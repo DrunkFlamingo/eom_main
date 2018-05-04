@@ -110,11 +110,23 @@ function Elector.religion(self)
     return self.religion_lookup
 end
 
+------------------
+--Trait Managers--
+------------------
+
+--v function(self: EOM_ELECTOR, trait: EOM_TRAIT)
+function Elector.add_trait(self, trait)
+    table.insert(self.trait_index, trait)
+    trait:activate()
+end
 
 
--------------------------------------
-------------Power Managers-----------
--------------------------------------
+
+
+
+------------------
+--Power Managers--
+------------------
 
 --
 --v function(self: EOM_ELECTOR, quantity:number)
@@ -164,9 +176,9 @@ function Elector.decrease_base_power(self, quantity)
     Elector.decrease_p_mood(self, quantity);
 end;
 
--------------------------------------
-----------Loyalty Managers-----------
--------------------------------------
+--------------------
+--Loyalty Managers--
+--------------------
 
 --takes a change in loyalty and increments the mood.
 --v function(self: EOM_ELECTOR, quantity:number)
