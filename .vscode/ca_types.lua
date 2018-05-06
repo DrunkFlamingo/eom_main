@@ -141,12 +141,15 @@
 --# assume CM.set_saved_value: method(valueKey: string, value: any)
 --# assume CM.get_saved_value: method(valueKey: string) --> WHATEVER
 --# assume CM.save_named_value: method(name: string, value: any, context: WHATEVER?)
---# assume CM.load_named_value: method(name: string, default: any, context: WHATEVER?) --> any
+--# assume CM.load_named_value: method(name: string, default: any, context: WHATEVER?) --> WHATEVER
 --# assume CM.teleport_to: method(charString: string, xPos: number, yPos: number, useCommandQueue: boolean)
 --# assume CM.is_new_game: method() --> boolean
 --# assume CM.apply_effect_bundle_to_region: method(bundle: string, region: string, turns: number)
 --# assume CM.remove_effect_bundle_from_region: method(bundle: string, region: string)
 --# assume CM.grant_unit_to_character: method(cqi: CA_CQI, unit: string)
+--# assume CM.add_saving_game_callback: method(function(context: WHATEVER))
+--# assume CM.add_loading_game_callback: method(function(context: WHATEVER))
+--# assume CM.random_number: method(num: int) --> int
 
 -- CAMPAIGN UI MANAGER
 --# assume CUIM.get_char_selected: method() --> string
