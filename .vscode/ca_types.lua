@@ -14,6 +14,7 @@
 --# assume global class CA_MILITARY_FORCE
 --# assume global class CA_MILITARY_FORCE_LIST
 --# assume global class CA_REGION
+--# assume global class CA_REGION_LIST
 --# assume global class CA_SETTLEMENT
 --# assume global class CA_GARRISON_RESIDENCE
 --# assume global class CA_SLOT_LIST
@@ -251,11 +252,15 @@
 --# assume CA_FACTION.is_vassal_of: method(faction: string) --> boolean
 --# assume CA_FACTION.is_ally_vassal_or_client_state_of: method(faction: string) --> boolean
 --# assume CA_FACTION.at_war_with: method(faction: string) --> boolean
+--# assume CA_FACTION.region_list: method() --> CA_REGION_LIST
 
 -- FACTION LIST
 --# assume CA_FACTION_LIST.num_items: method() --> number
 --# assume CA_FACTION_LIST.item_at: method(index: number) --> CA_FACTION
 
+--REGION LIST
+--# assume CA_REGION_LIST.num_items: method() --> number
+--# assume CA_REGION_LIST.item_at: method() --> CA_REGION
 
 -- EFFECT
 --# assume CA_EFFECT.get_localised_string: function(key: string) --> string

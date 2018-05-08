@@ -1,7 +1,11 @@
 
+--cmf registry
+cm:set_saved_value("df_politics_main", true)
 
-
+--toggle this to turn logging on or off.
 isLogAllowed = true --:boolean
+
+--allows for the logging of the model to a seperate file.
 --v function(text: string, ftext: string)
 function EOMLOG(text, ftext)
 
@@ -20,10 +24,23 @@ function EOMLOG(text, ftext)
 end
 
 
-local eom = require("eom/eom_model")
+
+EOMLOG("Init Starting", "file.df_politics_main")
+
+--require the objects and the model
+eom_elector = require("eom/eom_elector")
+eom_cult = require("eom/eom_cult")
+eom_civil_war = require("eom/eom_civil_war")
+eom_action = require("eom/eom_action")
+eom = require("eom/eom_model")
+
+--add eom to the gamespace.
+_G.eom = eom
 
 EOMLOG("Init Complete", "file.df_politics_main")
 
+
+--main function, called by CMF
 function df_politics_main()
 EOMLOG("df_politics_called and starting", "function.df_politics_main()")
 
