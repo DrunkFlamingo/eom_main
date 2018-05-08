@@ -32,10 +32,10 @@ eom_elector = require("eom/eom_elector")
 eom_cult = require("eom/eom_cult")
 eom_civil_war = require("eom/eom_civil_war")
 eom_action = require("eom/eom_action")
-eom = require("eom/eom_model")
+eom_model = require("eom/eom_model")
 
 --add eom to the gamespace.
-_G.eom = eom
+_G.eom_model = eom_model
 
 EOMLOG("Init Complete", "file.df_politics_main")
 

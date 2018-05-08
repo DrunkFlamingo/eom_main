@@ -41,6 +41,7 @@ end;
 --v function(self: EOM_MODEL, civil_war: EOM_CIVIL_WAR)
 function eom_model.add_civil_war(self, civil_war)
     table.insert(self.civil_wars, civil_war)
+    civil_war.eom = self
 end
 
 --v function(self: EOM_MODEL, key: string, data: string | number)
