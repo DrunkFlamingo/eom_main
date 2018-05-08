@@ -151,6 +151,8 @@
 --# assume CM.add_saving_game_callback: method(function(context: WHATEVER))
 --# assume CM.add_loading_game_callback: method(function(context: WHATEVER))
 --# assume CM.random_number: method(num: int) --> int
+--# assume CM.apply_effect_bundle: method(bundle: string, faction: string, timer: int)
+
 
 -- CAMPAIGN UI MANAGER
 --# assume CUIM.get_char_selected: method() --> string
@@ -253,6 +255,7 @@
 --# assume CA_FACTION.is_ally_vassal_or_client_state_of: method(faction: string) --> boolean
 --# assume CA_FACTION.at_war_with: method(faction: string) --> boolean
 --# assume CA_FACTION.region_list: method() --> CA_REGION_LIST
+--# assume CA_FACTION.has_effect_bundle: method(bundle:string) --> boolean
 
 -- FACTION LIST
 --# assume CA_FACTION_LIST.num_items: method() --> number

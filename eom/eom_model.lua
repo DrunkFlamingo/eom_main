@@ -1,6 +1,6 @@
 EOMLOG("eom model required", "eom_model.file")
 
-local eom_model = {} --# assume eom: EOM_MODEL
+local eom_model = {} --# assume eom_model: EOM_MODEL
 
 
 --model assembly
@@ -10,7 +10,7 @@ local eom_model = {} --# assume eom: EOM_MODEL
 function eom_model.new()
     local self = {} 
     setmetatable({
-        __index = eom
+        __index = eom_model
     })
     --# assume self: EOM_MODEL
 

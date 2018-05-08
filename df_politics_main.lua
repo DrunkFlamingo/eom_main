@@ -18,7 +18,7 @@ function EOMLOG(text, ftext)
   local logTimeStamp = os.date("%d, %m %Y %X")
   local popLog = io.open("EOMLOG.txt","a")
   --# assume logTimeStamp: string
-  popLog :write("EOM ["..logText .. "] : [" .. logContext .. "] : [".. logTimeStamp .. "]\n")
+  popLog :write("EOM_MAIN:  "..logText .. "    : [" .. logContext .. "] : [".. logTimeStamp .. "]\n")
   popLog :flush()
   popLog :close()
 end
@@ -42,9 +42,9 @@ EOMLOG("Init Complete", "file.df_politics_main")
 
 --main function, called by CMF
 function df_politics_main()
-EOMLOG("df_politics_called and starting", "function.df_politics_main()")
+  EOMLOG("df_politics_called and starting", "function.df_politics_main()")
 
 
 
-EOMLOG("main function finished", "function.df_politics_main()")
+  EOMLOG("main function finished", "function.df_politics_main()")
 end
