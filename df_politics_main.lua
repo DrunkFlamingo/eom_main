@@ -18,7 +18,7 @@ function EOMLOG(text, ftext)
   local logTimeStamp = os.date("%d, %m %Y %X")
   local popLog = io.open("EOMLOG.txt","a")
   --# assume logTimeStamp: string
-  popLog :write(logText .. " : " .. logContext .. " : ".. logTimeStamp .. "\n")
+  popLog :write("EOM ["..logText .. "] : [" .. logContext .. "] : [".. logTimeStamp .. "]\n")
   popLog :flush()
   popLog :close()
 end
