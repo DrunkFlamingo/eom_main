@@ -152,7 +152,9 @@
 --# assume CM.add_loading_game_callback: method(function(context: WHATEVER))
 --# assume CM.random_number: method(num: int) --> int
 --# assume CM.apply_effect_bundle: method(bundle: string, faction: string, timer: int)
-
+--# assume CM.add_default_diplomacy_record: method(faction: string, other_faction: string, record: string, offer: boolean, accept: boolean, enable_payments: boolean)
+--# assume CM.force_make_peace: method(faction: string, other_faction: string)
+--# assume CM.force_declare_war: method(declarer: string, declaree: string, attacker_allies: boolean, defender_allies: boolean)
 
 -- CAMPAIGN UI MANAGER
 --# assume CUIM.get_char_selected: method() --> string

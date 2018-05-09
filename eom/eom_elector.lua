@@ -55,8 +55,6 @@ function eom_elector.save(self)
     save_table.leader_forename = self.leader_forename
     save_table.leader_surname = self.leader_surname
     save_table.capital = self.capital 
-    save_table.capital_x = self.capital_x 
-    save_table.capital_y = self.capital_y 
     save_table.expedition_x = self.expedition_x 
     save_table.expedition_y = self.expedition_y 
     save_table.traits = self.traits
@@ -72,21 +70,25 @@ end
 
 --v function(self: EOM_ELECTOR) --> int
 function eom_elector.get_loyalty(self)
+    EOMLOG("retrieved elector loyalty ["..self.faction_name.."]", "eom_elector.get_loyalty(self)")
     return self.loyalty
 end;
 
 --v function(self: EOM_ELECTOR, value: int) 
 function eom_elector.set_loyalty(self, value)
+    EOMLOG("set elector loyalty ["..self.faction_name.."] to ["..tostring(value).."]", "eom_elector.set_loyalty(self, value)")
     self.loyalty = value
 end
 
 --v function(self: EOM_ELECTOR, value: int)
 function eom_elector.change_loyalty(self, value)
+    EOMLOG("changed elector loyalty ["..self.faction_name.."] from ["..self.loyalty.."] to ["..tostring(self.loyalty + value).."]", "eom_elector.change_loyalty(self, value)")
     self.loyalty = self.loyalty + value
 end
 
 --v function(self: EOM_ELECTOR, status: int)
 function eom_elector.set_status(self, status)
+    EOMLOG("set elector status ["..self.faction_name.."] to ["..tostring(status).."]", "eom_elector.set_status")
     self.status = status
 end
 
@@ -127,11 +129,13 @@ end
 
 --v function(self: EOM_ELECTOR)
 function eom_elector.hide(self)
+    EOMLOG("hid ["..self.faction_name.."]", "eom_elector.hide(self)")
     self.hidden = true
 end
 
 --v function(self: EOM_ELECTOR)
 function eom_elector.show(self)
+    EOMLOG("showed ["..self.faction_name.."]", "eom_elector.show(self)")
     self.hidden = false
 end
 

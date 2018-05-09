@@ -33,7 +33,7 @@ eom_cult = require("eom/eom_cult")
 eom_civil_war = require("eom/eom_civil_war")
 eom_action = require("eom/eom_action")
 eom_model = require("eom/eom_model")
-
+require("eom/eom_startpos")
 --add eom to the gamespace.
 _G.eom_model = eom_model
 
