@@ -40,10 +40,42 @@ _G.eom_model = eom_model
 EOMLOG("Init Complete", "file.df_politics_main")
 
 
+
 --main function, called by CMF
 function df_politics_main()
   EOMLOG("df_politics_called and starting", "function.df_politics_main()")
+  
+  --create the model
+  eom = eom_model.new()
 
+  if get_faction("wh_main_emp_empire"):is_human() then
+    if cm:is_new_game() then
+      EOMLOG("ITS A NEW GAME! RUNNING START POSITION", "function.df_politics_main()")
+        --run the start pos
+        eom_start_pos("wh_main_emp_empire")
+        --add the core data to the model
+        eom_core_data_start_pos(eom)
+        --add the electors to the system
+        local electors = return_elector_starts()
+        for i = 1, #electors do
+          local current_function = electors[i]
+          local current_table = current_function()
+          local elector = eom_elector.new(current_table)
+          eom:add_elector(current_table.faction_name, elector)
+        end
+        --add the cults to the system
+        local cults = return_elector_starts()
+        for i = 1, #cults do
+          local current_function = cults[i]
+          local current_table = current_function()
+          local elector = eom_cult.new(current_table)
+          eom:add_cult(current_table.faction_name, elector)
+        end
+    else
+      EOMLOG("Loading an existing game back into the model", "function.df_politics_main()")
+    end
+  end
+  
 
 
   EOMLOG("main function finished", "function.df_politics_main()")

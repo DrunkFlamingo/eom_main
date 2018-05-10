@@ -102,10 +102,12 @@ end
 function eom_elector.refresh(self)
     self.dead = get_faction(self.faction_name):is_dead();
     self.regions_count = get_faction(self.faction_name):region_list():num_items();
-    if self.dead == true then
-        self.turns_dead = self.turns_dead + 1;
-    elseif self.dead == false then
-        self.turns_dead = 0;
+    if self.status > 0 then --we only want to count dead turns and cause revivals if the elector exists and is part of the empire.
+        if self.dead == true then
+            self.turns_dead = self.turns_dead + 1;
+        elseif self.dead == false then
+            self.turns_dead = 0;
+        end
     end
 end
 
