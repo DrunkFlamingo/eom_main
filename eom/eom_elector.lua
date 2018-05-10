@@ -5,7 +5,7 @@ EOMLOG("Loading the eom_elector object", "file.eom_elector")
 --v function(info: map<string, WHATEVER>) --> EOM_ELECTOR
 function eom_elector.new(info)
     local self = {}
-    setmetatable({
+    setmetatable(self, {
         __index = eom_elector
     })
     --# assume self: EOM_ELECTOR

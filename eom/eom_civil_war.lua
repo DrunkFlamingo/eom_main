@@ -5,7 +5,7 @@ EOMLOG("Loading object eom_civil_war", "file.eom_civil_war")
 --v function(info: map<string, WHATEVER>) --> EOM_CIVIL_WAR
 function eom_civil_war.new(info)
 local self = {}
-setmetatable({
+setmetatable(self, {
     __index = eom_civil_war
 })
 --# assume self: EOM_CIVIL_WAR

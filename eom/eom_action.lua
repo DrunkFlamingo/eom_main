@@ -4,7 +4,7 @@ EOMLOG("Loading the eom_action object", "file.eom_action")
 --v function(condition:function(eom: EOM_MODEL) --> boolean, callback: function(eom: EOM_MODEL)) --> EOM_ACTION
 function eom_action.new(condition, callback)
     local self = {}
-    setmetatable({
+    setmetatable(self, {
         __index = eom_action
     })
     --# assume self: EOM_ACTION

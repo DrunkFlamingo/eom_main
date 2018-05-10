@@ -6,7 +6,7 @@ EOMLOG("Loading the eom_cult object", "file.eom_cult")
 --v function(info: map<string, WHATEVER>) --> EOM_CULT
 function eom_cult.new(info)
     local self = {}
-    setmetatable({
+    setmetatable(self, {
         __index = eom_cult
     })
     --# assume self: EOM_CULT
@@ -53,6 +53,19 @@ function eom_cult.save(self)
 
     return save_table
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 return {
     new = eom_cult.new

@@ -8,20 +8,22 @@ local eom_model = {} --# assume eom_model: EOM_MODEL
 
 --v function() --> EOM_MODEL
 function eom_model.new()
-    local self = {} 
-    setmetatable({
+    EOMLOG("Starting Model Creation", "function.eom_model.new()")
+    local self = {};
+    EOMLOG("checkpoint 1", "function.eom_model.new()")
+    setmetatable(self, {
         __index = eom_model
     })
+    EOMLOG("checkpoint 2", "function.eom_model.new()")
     --# assume self: EOM_MODEL
 
     self.electors = {}--:map<string, EOM_ELECTOR>
     self.cults = {}--:map<string, EOM_CULT>
     self.civil_wars = {}--:vector<EOM_CIVIL_WAR>
+    EOMLOG("checkpoint 3", "function.eom_model.new()")
     self.elector_actions = {} --:vector<EOM_ACTION>
     self.cult_actions = {} --:vector<EOM_ACTION>
     self.core_data = {} --:map<string, string | number | boolean>
-
-    output("EOM CREATED")
     EOMLOG("******CREATED THE MODEL*****", "function.eom_model.new()")
     return self
 end;
