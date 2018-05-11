@@ -1,5 +1,11 @@
 EOMLOG("eom model required", "file.eom_model")
-
+--[[
+local eom_elector = require("eom/eom_elector")
+local eom_cult = require("eom/eom_cult")
+local eom_civil_war = require("eom/eom_civil_war")
+local eom_action = require("eom/eom_action")
+local eom_trait = require("eom/eom_trait")
+]]
 local eom_model = {} --# assume eom_model: EOM_MODEL
 
 
@@ -21,6 +27,7 @@ function eom_model.new()
     self.elector_actions = {} --:vector<EOM_ACTION>
     self.cult_actions = {} --:vector<EOM_ACTION>
     self.core_data = {} --:map<string, string | number | boolean>
+    self.active_traits = {} --:map<string, EOM_TRAIT>
     EOMLOG("******CREATED THE MODEL*****", "function.eom_model.new()")
     return self
 end;
@@ -29,6 +36,7 @@ end;
 
 --v function(self: EOM_MODEL) --> map<string, WHATEVER>
 function eom_model.save(self)
+    EOMLOG("SAVING THE MODEL", "eom_model.save(self)")
     local st = {}
     st.electors = {}
     for key, value in pairs(self.electors) do
@@ -87,6 +95,20 @@ function eom_model.add_cult_action(self, action)
     table.insert(self.cult_actions, action)
     action:register_to_model(self)
 end
+
+--v function(self: EOM_MODEL, trait: EOM_TRAIT)
+function eom_model.add_trait(self, trait)
+    trait:activate(self)
+    self.active_traits[trait:get_name()] = trait
+end
+
+--v function(self: EOM_MODEL, name: string)
+function eom_model.disactivate_trait_with_name(self, name)
+    local trait = self.active_traits[name]
+    trait:deactivate()
+    self.active_traits[name] = nil
+end
+
 
 --used for both dilemmas and incidents.
 --always callback always triggers.

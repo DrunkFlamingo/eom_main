@@ -29,7 +29,22 @@ function EOMLOG(text, ftext)
   local logTimeStamp = os.date("%d, %m %Y %X")
   local popLog = io.open("EOMLOG.txt","a")
   --# assume logTimeStamp: string
-  popLog :write("EOM_MAIN:  "..logText .. "    : [" .. logContext .. "] : [".. logTimeStamp .. "]\n")
+  popLog :write("df_politics_main:  "..logText .. "    : [" .. logContext .. "] : [".. logTimeStamp .. "]\n")
+  popLog :flush()
+  popLog :close()
+end
+
+--v function()
+function REFRESHLOG()
+  if not isLogAllowed then
+    return;
+  end
+
+  local logTimeStamp = os.date("%d, %m %Y %X")
+  --# assume logTimeStamp: string
+
+  local popLog = io.open("EOMLOG.txt","w+")
+  popLog :write("NEW LOG ["..logTimeStamp.."] \n")
   popLog :flush()
   popLog :close()
 end
@@ -43,24 +58,49 @@ eom_elector = require("eom/eom_elector")
 eom_cult = require("eom/eom_cult")
 eom_civil_war = require("eom/eom_civil_war")
 eom_action = require("eom/eom_action")
+eom_trait = require("eom/eom_trait")
 eom_model = require("eom/eom_model")
+
 require("eom/eom_startpos")
 --add eom to the gamespace.
 _G.eom_model = eom_model
+
+--create the model
+eom = eom_model.new()
+_G.eom = eom
+
+cm:add_loading_game_callback(
+  function(context)
+  eom_save_table = cm:load_named_value("eom_save_table", {}, context)
+
+  end
+)
+
+cm:add_saving_game_callback(
+  function(context)
+    local eom_new_save = eom:save()
+    cm:save_named_value("eom_save_table", eom_new_save, context)
+  end
+)
+
+
+
+
+
+
 
 EOMLOG("Init Complete", "file.df_politics_main")
 
 
 
 --main function, called by CMF
+--v function()
 function df_politics_main()
-  EOMLOG("df_politics_called and starting", "function.df_politics_main()")
+  EOMLOG("df_politics_main called and starting", "function.df_politics_main()")
   
-  --create the model
-  eom = eom_model.new()
-
   if get_faction("wh_main_emp_empire"):is_human() then
     if cm:is_new_game() then
+      REFRESHLOG()
       EOMLOG("ITS A NEW GAME! RUNNING START POSITION", "function.df_politics_main()")
         --run the start pos
         eom_start_pos("wh_main_emp_empire")
@@ -84,6 +124,23 @@ function df_politics_main()
         end
     else
       EOMLOG("Loading an existing game back into the model", "function.df_politics_main()")
+      if eom_save_table == {} then
+        EOMLOG("ERROR: We tried to load the game but the save table was missing! something has gone terribly wrong", "function.df_politics_main()")
+        else
+          for i = 1, #eom_save_table.electors do
+            local info = eom_save_table.electors[i]
+            local elector = eom_elector.new(info)
+            eom:add_elector(info.faction_name, elector)
+          end
+          for i = 1, #eom_save_table.cults do
+            local info = eom_save_table.cults[i]
+            local cult = eom_cult.new(info)
+            eom:add_cult(info.faction_name, cult)
+          end
+          for key, value in pairs (eom_save_table.core_data) do
+            eom:add_core_data(key, value)
+          end
+        end
     end
   end
   
