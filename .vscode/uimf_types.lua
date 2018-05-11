@@ -22,8 +22,6 @@
 --# type global TEXT_TYPE = 
 --# "NORMAL" | "WRAPPED" | "TITLE" | "HEADER"
 
---# assume BUTTON.GetContentComponent: method() --> CA_UIC
---# assume BUTTON.GetPositioningComponent: method() --> CA_UIC
 
 --# assume global class CONTAINER
 --# assume global class GAP
@@ -52,3 +50,31 @@
 --# assume global write_log: boolean
 
 --# assume LOG.write: function(str: string)
+
+--object creation functions
+--# assume BUTTON.new: function(name: string, parent: CA_UIC, imagePath: string)
+
+
+--button
+--# assume BUTTON.MoveTo: method(xPos: number, yPos: number)
+--# assume BUTTON.Move: method(XMove: number, yMove: number)
+--# assume BUTTON.PositionRelativeTo: method(component: CA_UIC, xDiff: number, yDiff: number)
+--# assume BUTTON.Scale: method(factor:number)
+--# assume BUTTON.Resize: method(width: number, height: number)
+--# assume BUTTON.SetVisible: method(visible: boolean)
+--# assume BUTTON.Visible: method() --> boolean
+--# assume BUTTON.GetContentComponent: method() --> CA_UIC
+--# assume BUTTON.GetPositioningComponent: method() --> CA_UIC
+--# assume BUTTON.Delete: method()
+--# assume BUTTON.ClearSound: method()
+--# assume BUTTON.SetState: method(state: string)
+--# assume BUTTON.CurrentState: method() --> string
+--# assume BUTTON.IsSelected: method() --> boolean
+--# assume BUTTON.RegisterForClick: method(callback: function, name: string)
+--# assume BUTTON.SetImage: method(path: string)
+--# assume BUTTON.SetDisabled: method(disabled: boolean)
+
+
+
+
+
