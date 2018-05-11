@@ -64,6 +64,7 @@
 --# assume BUTTON.SetVisible: method(visible: boolean)
 --# assume BUTTON.Visible: method() --> boolean
 --# assume BUTTON.Position: method() --> (number, number)
+--# assume BUTTON.Bounds: method() --> (number, number)
 --# assume BUTTON.GetContentComponent: method() --> CA_UIC
 --# assume BUTTON.GetPositioningComponent: method() --> CA_UIC
 --# assume BUTTON.Delete: method()
@@ -81,8 +82,20 @@
 --# assume FRAME.PositionRelativeTo: method(component: CA_UIC, xDiff: number, yDiff: number)
 --# assume FRAME.Scale: method(factor: number)
 --# assume FRAME.Position: method() --> (number, number)
---@
-
+--# assume FRAME.Bounds: method() --> (number, number)
+--# assume FRAME.XPos: method() --> number
+--# assume FRAME.YPos: method() --> number
+--# assume FRAME.Width: method() --> number
+--# assume FRAME.Height: method() --> number
+--# assume FRAME.SetVisible: method(visible: boolean)
+--# assume FRAME.Visible: method() --> boolean
+--# assume FRAME.GetContentComponent: method() --> CA_UIC
+--# assume FRAME.GetPositioningComponent: method() --> CA_UIC
+--# assume FRAME.Delete: method()
+--# assume FRAME.AddComponent: method(component: CA_UIC | COMPONENT_TYPE)
+--# assume FRAME.SetTitle: method(title: string)
+--# assume FRAME.AddCloseButton: method(callback: function, cross: WHATEVER?)
+--# assume FRAME.GetContentPanel: method() --> CA_UIC
 
 
 
