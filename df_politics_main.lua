@@ -75,14 +75,10 @@ function df_politics_main()
           eom:add_elector(current_table.faction_name, elector)
         end
         --add the cults to the system
-        EOMLOG("about to ask for the cult callbacks", "test")
         local cults = return_cult_starts()
-        EOMLOG("successfully got the cult list", "test")
         for i = 1, #cults do
-          EOMLOG("successfully started the loop", "test")
           local current_function = cults[i];
           local current_table = current_function()
-          EOMLOG("successfully defined the table", "test")
           local cult = eom_cult.new(current_table)
           eom:add_cult(current_table.faction_name, cult)
         end

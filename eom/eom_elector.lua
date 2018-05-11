@@ -215,15 +215,11 @@ function eom_elector.get_capital_region(self)
     return get_region(self.capital)
 end
 
---v function(self: EOM_ELECTOR) --> number
-function eom_elector.get_expedition_x(self)
-    return self.expedition_x
+--v function(self: EOM_ELECTOR) --> (number, number)
+function eom_elector.get_expedition_location(self)
+    return self.expedition_x, self.expedition_y
 end
 
---v function(self: EOM_ELECTOR) --> number
-function eom_elector.get_expedition_y(self)
-    return self.expedition_y
-end
 
 --v function(self: EOM_ELECTOR) --> string
 function eom_elector.get_expedition_region(self)

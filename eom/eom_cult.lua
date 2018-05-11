@@ -54,9 +54,94 @@ function eom_cult.save(self)
     return save_table
 end
 
+--general
+
+--v function(self: EOM_CULT) --> int
+function eom_cult.get_loyalty(self)
+    EOMLOG("retrieved elector loyalty ["..self.faction_name.."]", "eom_elector.get_loyalty(self)")
+    return self.loyalty
+end;
+
+--v function(self: EOM_CULT, value: int) 
+function eom_cult.set_loyalty(self, value)
+    EOMLOG("set elector loyalty ["..self.faction_name.."] to ["..tostring(value).."]", "eom_elector.set_loyalty(self, value)")
+    self.loyalty = value
+end
+
+--v function(self: EOM_CULT, value: int)
+function eom_cult.change_loyalty(self, value)
+    EOMLOG("changed elector loyalty ["..self.faction_name.."] from ["..self.loyalty.."] to ["..tostring(self.loyalty + value).."]", "eom_elector.change_loyalty(self, value)")
+    self.loyalty = self.loyalty + value
+end
 
 
 
+--ui
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_ui_name(self)
+    return self.ui_name
+end
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_image(self)
+    return "ui/flags/"..self.faction_name.."/mon_rotated.png"
+end
+
+
+--invasions and spawns
+
+--v function(self: EOM_CULT) --> (number, number)
+function eom_cult.get_spawn_location(self)
+    return self.spawn_x, self.spawn_y
+end
+
+--v function(self: EOM_CULT) --> (number, number)
+function eom_cult.get_secondary_spawn_location(self)
+    return self.second_spawn_x, self.second_spawn_y
+end
+
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_leader_forname(self)
+    return self.leader_forename;
+end;
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_leader_surname(self)
+    return self.leader_surname;
+end;
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_leader_subtype(self)
+    return self.leader_subtype;
+end;
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_leader_region(self)
+    return self.leader_region
+end
+
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_second_forname(self)
+    return self.second_forename;
+end;
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_second_surname(self)
+    return self.second_surname;
+end;
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_second_subtype(self)
+    return self.second_subtype;
+end;
+
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_second_region(self)
+    return self.second_region
+end
 
 
 

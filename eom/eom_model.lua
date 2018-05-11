@@ -51,7 +51,6 @@ function eom_model.add_elector(self, key, elector)
     EOMLOG("Added elector with key ["..key.."]", "eom_model.add_elector(self, key,elector)")
     local electors = self.electors;
     electors[key] = elector;
-    EOMLOG("Finished elector with key ["..key.."]", "eom_model.add_elector(self, key,elector)")
 end;
 
 --v function(self: EOM_MODEL, key: string, cult: EOM_CULT)
