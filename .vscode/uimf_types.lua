@@ -53,7 +53,7 @@
 
 --object creation functions
 --# assume BUTTON.new: function(name: string, parent: CA_UIC, imagePath: string)
-
+--# assume FRAME.new: function(name: string)
 
 --button
 --# assume BUTTON.MoveTo: method(xPos: number, yPos: number)
@@ -63,6 +63,7 @@
 --# assume BUTTON.Resize: method(width: number, height: number)
 --# assume BUTTON.SetVisible: method(visible: boolean)
 --# assume BUTTON.Visible: method() --> boolean
+--# assume BUTTON.Position: method() --> (number, number)
 --# assume BUTTON.GetContentComponent: method() --> CA_UIC
 --# assume BUTTON.GetPositioningComponent: method() --> CA_UIC
 --# assume BUTTON.Delete: method()
@@ -74,6 +75,13 @@
 --# assume BUTTON.SetImage: method(path: string)
 --# assume BUTTON.SetDisabled: method(disabled: boolean)
 
+--frame
+--# assume FRAME.MoveTo: method(xPos: number, yPos: number)
+--# assume FRAME.Move: method(xMove: number, yMove: number)
+--# assume FRAME.PositionRelativeTo: method(component: CA_UIC, xDiff: number, yDiff: number)
+--# assume FRAME.Scale: method(factor: number)
+--# assume FRAME.Position: method() --> (number, number)
+--@
 
 
 
