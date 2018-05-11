@@ -10,17 +10,14 @@ local eom_model = {} --# assume eom_model: EOM_MODEL
 function eom_model.new()
     EOMLOG("Starting Model Creation", "function.eom_model.new()")
     local self = {};
-    EOMLOG("checkpoint 1", "function.eom_model.new()")
     setmetatable(self, {
         __index = eom_model
     })
-    EOMLOG("checkpoint 2", "function.eom_model.new()")
     --# assume self: EOM_MODEL
 
     self.electors = {}--:map<string, EOM_ELECTOR>
     self.cults = {}--:map<string, EOM_CULT>
     self.civil_wars = {}--:vector<EOM_CIVIL_WAR>
-    EOMLOG("checkpoint 3", "function.eom_model.new()")
     self.elector_actions = {} --:vector<EOM_ACTION>
     self.cult_actions = {} --:vector<EOM_ACTION>
     self.core_data = {} --:map<string, string | number | boolean>
@@ -54,6 +51,7 @@ function eom_model.add_elector(self, key, elector)
     EOMLOG("Added elector with key ["..key.."]", "eom_model.add_elector(self, key,elector)")
     local electors = self.electors;
     electors[key] = elector;
+    EOMLOG("Finished elector with key ["..key.."]", "eom_model.add_elector(self, key,elector)")
 end;
 
 --v function(self: EOM_MODEL, key: string, cult: EOM_CULT)

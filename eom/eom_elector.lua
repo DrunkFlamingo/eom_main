@@ -33,7 +33,11 @@ function eom_elector.new(info)
     self.base_regions = info.base_regions --:int
     -- game variables
     self.dead = get_faction(self.faction_name):is_dead();
-    self.regions_count = get_faction(self.faction_name):region_list():num_items();
+    if self.dead == false then
+        self.regions_count = get_faction(self.faction_name):region_list():num_items();
+    else
+        self.regions_count = 0;
+    end
     self.capital_x = get_region(self.capital):settlement():logical_position_x() --:number
     self.capital_y = get_region(self.capital):settlement():logical_position_y() --:number
     return self;
@@ -107,6 +111,9 @@ function eom_elector.refresh(self)
             self.turns_dead = self.turns_dead + 1;
         elseif self.dead == false then
             self.turns_dead = 0;
+            self.regions_count = get_faction(self.faction_name):region_list():num_items();
+            self.capital_x = get_region(self.capital):settlement():logical_position_x() 
+            self.capital_y = get_region(self.capital):settlement():logical_position_y() 
         end
     end
 end

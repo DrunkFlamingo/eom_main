@@ -1,4 +1,15 @@
 
+--[[
+dev notes:
+
+trying to add two electors of the same faction name causes a crash
+
+
+
+
+]]--
+
+
 --cmf registry
 cm:set_saved_value("df_politics_main", true)
 
@@ -64,12 +75,16 @@ function df_politics_main()
           eom:add_elector(current_table.faction_name, elector)
         end
         --add the cults to the system
-        local cults = return_elector_starts()
+        EOMLOG("about to ask for the cult callbacks", "test")
+        local cults = return_cult_starts()
+        EOMLOG("successfully got the cult list", "test")
         for i = 1, #cults do
-          local current_function = cults[i]
+          EOMLOG("successfully started the loop", "test")
+          local current_function = cults[i];
           local current_table = current_function()
-          local elector = eom_cult.new(current_table)
-          eom:add_cult(current_table.faction_name, elector)
+          EOMLOG("successfully defined the table", "test")
+          local cult = eom_cult.new(current_table)
+          eom:add_cult(current_table.faction_name, cult)
         end
     else
       EOMLOG("Loading an existing game back into the model", "function.df_politics_main()")

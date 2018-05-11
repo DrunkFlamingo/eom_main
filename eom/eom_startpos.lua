@@ -423,7 +423,7 @@ function sylvania_start_pos()
     sp.ui_name = "Sylvania"
     sp.image =  "ui/flags/wh_main_emp_sylvania/mon_rotated.png"
     sp.tooltip = "Elector Count"
-    sp.status = -1
+    sp.status = (-1)
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147355363"
     sp.leader_surname = "names_name_2147354856"
@@ -445,15 +445,15 @@ function vampire_start_pos()
     sp.fully_loyal = false
     sp.hidden = true
     sp.base_power = 30
-    sp.faction_name = "wh_main_emp_hochland"
+    sp.faction_name = "wh_main_vmp_schwartzhafen"
     sp.ui_name = "Sylvania"
-    sp.image =  "ui/flags/wh_main_emp_hochland/mon_rotated.png"
+    sp.image =  "ui/flags/wh_main_vmp_schwartzhafen/mon_rotated.png"
     sp.tooltip = "Elector Count"
-    sp.status = -1
+    sp.status = (-1)
     sp.leader_subtype = "dlc04_vmp_vlad_con_carstein"
     sp.leader_forename = "names_name_2147345130"
     sp.leader_surname = "names_name_2147343895"
-    sp.capital =  "wh_main_eastern_sylvania_drakenhof"
+    sp.capital =  "wh_main_eastern_sylvania_castle_drakenhof"
     sp.expedition_x = 677
     sp.expedition_y = 460
     sp.traits = {} --to be filled in later
@@ -494,9 +494,11 @@ end;
 
 --v function() --> vector<function() --> map<string,WHATEVER> >
 function return_cult_starts()
-    local t = {
+    EOMLOG("asked for cult callbacks", "test")
+    local c = {
         sigmar_start_pos,
         ulric_start_pos
     }
-    return t;
+    EOMLOG("about to return cult callbacks", "test")
+    return c;
 end
