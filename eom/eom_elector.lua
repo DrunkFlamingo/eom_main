@@ -87,7 +87,7 @@ end
 --v function(self: EOM_ELECTOR, value: int)
 function eom_elector.change_loyalty(self, value)
     EOMLOG("changed elector loyalty ["..self.faction_name.."] from ["..self.loyalty.."] to ["..tostring(self.loyalty + value).."]", "eom_elector.change_loyalty(self, value)")
-    self.loyalty = self.loyalty + value
+    self.loyalty = self.loyalty + (value)
 end
 
 --v function(self: EOM_ELECTOR, status: int)
@@ -99,6 +99,21 @@ end
 --v function(self: EOM_ELECTOR) --> int
 function eom_elector.get_status(self)
     return self.status
+end
+
+--v function(self: EOM_ELECTOR) --> int
+function eom_elector.get_base_power(self)
+    return self.base_power
+end
+
+--v function(self: EOM_ELECTOR, value: int)
+function eom_elector.set_base_power(self, value)
+    self.base_power = value
+end
+
+--v function(self: EOM_ELECTOR, value: int)
+function eom_elector.change_base_power(self, value)
+    self.base_power = self.base_power + value
 end
 
 
@@ -120,6 +135,8 @@ end
 
 
 --ui api
+
+
 --v function(self: EOM_ELECTOR) --> int
 function eom_elector.num_traits(self)
     return #self.traits

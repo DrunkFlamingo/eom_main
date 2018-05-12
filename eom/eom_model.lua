@@ -110,12 +110,9 @@ function eom_model.disactivate_trait_with_name(self, name)
 end
 
 
---used for both dilemmas and incidents.
---always callback always triggers.
 --if choices are not present or used pass a blank function.
---function is always called with context.
---v function(self: EOM_MODEL, dilemma: string, always: function(), choice1: function(), choice2: function(), choice3: function(), choice4: function())
-function eom_model.add_dilemma_to_model(self, dilemma, always, choice1, choice2, choice3, choice4)
+--v function(self: EOM_MODEL, dilemma: string, choice1: function(), choice2: function(), choice3: function(), choice4: function())
+function eom_model.add_dilemma_to_model(self, dilemma, choice1, choice2, choice3, choice4)
     EOMLOG("Adding a scripted dilemma choice responce to the model", "eom_model.add_dilemma_to_model(self, dilemma, always, choice1, choice2, choice3, choice4")
     core:add_listener(
         "eom"..dilemma,
@@ -125,7 +122,6 @@ function eom_model.add_dilemma_to_model(self, dilemma, always, choice1, choice2,
         end,
         function(context)
             EOMLOG("Dilemma choice made ["..tostring(context:choice()).."] for dilemma ["..tostring(context:dilemma()).."]", "listener.eom_model.add_dilemma_to_model")
-            always()
             if context:choice() == 0 then
                 choice1()
             elseif context:choice() == 1 then

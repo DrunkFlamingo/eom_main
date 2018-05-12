@@ -60,7 +60,6 @@ eom_civil_war = require("eom/eom_civil_war")
 eom_action = require("eom/eom_action")
 eom_trait = require("eom/eom_trait")
 eom_model = require("eom/eom_model")
-
 require("eom/eom_startpos")
 --add eom to the gamespace.
 _G.eom_model = eom_model
@@ -68,6 +67,24 @@ _G.eom_model = eom_model
 --create the model
 eom = eom_model.new()
 _G.eom = eom
+
+--ui 
+--eom_button = require("ui/eom_button")
+--eom_panel = require("ui/eom_panel")
+
+
+core:add_listener(
+  "EOM_UI_CORE",
+  "UICreated",
+  function(context)
+    return true
+  end,
+  function(context)
+
+  end,
+  true);
+
+
 
 cm:add_loading_game_callback(
   function(context)

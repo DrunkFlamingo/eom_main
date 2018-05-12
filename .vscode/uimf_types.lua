@@ -52,8 +52,17 @@
 --# assume LOG.write: function(str: string)
 
 --object creation functions
---# assume BUTTON.new: function(name: string, parent: CA_UIC, imagePath: string)
---# assume FRAME.new: function(name: string)
+--# assume BUTTON.new: function(name: string, parent: CA_UIC, imagePath: string) --> BUTTON
+--# assume FRAME.new: function(name: string) --> FRAME
+
+
+
+--utility
+--# assume UTIL.getComponentWithName: function(name: string) --> COMPONENT_TYPE
+
+
+
+
 
 --button
 --# assume BUTTON.MoveTo: method(xPos: number, yPos: number)
