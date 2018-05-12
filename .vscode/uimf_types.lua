@@ -52,7 +52,7 @@
 --# assume LOG.write: function(str: string)
 
 --object creation functions
---# assume BUTTON.new: function(name: string, parent: CA_UIC, imagePath: string) --> BUTTON
+--# assume BUTTON.new: function(name: string, parent: CA_UIC, form: BUTTON_TYPE, imagePath: string) --> BUTTON
 --# assume FRAME.new: function(name: string) --> FRAME
 
 
@@ -81,7 +81,7 @@
 --# assume BUTTON.SetState: method(state: string)
 --# assume BUTTON.CurrentState: method() --> string
 --# assume BUTTON.IsSelected: method() --> boolean
---# assume BUTTON.RegisterForClick: method(callback: function, name: string)
+--# assume BUTTON.RegisterForClick: method(callback: function(context: WHATEVER?))
 --# assume BUTTON.SetImage: method(path: string)
 --# assume BUTTON.SetDisabled: method(disabled: boolean)
 

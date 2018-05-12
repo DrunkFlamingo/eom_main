@@ -494,11 +494,9 @@ end;
 
 --v function() --> vector<function() --> map<string,WHATEVER> >
 function return_cult_starts()
-    EOMLOG("asked for cult callbacks", "test")
     local c = {
         sigmar_start_pos,
         ulric_start_pos
     }
-    EOMLOG("about to return cult callbacks", "test")
     return c;
 end

@@ -1,7 +1,6 @@
 
---# assume global class EOM_PANEL
---# assume global class EOM_BUTTON
-
+--# assume global class EOM_VIEW
+--# assume global class EOM_CONTROLLER
 
 --# assume global class EOM_MODEL
 
@@ -18,3 +17,4 @@
 
 --# assume global class EOM_ENTITY
 --# assume EOM_ENTITY.change_loyalty: method(i: number)
+--# assume EOM_ENTITY.get_faction_name: method() --> string

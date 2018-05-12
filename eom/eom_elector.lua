@@ -72,6 +72,12 @@ end
 --general
 --most changes handled up stream but functions can be directly called.
 
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.get_faction_name(self)
+    return self.faction_name
+end
+
+
 --v function(self: EOM_ELECTOR) --> int
 function eom_elector.get_loyalty(self)
     EOMLOG("retrieved elector loyalty ["..self.faction_name.."]", "eom_elector.get_loyalty(self)")

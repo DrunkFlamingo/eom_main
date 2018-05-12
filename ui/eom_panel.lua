@@ -1,1 +1,0 @@
-local eom_panel = {}

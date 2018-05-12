@@ -68,9 +68,6 @@ _G.eom_model = eom_model
 eom = eom_model.new()
 _G.eom = eom
 
---ui 
---eom_button = require("ui/eom_button")
---eom_panel = require("ui/eom_panel")
 
 
 core:add_listener(
@@ -80,7 +77,11 @@ core:add_listener(
     return true
   end,
   function(context)
-
+    EOMLOG("CA UI CREATED", "listener.EOM_UI_CORE")
+    eom:create_ui()
+    eom:view():set_button_parent()
+    local button = eom:view():get_button()
+    button:SetVisible(true)
   end,
   true);
 

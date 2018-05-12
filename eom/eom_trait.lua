@@ -28,6 +28,7 @@ function eom_trait.activate(self, eom)
             return self.conditional(context)
         end,
         function(context)
+            EOMLOG("Trait is changing loyalty for ["..tostring(self.entity:get_faction_name()).."] by ["..tostring(self.loyalty_change).."]", "listener."..self.name.." ")
             self.entity:change_loyalty(self.loyalty_change)
         end,
         true)

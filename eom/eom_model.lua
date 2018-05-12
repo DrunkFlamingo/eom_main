@@ -6,6 +6,12 @@ local eom_civil_war = require("eom/eom_civil_war")
 local eom_action = require("eom/eom_action")
 local eom_trait = require("eom/eom_trait")
 ]]
+
+--ui 
+local eom_view = require("eom/eom_view")
+local eom_controller = require("eom/eom_controller")
+
+
 local eom_model = {} --# assume eom_model: EOM_MODEL
 
 
@@ -28,6 +34,9 @@ function eom_model.new()
     self.cult_actions = {} --:vector<EOM_ACTION>
     self.core_data = {} --:map<string, string | number | boolean>
     self.active_traits = {} --:map<string, EOM_TRAIT>
+    self.ui_view = nil --: EOM_VIEW
+    self.ui_controller = nil --: EOM_CONTROLLER
+
     EOMLOG("******CREATED THE MODEL*****", "function.eom_model.new()")
     return self
 end;
@@ -154,6 +163,33 @@ end
 function eom_model.get_cult(self, key)
     EOMLOG("retrieved cult object ["..key.."]", "eom_model.get_cult(self_key)")
     return self.cults[key]
+end
+
+
+
+--UI SYSTEMS
+
+
+--v function(self: EOM_MODEL)
+function eom_model.create_ui(self)
+    local controller = eom_controller.new()
+    local view = eom_view.new()
+    controller:add_model(self)
+    controller:add_view(view)
+    view:add_model(self)
+    view:add_controller(controller)
+    self.ui_view = view
+    self.ui_controller = controller
+end
+
+--v function(self: EOM_MODEL) --> EOM_VIEW
+function eom_model.view(self)
+    return self.ui_view
+end
+
+--v function(self: EOM_MODEL) --> EOM_CONTROLLER
+function eom_model.controller(self)
+    return self.ui_controller
 end
 
 

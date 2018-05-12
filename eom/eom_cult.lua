@@ -56,6 +56,12 @@ end
 
 --general
 
+--v function(self: EOM_CULT) --> string
+function eom_cult.get_faction_name(self)
+    return self.faction_name
+end
+
+
 --v function(self: EOM_CULT) --> int
 function eom_cult.get_loyalty(self)
     EOMLOG("retrieved elector loyalty ["..self.faction_name.."]", "eom_elector.get_loyalty(self)")
