@@ -91,7 +91,7 @@ end
 
 --v function(self: EOM_CULT) --> string
 function eom_cult.get_image(self)
-    return "ui/flags/"..self.faction_name.."/mon_rotated.png"
+    return "ui/flags/"..self.faction_name.."/mon_256.png"
 end
 
 

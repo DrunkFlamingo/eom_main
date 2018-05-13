@@ -52,14 +52,19 @@
 --# assume LOG.write: function(str: string)
 
 --object creation functions
---# assume BUTTON.new: function(name: string, parent: CA_UIC, form: BUTTON_TYPE, imagePath: string) --> BUTTON
+--# assume BUTTON.new: function(name: string, parent: WHATEVER, form: BUTTON_TYPE, imagePath: string) --> BUTTON
 --# assume FRAME.new: function(name: string) --> FRAME
-
-
+--# assume IMAGE.new: function(name: string, parent: WHATEVER, imagepath: string) --> IMAGE
+--# assume TEXT.new: function(name: string, parent: WHATEVER, form: TEXT_TYPE, text: string) --> TEXT
+--# assume LIST_VIEW.new: function(name: string, parent: WHATEVER, scroll:LIST_SCROLL_DIRECTION) --> LIST_VIEW
+--# assume FLOW_LAYOUT.VERTICAL: FLOW_LAYOUT
+--# assume FLOW_LAYOUT.HORIZONTAL: FLOW_LAYOUT
+--# assume CONTAINER.new: function(layout: LAYOUT) --> CONTAINER
 
 --utility
 --# assume UTIL.getComponentWithName: function(name: string) --> COMPONENT_TYPE
-
+--# assume UTIL.centreComponentOnScreen: function(component: WHATEVER)
+--# assume UTIL.centreComponentOnComponent: function(component: WHATEVER, other_component: WHATEVER)    
 
 
 
@@ -67,7 +72,7 @@
 --button
 --# assume BUTTON.MoveTo: method(xPos: number, yPos: number)
 --# assume BUTTON.Move: method(XMove: number, yMove: number)
---# assume BUTTON.PositionRelativeTo: method(component: CA_UIC, xDiff: number, yDiff: number)
+--# assume BUTTON.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
 --# assume BUTTON.Scale: method(factor:number)
 --# assume BUTTON.Resize: method(width: number, height: number)
 --# assume BUTTON.SetVisible: method(visible: boolean)
@@ -88,7 +93,7 @@
 --frame
 --# assume FRAME.MoveTo: method(xPos: number, yPos: number)
 --# assume FRAME.Move: method(xMove: number, yMove: number)
---# assume FRAME.PositionRelativeTo: method(component: CA_UIC, xDiff: number, yDiff: number)
+--# assume FRAME.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
 --# assume FRAME.Scale: method(factor: number)
 --# assume FRAME.Position: method() --> (number, number)
 --# assume FRAME.Bounds: method() --> (number, number)
@@ -106,5 +111,22 @@
 --# assume FRAME.AddCloseButton: method(callback: function, cross: WHATEVER?)
 --# assume FRAME.GetContentPanel: method() --> CA_UIC
 
+--image
+--# assume IMAGE.Resize: method(width: number, height: number)
+--# assume IMAGE.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
+--# assume IMAGE.Scale: method(factor: number)
+--text
+--# assume TEXT.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
+--# assume TEXT.SetText: method(str: string)
+--# assume TEXT.Bounds: method() --> (number, number)
+--# assume TEXT.Resize: method(x: number, y: number)
+--container
+--# assume CONTAINER.AddComponent: method(component: WHATEVER)
+--# assume CONTAINER.GetContentComponent: method() --> CA_UIC
+--# assume CONTAINER.AddGap: method(num: number)
 
 
+--listview
+--# assume LIST_VIEW.AddComponent: method(component: WHATEVER)
+--# assume LIST_VIEW.Bounds: method() --> (number, number)
+--# assume LIST_VIEW.Scale: method(factor: number)

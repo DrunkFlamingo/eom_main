@@ -142,6 +142,10 @@ end
 
 --ui api
 
+--v function(self: EOM_ELECTOR) --> boolean
+function eom_elector.is_hidden(self)
+    return self.hidden
+end
 
 --v function(self: EOM_ELECTOR) --> int
 function eom_elector.num_traits(self)
@@ -179,6 +183,11 @@ end
 --v function(self: EOM_ELECTOR, tooltip: string)
 function eom_elector.set_tooltip(self, tooltip)
     self.tooltip = tooltip
+end
+
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.get_tooltip(self)
+    return self.tooltip
 end
 
 --v function(self:EOM_ELECTOR) --> string

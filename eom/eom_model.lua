@@ -8,8 +8,7 @@ local eom_trait = require("eom/eom_trait")
 ]]
 
 --ui 
-local eom_view = require("eom/eom_view")
-local eom_controller = require("eom/eom_controller")
+
 
 
 local eom_model = {} --# assume eom_model: EOM_MODEL
@@ -165,10 +164,20 @@ function eom_model.get_cult(self, key)
     return self.cults[key]
 end
 
+--v function(self: EOM_MODEL) --> map<string, EOM_ELECTOR>
+function eom_model.get_elector_list(self)
+    return self.electors
+end
+
+--v function(self: EOM_MODEL) --> map<string, EOM_CULT>
+function eom_model.get_cult_list(self)
+    return self.cults
+end
 
 
 --UI SYSTEMS
-
+local eom_controller = require("eom/eom_controller")
+local eom_view = require("eom/eom_view")
 
 --v function(self: EOM_MODEL)
 function eom_model.create_ui(self)
