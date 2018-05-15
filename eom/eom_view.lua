@@ -147,6 +147,32 @@ function eom_view.populate_frame(self)
         local GapContainer = Container.new(FlowLayout.HORIZONTAL)
         GapContainer:AddComponent(firstDivider)
         eList:AddComponent(GapContainer)
+
+
+        --CULTS LIST
+        local CultContainer = Container.new(FlowLayout.HORIZONTAL)
+        for k, v in pairs (self.game_model:get_cult_list()) do
+            --no hidden condition, cults are never hidden
+            local MainCContainer = Container.new(FlowLayout.HORIZONTAL)
+            MainCContainer:AddGap(10)
+            local flagImage = Image.new(k.."_image", self.frame, v:get_image())
+            flagImage:Scale(2)
+            MainCContainer:AddComponent(flagImage)
+            local panelSecond = Container.new(FlowLayout.VERTICAL)
+            --panel one, loyalty.
+            local SubContainerA = Container.new(FlowLayout.HORIZONTAL)
+            local loyaltyText = Text.new(k.."_loyalty_text", self.frame, "TITLE", "Loyalty: ")
+            local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
+            local tX, tY = dy_loyalty:Bounds()
+            loyaltyText:Resize(tX/2, tY)
+            dy_loyalty:Resize(tX/4, tY)
+            SubContainerA:AddComponent(loyaltyText)
+            SubContainerA:AddComponent(dy_loyalty)
+            panelSecond:AddComponent(SubContainerA)
+        end
+
+
+        --ELECTORS LIST
         for k, v in pairs(self.game_model:get_elector_list()) do
             if not v:is_hidden() then
                 local MainEContainer = Container.new(FlowLayout.HORIZONTAL)
@@ -171,7 +197,8 @@ function eom_view.populate_frame(self)
                     dy_loyalty:SetText("[[col:red]]"..tostring(v:get_loyalty()).."[[/col]]")
                 end
                 local tX, tY = dy_loyalty:Bounds()
-                dy_loyalty:Resize(tX/3, tY)
+                loyaltyText:Resize(tX/2, tY)
+                dy_loyalty:Resize(tX/4, tY)
                 loyaltyContainer:AddComponent(loyaltyText)
                 loyaltyContainer:AddComponent(dy_loyalty)
                 SubContainerB:AddComponent(loyaltyContainer)
