@@ -115,6 +115,7 @@
 --# assume IMAGE.Resize: method(width: number, height: number)
 --# assume IMAGE.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
 --# assume IMAGE.Scale: method(factor: number)
+--# assume IMAGE.Move: method(xMove: number, yMove: number)
 --text
 --# assume TEXT.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
 --# assume TEXT.SetText: method(str: string)
@@ -124,7 +125,7 @@
 --# assume CONTAINER.AddComponent: method(component: WHATEVER)
 --# assume CONTAINER.GetContentComponent: method() --> CA_UIC
 --# assume CONTAINER.AddGap: method(num: number)
-
+--# assume CONTAINER.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
 
 --listview
 --# assume LIST_VIEW.AddComponent: method(component: WHATEVER)

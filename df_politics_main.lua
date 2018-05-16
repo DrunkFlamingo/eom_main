@@ -15,6 +15,7 @@ cm:set_saved_value("df_politics_main", true)
 
 --toggle this to turn logging on or off.
 isLogAllowed = true --:boolean
+TestLogVar = 0 --:int
 
 --allows for the logging of the model to a seperate file.
 --v function(text: string, ftext: string)
@@ -49,7 +50,12 @@ function REFRESHLOG()
   popLog :close()
 end
 
+--v function()
+function TESTLOG()
+  TestLogVar = TestLogVar + 1;
+  EOMLOG("TEST ["..tostring(TestLogVar).."]", "test")
 
+end
 
 EOMLOG("Init Starting", "file.df_politics_main")
 

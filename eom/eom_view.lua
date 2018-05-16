@@ -135,96 +135,36 @@ end
 --# assume EOM_MODEL.get_cult_list: method() --> map<string, EOM_CULT>
 --v function(self: EOM_VIEW)
 function eom_view.populate_frame(self)
-    EOMLOG("Populating the Frame", "eom_view.populate_frame(self)")
-    local existingListView = Util.getComponentWithName(self.list_name_electors)
-    if not existingListView then
-        local ListViewContainer = Container.new(FlowLayout.VERTICAL);
-        local eList = ListView.new(self.list_name_electors, self.frame, "VERTICAL")
-        eList:Scale(1.5)
+
+    local existingView = Util.getComponentWithName(self.list_name_electors)
+    if not existingView then
+        local frameContainer = Container.new(FlowLayout.VERTICAL)
+        local fX, fY = self.frame:Bounds()
+        Util.centreComponentOnComponent(frameContainer, self.frame)
+
+        --title bar cults goes here.
         local firstDivider = Image.new(self.list_name_electors.."divider", self.frame, "ui/skins/default/candidate_divider.png")
-        local listX, listY = eList:Bounds()
-        firstDivider:Resize(listX, 5)
-        local GapContainer = Container.new(FlowLayout.HORIZONTAL)
-        GapContainer:AddComponent(firstDivider)
-        eList:AddComponent(GapContainer)
-
-
-        --CULTS LIST
-        local CultContainer = Container.new(FlowLayout.HORIZONTAL)
-        for k, v in pairs (self.game_model:get_cult_list()) do
-            --no hidden condition, cults are never hidden
-            local MainCContainer = Container.new(FlowLayout.HORIZONTAL)
-            MainCContainer:AddGap(10)
-            local flagImage = Image.new(k.."_image", self.frame, v:get_image())
-            flagImage:Scale(2)
-            MainCContainer:AddComponent(flagImage)
-            local panelSecond = Container.new(FlowLayout.VERTICAL)
-            --panel one, loyalty.
-            local SubContainerA = Container.new(FlowLayout.HORIZONTAL)
-            local loyaltyText = Text.new(k.."_loyalty_text", self.frame, "TITLE", "Loyalty: ")
+        firstDivider:Resize(fX/2, 5)
+        frameContainer:AddComponent(firstDivider)
+        local cultContainer = Container.new(FlowLayout.HORIZONTAL)
+        for k, v in pairs(self.game_model:get_cult_list()) do
+            local currentContainer = Container.new(FlowLayout.VERTICAL)
+            local cultButton = Button.new(k.."cult_button", self.frame, "SQUARE", v:get_image())
+            cultButton:Scale(2.5)
             local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
-            local tX, tY = dy_loyalty:Bounds()
-            loyaltyText:Resize(tX/2, tY)
-            dy_loyalty:Resize(tX/4, tY)
-            SubContainerA:AddComponent(loyaltyText)
-            SubContainerA:AddComponent(dy_loyalty)
-            panelSecond:AddComponent(SubContainerA)
+            currentContainer:AddComponent(cultButton)
+            currentContainer:AddComponent(dy_loyalty)
+
+            cultContainer:AddComponent(currentContainer)
         end
+        frameContainer:AddComponent(cultContainer)
+        frameContainer:AddGap(10)
 
-
-        --ELECTORS LIST
-        for k, v in pairs(self.game_model:get_elector_list()) do
-            if not v:is_hidden() then
-                local MainEContainer = Container.new(FlowLayout.HORIZONTAL)
-                MainEContainer:AddGap(10)
-                local flagImage = Image.new(k.."_image", self.frame, v:get_image())
-                flagImage:Scale(2)
-                MainEContainer:AddComponent(flagImage)
-                --panel one, status and name
-                local SubContainerA = Container.new(FlowLayout.VERTICAL)
-                local NameText = Text.new(k.."_name", self.frame, "TITLE", v:get_ui_name())
-                SubContainerA:AddComponent(NameText)
-                local StatusText = Text.new(k.."_status", self.frame, "TITLE", v:get_tooltip())
-                SubContainerA:AddComponent(StatusText)
-                MainEContainer:AddComponent(SubContainerA)
-                --panel two, loyalty and power
-                local SubContainerB = Container.new(FlowLayout.VERTICAL)
-                --loyalty
-                local loyaltyContainer = Container.new(FlowLayout.HORIZONTAL)
-                local loyaltyText = Text.new(k.."_loyalty_text", self.frame, "TITLE", "Loyalty: ")
-                local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
-                if v:get_loyalty() < 33 then
-                    dy_loyalty:SetText("[[col:red]]"..tostring(v:get_loyalty()).."[[/col]]")
-                end
-                local tX, tY = dy_loyalty:Bounds()
-                loyaltyText:Resize(tX/2, tY)
-                dy_loyalty:Resize(tX/4, tY)
-                loyaltyContainer:AddComponent(loyaltyText)
-                loyaltyContainer:AddComponent(dy_loyalty)
-                SubContainerB:AddComponent(loyaltyContainer)
-                --power
-                local PowerContainer = Container.new(FlowLayout.HORIZONTAL)
-                local PowerText = Text.new(k.."_power_text", self.frame, "TITLE", "Power: ")
-                local dy_power = Text.new(k.."_dy_power", self.frame, "TITLE", "[[col:red]]"..tostring(v:get_base_power()).."[[/col]]")
-                local tX, tY = dy_power:Bounds()
-                dy_power:Resize(tX/3, tY)
-                PowerContainer:AddComponent(PowerText)
-                PowerContainer:AddComponent(dy_power)
-                SubContainerB:AddComponent(PowerContainer)
-                MainEContainer:AddComponent(SubContainerB)
-                --
-                eList:AddComponent(MainEContainer)
-                local firstDivider = Image.new(k.."divider", self.frame, "ui/skins/default/candidate_divider.png")
-                firstDivider:Resize(listX, 5)
-                local GapContainer = Container.new(FlowLayout.HORIZONTAL)
-                GapContainer:AddComponent(firstDivider)
-                eList:AddComponent(GapContainer)
-            end
-        end
-        ListViewContainer:AddComponent(eList)
-
-        Util.centreComponentOnComponent(ListViewContainer, self.frame:GetContentPanel())
     end
+        --cults
+
+
+ 
 
 end
 
