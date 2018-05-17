@@ -129,5 +129,7 @@
 
 --listview
 --# assume LIST_VIEW.AddComponent: method(component: WHATEVER)
+--# assume LIST_VIEW.AddContainer: method(container: CONTAINER)
 --# assume LIST_VIEW.Bounds: method() --> (number, number)
 --# assume LIST_VIEW.Scale: method(factor: number)
+--# assume LIST_VIEW.Resize: method(x: number, y: number)

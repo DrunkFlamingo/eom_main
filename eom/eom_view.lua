@@ -131,8 +131,7 @@ function eom_view.frame_buttons(self)
 
 end
 
---# assume EOM_MODEL.get_elector_list: method() --> map<string, EOM_ELECTOR>
---# assume EOM_MODEL.get_cult_list: method() --> map<string, EOM_CULT>
+
 --v function(self: EOM_VIEW)
 function eom_view.populate_frame(self)
 
@@ -140,32 +139,77 @@ function eom_view.populate_frame(self)
     if not existingView then
         local frameContainer = Container.new(FlowLayout.VERTICAL)
         local fX, fY = self.frame:Bounds()
-        Util.centreComponentOnComponent(frameContainer, self.frame)
-
+        
         --title bar cults goes here.
         local firstDivider = Image.new(self.list_name_electors.."divider", self.frame, "ui/skins/default/candidate_divider.png")
-        firstDivider:Resize(fX/2, 5)
+        firstDivider:Resize(fX*(2/3), 5)
         frameContainer:AddComponent(firstDivider)
         local cultContainer = Container.new(FlowLayout.HORIZONTAL)
+        cultContainer:AddGap(fX/4 - 10)
         for k, v in pairs(self.game_model:get_cult_list()) do
             local currentContainer = Container.new(FlowLayout.VERTICAL)
             local cultButton = Button.new(k.."cult_button", self.frame, "SQUARE", v:get_image())
-            cultButton:Scale(2.5)
+            cultButton:Scale(2)
             local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
+            local bX, bY = cultButton:Bounds()
+            local tX, tY = dy_loyalty:Bounds()
+            dy_loyalty:Resize(bX, tY)
             currentContainer:AddComponent(cultButton)
             currentContainer:AddComponent(dy_loyalty)
-
+            cultContainer:AddGap(5)
             cultContainer:AddComponent(currentContainer)
         end
         frameContainer:AddComponent(cultContainer)
+        local SecondDivider = Image.new(self.list_name_electors.."divider2", self.frame, "ui/skins/default/candidate_divider.png")
+        SecondDivider:Resize(fX*(2/3), 5)
+        frameContainer:AddComponent(SecondDivider)
         frameContainer:AddGap(10)
 
+        --title bar electors goes here.
+       --frameContainer:AddGap(5)
+        local electorListView = ListView.new(self.list_name_electors, self.frame, "HORIZONTAL")
+        electorListView:Resize(fX*(2/3), fY/4)
+        local electorContainer = Container.new(FlowLayout.HORIZONTAL)
+        electorContainer:AddGap(10)
+        electorListView:AddComponent(electorContainer)
+        for k, v in pairs(self.game_model:get_elector_list()) do
+            if not v:is_hidden() then
+                local currentContainer = Container.new(FlowLayout.VERTICAL)
+                local electorButton = Button.new(k.."elector_button", self.frame, "SQUARE", v:get_image())
+                electorButton:Scale(2)
+                local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
+                if v:get_status() == "seceded" then 
+                    dy_loyalty:SetText("[[col:red]]Seceded[[/col]]")
+                end
+                local bX, bY = electorButton:Bounds()
+                local tX, tY = dy_loyalty:Bounds()
+                dy_loyalty:Resize(bX, tY)
+                currentContainer:AddComponent(electorButton)
+                currentContainer:AddComponent(dy_loyalty)
+
+                
+
+                electorListView:AddComponent(currentContainer)
+            end
+        end
+        frameContainer:AddComponent(electorListView)
+        Util.centreComponentOnComponent(frameContainer, self.frame)
+
+    else
+        for k, v in pairs(self.game_model:get_cult_list()) do
+            local dy_loyalty = Util.getComponentWithName(k.."_dy_loyalty")
+            --# assume dy_loyalty: TEXT
+            dy_loyalty:SetText("[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
+        end
+        for k, v in pairs(self.game_model:get_elector_list()) do
+            local dy_loyalty = Util.getComponentWithName(k.."_dy_loyalty")
+            --# assume dy_loyalty: TEXT
+            dy_loyalty:SetText("[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
+            if v:get_status() == "seceded" then 
+                dy_loyalty:SetText("[[col:red]]Seceded[[/col]]")
+            end
+        end
     end
-        --cults
-
-
- 
-
 end
 
 return {

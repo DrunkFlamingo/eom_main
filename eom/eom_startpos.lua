@@ -114,7 +114,7 @@ function ulric_start_pos()
     local sp = {}
     sp.faction_name = "wh_main_emp_cult_of_ulric"
     sp.ui_name = "Cult of Ulric"
-    sp.loyalty = 65
+    sp.loyalty = 35
     sp.spawn_x = 523
     sp.spawn_y = 409
     sp.second_spawn_x = 497
@@ -166,7 +166,7 @@ function averland_start_pos()
     sp.ui_name = "Averland"
     sp.image =  "ui/flags/wh_main_emp_averland/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147343941"
     sp.leader_surname = "names_name_2147343947"
@@ -192,7 +192,7 @@ function hochland_start_pos()
     sp.ui_name = "Hochland"
     sp.image =  "ui/flags/wh_main_emp_hochland/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147344017"
     sp.leader_surname = "names_name_2147344019"
@@ -218,7 +218,7 @@ function ostermark_start_pos()
     sp.ui_name = "Ostermark"
     sp.image =  "ui/flags/wh_main_emp_ostermark/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147344036"
     sp.leader_surname = "names_name_2147344037"
@@ -244,7 +244,7 @@ function stirland_start_pos()
     sp.ui_name = "Stirland"
     sp.image =  "ui/flags/wh_main_emp_stirland/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147344039"
     sp.leader_surname = "names_name_2147344048"
@@ -271,7 +271,7 @@ function middenland_start_pos()
     sp.ui_name = "Middenland"
     sp.image =  "ui/flags/wh_main_emp_middenland/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147343937"
     sp.leader_surname = "names_name_2147343940"
@@ -297,7 +297,7 @@ function nordland_start_pos()
     sp.ui_name = "Nordland"
     sp.image =  "ui/flags/wh_main_emp_nordland/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147344022"
     sp.leader_surname = "names_name_2147344023"
@@ -323,7 +323,7 @@ function ostland_start_pos()
     sp.ui_name = "Ostland"
     sp.image =  "ui/flags/wh_main_emp_ostland/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147344026"
     sp.leader_surname = "names_name_2147344030"
@@ -349,7 +349,7 @@ function wissenland_start_pos()
     sp.ui_name = "Wissenland"
     sp.image =  "ui/flags/wh_main_emp_wissenland/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147344005"
     sp.leader_surname = "names_name_2147344064"
@@ -375,7 +375,7 @@ function talabecland_start_pos()
     sp.ui_name = "Talabecland"
     sp.image =  "ui/flags/wh_main_emp_talabecland/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = 1
+    sp.status = "normal"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147344050"
     sp.leader_surname = "names_name_2147344053"
@@ -393,7 +393,7 @@ end
 --v function() --> map<string, WHATEVER>
 function marienburg_start_pos()
     local sp = {}
-    sp.loyalty = 35
+    sp.loyalty = 0
     sp.fully_loyal = false
     sp.hidden = false
     sp.base_power = 35
@@ -401,7 +401,7 @@ function marienburg_start_pos()
     sp.ui_name = "Marienburg"
     sp.image =  "ui/flags/wh_main_emp_marienburg/mon_256.png"
     sp.tooltip = "Seceded State"
-    sp.status = 0
+    sp.status = "seceded"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147355056"
     sp.leader_surname = "names_name_2147352481" --change these
@@ -427,7 +427,7 @@ function sylvania_start_pos()
     sp.ui_name = "Sylvania"
     sp.image =  "ui/flags/wh_main_emp_sylvania/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = (-1)
+    sp.status = "notyetexisting"
     sp.leader_subtype = "emp_lord"
     sp.leader_forename = "names_name_2147355363"
     sp.leader_surname = "names_name_2147354856"
@@ -451,9 +451,9 @@ function vampire_start_pos()
     sp.base_power = 30
     sp.faction_name = "wh_main_vmp_schwartzhafen"
     sp.ui_name = "Sylvania"
-    sp.image =  "ui/flags/wh_main_vmp_schwartzhafen/mon_256.png"
+    sp.image =  "ui/flags/wh_dlc07_vmp_von_carstein/mon_256.png"
     sp.tooltip = "Elector Count"
-    sp.status = (-1)
+    sp.status = "notyetexisting"
     sp.leader_subtype = "dlc04_vmp_vlad_con_carstein"
     sp.leader_forename = "names_name_2147345130"
     sp.leader_surname = "names_name_2147343895"

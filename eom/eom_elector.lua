@@ -19,7 +19,7 @@ function eom_elector.new(info)
     self.ui_name = info.ui_name --:string
     self.image = info.image --:string
     self.tooltip = info.tooltip --:string
-    self.status = info.status --:int
+    self.status = info.status --:string
     self.leader_subtype = info.leader_subtype --:string
     self.leader_forename = info.leader_forename --:string
     self.leader_surname = info.leader_surname --:string
@@ -96,13 +96,13 @@ function eom_elector.change_loyalty(self, value)
     self.loyalty = self.loyalty + (value)
 end
 
---v function(self: EOM_ELECTOR, status: int)
+--v function(self: EOM_ELECTOR, status: string)
 function eom_elector.set_status(self, status)
     EOMLOG("set elector status ["..self.faction_name.."] to ["..tostring(status).."]", "eom_elector.set_status")
     self.status = status
 end
 
---v function(self: EOM_ELECTOR) --> int
+--v function(self: EOM_ELECTOR) --> string
 function eom_elector.get_status(self)
     return self.status
 end
@@ -127,14 +127,12 @@ end
 function eom_elector.refresh(self)
     self.dead = get_faction(self.faction_name):is_dead();
     self.regions_count = get_faction(self.faction_name):region_list():num_items();
-    if self.status > 0 then --we only want to count dead turns and cause revivals if the elector exists and is part of the empire.
+    if self.status ~= "normal" then --we only want to count dead turns and cause revivals if the elector exists and is part of the empire.
         if self.dead == true then
             self.turns_dead = self.turns_dead + 1;
         elseif self.dead == false then
             self.turns_dead = 0;
             self.regions_count = get_faction(self.faction_name):region_list():num_items();
-            self.capital_x = get_region(self.capital):settlement():logical_position_x() 
-            self.capital_y = get_region(self.capital):settlement():logical_position_y() 
         end
     end
 end
