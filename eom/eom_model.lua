@@ -1,4 +1,4 @@
-EOMLOG("eom model required", "file.eom_model")
+-- EOMLOG("eom model required", "file.eom_model")
 --[[
 local eom_elector = require("eom/eom_elector")
 local eom_cult = require("eom/eom_cult")

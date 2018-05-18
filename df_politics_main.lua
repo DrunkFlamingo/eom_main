@@ -67,6 +67,7 @@ eom_action = require("eom/eom_action")
 eom_trait = require("eom/eom_trait")
 eom_model = require("eom/eom_model")
 require("eom/eom_startpos")
+require("eom/eom_data")
 --add eom to the gamespace.
 _G.eom_model = eom_model
 
