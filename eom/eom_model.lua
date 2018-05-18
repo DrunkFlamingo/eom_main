@@ -201,7 +201,85 @@ function eom_model.controller(self)
     return self.ui_controller
 end
 
+--core functions
 
+--v function(self: EOM_MODEL)
+function eom_model.decide_on_actions(self)
+    --cults first
+    local timer = self:get_core_data("cult_meeting_timer")
+    --# assume timer: number
+    if timer <= 0 then
+        _any_true = false --:boolean
+        local valid_acts = {} --:vector<EOM_ACTION>
+        for i = 1, #self.cult_actions do
+            if self.cult_actions[i]:check() == true then
+                table.insert(valid_acts, self.cult_actions[i])
+                _any_true = true;
+            end
+        end
+        if not _any_true == false then
+            local i = cm:random_number(#valid_acts)
+            valid_acts[i]:act()
+            self:add_core_data("cult_meeting_timer", 24)
+            --need to skip the electors this time, since the cults are acting.
+            self:add_core_data("elector_meeting_timer", 6)
+        end
+
+    else
+        local new_timer = timer - 1;
+        self:add_core_data("cult_meeting_timer", new_timer)
+    end
+
+
+
+      --electors.
+    local timer = self:get_core_data("elector_meeting_timer")
+    --# assume timer: number
+    if timer <= 0 then
+        _any_true = false 
+        local valid_acts = {} --:vector<EOM_ACTION>
+        for i = 1, #self.elector_actions do
+            if self.elector_actions[i]:check() == true then
+                table.insert(valid_acts, self.elector_actions[i])
+                _any_true = true;
+            end
+        end
+        if _any_true == false then
+            local i = cm:random_number(#valid_acts)
+            valid_acts[i]:act()
+            self:add_core_data("elector_meeting_timer", 6)
+        end
+
+    else
+        local new_timer = timer - 1;
+        self:add_core_data("elector_meeting_timer", new_timer)
+    end
+
+
+
+end
+
+--v function(self: EOM_MODEL)
+function eom_model.refresh(self)
+    for k, v in pairs(self.electors) do
+        v:refresh()
+    end
+end
+
+--v function(self: EOM_MODEL)
+function eom_model.consequences(self)
+
+end
+
+--v function(self: EOM_MODEL)
+function eom_model.plot(self)
+
+end
+
+--v function(self: EOM_MODEL)
+function eom_model.civil_war_check(self)
+
+end
 
 
 return {

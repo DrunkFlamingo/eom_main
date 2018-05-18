@@ -141,10 +141,10 @@ function eom_core_data_start_pos(eom)
     eom:add_core_data("marienburg_defended", false)
     eom:add_core_data("marienburg_fallen", false)
     eom:add_core_data("version", "3 alpha")
-    eom:add_core_data("cult_meeting_timer", false)
-    eom:add_core_data("elector_meeting_timer", false)
-    eom:add_core_data("cult_meeting_tooltip", "The Conclave will not convene until the Upper Reik Rebellion has been defeated!")
-    eom:add_core_data("elector_meeting_tooltip", "The Electoral Embassies will not convene until the Upper Reik Rebellion has been defeated!")
+    eom:add_core_data("cult_meeting_timer", 1000)
+    eom:add_core_data("elector_meeting_timer", 1000)
+    eom:add_core_data("last_sigmar_loyalty", 65)
+    eom:add_core_data("last_ulric_loyalty", 35)
 end
 
 
