@@ -15,6 +15,11 @@
 --Any methods valid for both classes should be reflected below.
 
 
---# assume global class EOM_ENTITY
+--# assume global class EOM_ENTITY 
+
 --# assume EOM_ENTITY.change_loyalty: method(i: number)
 --# assume EOM_ENTITY.get_faction_name: method() --> string
+
+--# type global ELECTOR_STATES = 
+--# "normal" | "seceded" | "notyetexisting" | "loyal" | "civil_war_enemy" | "civil_war_emperor" |
+--# "open_rebellion" | "fallen"

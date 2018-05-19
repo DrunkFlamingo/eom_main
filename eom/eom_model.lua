@@ -203,21 +203,26 @@ end
 
 --core functions
 
+
 --v function(self: EOM_MODEL)
 function eom_model.decide_on_actions(self)
+    EOMLOG("Checking to see who should act", "eom_model.decide_on_actions(self)")
     --cults first
     local timer = self:get_core_data("cult_meeting_timer")
     --# assume timer: number
     if timer <= 0 then
+        EOMLOG("The cults are deciding on political action", "eom_model.decide_on_actions(self)")
         _any_true = false --:boolean
         local valid_acts = {} --:vector<EOM_ACTION>
         for i = 1, #self.cult_actions do
             if self.cult_actions[i]:check() == true then
                 table.insert(valid_acts, self.cult_actions[i])
                 _any_true = true;
+                EOMLOG("The cults have found a political action!", "eom_model.decide_on_actions(self)")
             end
         end
         if not _any_true == false then
+            EOMLOG("The cults are randomly picking a valid action", "eom_model.decide_on_actions(self)")
             local i = cm:random_number(#valid_acts)
             valid_acts[i]:act()
             self:add_core_data("cult_meeting_timer", 24)
@@ -226,6 +231,7 @@ function eom_model.decide_on_actions(self)
         end
 
     else
+        EOMLOG("The cult does not meet this turn.", "eom_model.decide_on_actions(self)")
         local new_timer = timer - 1;
         self:add_core_data("cult_meeting_timer", new_timer)
     end
@@ -236,21 +242,25 @@ function eom_model.decide_on_actions(self)
     local timer = self:get_core_data("elector_meeting_timer")
     --# assume timer: number
     if timer <= 0 then
+        EOMLOG("The Electors are deciding on an action.", "eom_model.decide_on_actions(self)")
         _any_true = false 
         local valid_acts = {} --:vector<EOM_ACTION>
         for i = 1, #self.elector_actions do
             if self.elector_actions[i]:check() == true then
                 table.insert(valid_acts, self.elector_actions[i])
                 _any_true = true;
+                EOMLOG("The Electors have found a political action!", "eom_model.decide_on_actions(self)")
             end
         end
         if _any_true == false then
             local i = cm:random_number(#valid_acts)
             valid_acts[i]:act()
             self:add_core_data("elector_meeting_timer", 6)
+            EOMLOG("The Electors are randomly selecting a valid action!", "eom_model.decide_on_actions(self)")
         end
 
     else
+        EOMLOG("The Electors do not meet this turn.", "eom_model.decide_on_actions(self)")
         local new_timer = timer - 1;
         self:add_core_data("elector_meeting_timer", new_timer)
     end
@@ -261,6 +271,7 @@ end
 
 --v function(self: EOM_MODEL)
 function eom_model.refresh(self)
+    EOMLOG("Refreshing all elector data", "eom_model.refresh(self)")
     for k, v in pairs(self.electors) do
         v:refresh()
     end
@@ -268,18 +279,60 @@ end
 
 --v function(self: EOM_MODEL)
 function eom_model.consequences(self)
-
+    EOMLOG("Checking Consequences for electors", "eom_model.consequences(self)")
+    for k, v in pairs(self.electors) do
+        if v:get_status() == "normal" then
+            local loyalty = v:get_loyalty()
+            if loyalty > 99 then
+                v:set_status("loyal")
+                cm:force_change_cai_faction_personality(v:get_faction_name(), "df_"..v:get_faction_name().."_loyal");
+                EOMLOG(" ["..v:get_faction_name().."] was fully loyal, changing their status and personality","eom_model.consequences(self)")
+                --all other consequences can be done by other actions.
+            end
+            if v:get_status() == "normal" then
+                v:set_personality()
+                v:remove_diplomatic_bundles()
+                v:apply_diplomatic_bundles()
+            end
+        end
+    end
 end
 
 --v function(self: EOM_MODEL)
 function eom_model.plot(self)
+    EOMLOG("Checking the plot elements", "eom_model.plot(self)")
+    --these are gonna be messy, but we will leave them for now.
 
 end
 
 --v function(self: EOM_MODEL)
 function eom_model.civil_war_check(self)
-
+    EOMLOG("Checking for civil war potential", "eom_model.civil_war_check(self)")
 end
+
+
+
+
+
+--v function(self: EOM_MODEL)
+function eom_model.activate(self)
+    core:add_listener(
+        "eom_model_core_turnstart",
+        "FactionTurnStart",
+        function(context)
+            return context:faction():name() == "wh_main_emp_empire"
+        end,
+        function(context)
+            self:refresh()
+            self:plot()
+            self:civil_war_check()
+            self:consequences()
+            self:decide_on_actions()
+        end,
+        true)
+end
+
+
 
 
 return {

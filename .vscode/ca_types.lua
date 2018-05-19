@@ -46,6 +46,11 @@
 --# "drop_down"
 
 
+--# type global BATTLE_SIDE =
+--# "Attacker" | "Defender" 
+
+
+
 -- CONTEXT
 --# assume CA_UIContext.component: CA_Component
 --# assume CA_UIContext.string: string
@@ -152,9 +157,14 @@
 --# assume CM.add_loading_game_callback: method(function(context: WHATEVER))
 --# assume CM.random_number: method(num: int) --> int
 --# assume CM.apply_effect_bundle: method(bundle: string, faction: string, timer: int)
+--# assume CM.remove_effect_bundle: method(bundle: string, faction: string)
 --# assume CM.add_default_diplomacy_record: method(faction: string, other_faction: string, record: string, offer: boolean, accept: boolean, enable_payments: boolean)
 --# assume CM.force_make_peace: method(faction: string, other_faction: string)
 --# assume CM.force_declare_war: method(declarer: string, declaree: string, attacker_allies: boolean, defender_allies: boolean)
+--# assume CM.pending_battle_cache_get_defender: method(pos: int) --> (CA_CQI, CA_CQI, string)
+--# assume CM.pending_battle_cache_get_attacker: method(pos: int) --> (CA_CQI, CA_CQI, string)
+--# assume CM.force_change_cai_faction_personality: method(key: string, personality: string)
+
 
 -- CAMPAIGN UI MANAGER
 --# assume CUIM.get_char_selected: method() --> string
@@ -288,7 +298,7 @@
 --# assume CORE.remove_listener: method(listenerName: string)
 --# assume CORE.add_ui_created_callback: method(function())
 --# assume CORE.get_screen_resolution: method() --> (number, number)
-
+--# assume CORE.trigger_event: method(event_name: string)
 
 -- GLOBAL VARIABLES
 --# assume global cm: CM
@@ -323,6 +333,6 @@
 --# assume global char_lookup_str: function(char: CA_CQI | CA_CHAR | number) --> string
 --# assume global kill_all_armies_for_faction: function(factionName: string)
 --# assume global get_cm: function() --> CM
-
+--# assume global Get_Character_Side_In_Last_Battle: function(char: CA_CHAR) --> BATTLE_SIDE
 
 

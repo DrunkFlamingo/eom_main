@@ -19,7 +19,7 @@ function eom_elector.new(info)
     self.ui_name = info.ui_name --:string
     self.image = info.image --:string
     self.tooltip = info.tooltip --:string
-    self.status = info.status --:string
+    self.status = info.status --:ELECTOR_STATES
     self.leader_subtype = info.leader_subtype --:string
     self.leader_forename = info.leader_forename --:string
     self.leader_surname = info.leader_surname --:string
@@ -96,13 +96,13 @@ function eom_elector.change_loyalty(self, value)
     self.loyalty = self.loyalty + (value)
 end
 
---v function(self: EOM_ELECTOR, status: string)
+--v function(self: EOM_ELECTOR, status: ELECTOR_STATES)
 function eom_elector.set_status(self, status)
     EOMLOG("set elector status ["..self.faction_name.."] to ["..tostring(status).."]", "eom_elector.set_status")
     self.status = status
 end
 
---v function(self: EOM_ELECTOR) --> string
+--v function(self: EOM_ELECTOR) --> ELECTOR_STATES
 function eom_elector.get_status(self)
     return self.status
 end
@@ -196,7 +196,67 @@ end
 
 --systems
 
+--loyalty bundles and personalities
 
+--v function(self: EOM_ELECTOR)
+function eom_elector.set_personality(self)
+	if self.loyalty > 0 and self.loyalty < 21 then
+		cm:force_change_cai_faction_personality(self.faction_name, "df_"..self.faction_name.."_min");
+	elseif self.loyalty > 20 and self.loyalty < 41 then
+		cm:force_change_cai_faction_personality(self.faction_name, "df_"..self.faction_name.."_low");
+	elseif self.loyalty > 40 and self.loyalty < 65 then
+		cm:force_change_cai_faction_personality(self.faction_name, "df_"..self.faction_name.."_mid");
+	elseif self.loyalty > 64 and self.loyalty < 100 then
+        cm:force_change_cai_faction_personality(self.faction_name, "df_"..self.faction_name.."_high");
+    end
+end
+
+--v function(self: EOM_ELECTOR)
+function eom_elector.remove_diplomatic_bundles(self)
+
+    local actual_faction = cm:model():world():faction_by_key("wh_main_emp_empire");
+
+    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_one") then 
+        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire");
+    end
+    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_two") then 
+        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire");
+    end
+    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_three") then 
+        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_three", "wh_main_emp_empire");
+    end
+    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_four") then 
+        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_four", "wh_main_emp_empire");
+    end
+    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_five") then 
+        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_five", "wh_main_emp_empire");
+    end
+end
+
+--v function(self: EOM_ELECTOR)
+function eom_elector.apply_diplomatic_bundles(self)
+    if self.loyalty < 20 then
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
+    elseif self.loyalty > 19 and self.loyalty < 35 then
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire", 0);
+    elseif self.loyalty > 34 and self.loyalty < 50 then 
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_three", "wh_main_emp_empire", 0);
+    elseif self.loyalty > 49 and self.loyalty < 65 then 
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_three", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_four", "wh_main_emp_empire", 0);
+    elseif self.loyalty > 64 then
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_three", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_four", "wh_main_emp_empire", 0);
+        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_five", "wh_main_emp_empire", 0);
+    end
+end
 
 --integration API for Mixu's lords
 
