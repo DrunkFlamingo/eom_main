@@ -2,6 +2,7 @@ eom_trait = {} --# assume eom_trait: EOM_TRAIT
 
 --v function(name: string, entity: EOM_ENTITY, event: string, conditional: function(context: WHATEVER) --> boolean, loyaltychange: int) --> EOM_TRAIT
 function eom_trait.new(name, entity, event, conditional, loyaltychange)
+EOMLOG("Creating ["..name.."] as a trait", "eom_trait.new(name, entity, event, conditional, loyaltychange)")
 local self = {}
 setmetatable(self, {
     __index = eom_trait

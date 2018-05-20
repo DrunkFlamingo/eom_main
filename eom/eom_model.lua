@@ -303,6 +303,9 @@ function eom_model.plot(self)
     EOMLOG("Checking the plot elements", "eom_model.plot(self)")
     --these are gonna be messy, but we will leave them for now.
 
+
+    
+
 end
 
 --v function(self: EOM_MODEL)
@@ -316,6 +319,7 @@ end
 
 --v function(self: EOM_MODEL)
 function eom_model.activate(self)
+    EOMLOG("the model is no longer inert, game is starting.", "eom_model.activate(self)")
     core:add_listener(
         "eom_model_core_turnstart",
         "FactionTurnStart",
