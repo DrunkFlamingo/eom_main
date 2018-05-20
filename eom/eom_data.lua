@@ -26,12 +26,84 @@
 function add_dilemma_data(eom)
     local dilemma_data = {
         {
+            ["dilemma_key"] = "df_dilemma_01",
+            ["first"] = function() 
+                eom:get_elector("wh_main_emp_nordland"):change_loyalty(-10)
+                eom:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
+                cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "df_seperate_marienburg_loyal");
+                cm:add_default_diplomacy_record("wh_main_emp_empire", "wh_main_emp_marienburg", "war", false, false, false);
+            end,
+            ["second"] = function () 
+                eom:get_elector("wh_main_emp_nordland"):change_loyalty(10)
+                eom:get_elector("wh_main_emp_ostermark"):change_loyalty(-10)
+                cm:add_default_diplomacy_record("wh_main_emp_empire", "wh_main_emp_marienburg", "war", true, true, false);
+                cm:add_default_diplomacy_record("wh_main_emp_empire", "wh_main_emp_marienburg", "trade agreement", false, false, false);
+                cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "df_seperate_marienburg_rebel");
+            end,
+            ["third"] = function() end,
+            ["fourth"] = function() end
+        },
+        {
+            ["dilemma_key"] = "df_dilemma_02",
+            ["first"] = function() end,
+            ["second"] = function () end,
+            ["third"] = function() end,
+            ["fourth"] = function() end
+        },
+        {
+            ["dilemma_key"] = "df_dilemma_03",
+            ["first"] = function()
+                cm:force_declare_war("wh_main_emp_stirland", "wh_main_emp_averland", false, false);
+                cm:transfer_region_to_faction("wh_main_stirland_the_moot", "wh_main_emp_averland");
+                eom:get_elector("wh_main_emp_averland"):change_loyalty(15)
+                eom:get_elector("wh_main_emp_stirland"):change_loyalty(-15)
+            end,
+            ["second"] = function () end,
+            ["third"] = function() end,
+            ["fourth"] = function() end
+        },
+        {
             ["dilemma_key"] = "df_politics_dilemma_01",
             ["first"] = function() end,
             ["second"] = function () end,
             ["third"] = function() end,
             ["fourth"] = function() end
-        }
+        },
+        {
+            ["dilemma_key"] = "df_politics_dilemma_01",
+            ["first"] = function() end,
+            ["second"] = function () end,
+            ["third"] = function() end,
+            ["fourth"] = function() end
+        },
+        {
+            ["dilemma_key"] = "df_politics_dilemma_01",
+            ["first"] = function() end,
+            ["second"] = function () end,
+            ["third"] = function() end,
+            ["fourth"] = function() end
+        },
+        {
+            ["dilemma_key"] = "df_politics_dilemma_01",
+            ["first"] = function() end,
+            ["second"] = function () end,
+            ["third"] = function() end,
+            ["fourth"] = function() end
+        },
+        {
+            ["dilemma_key"] = "df_politics_dilemma_01",
+            ["first"] = function() end,
+            ["second"] = function () end,
+            ["third"] = function() end,
+            ["fourth"] = function() end
+        },
+        {
+            ["dilemma_key"] = "df_politics_dilemma_01",
+            ["first"] = function() end,
+            ["second"] = function () end,
+            ["third"] = function() end,
+            ["fourth"] = function() end
+        },
     }--:vector<map<string, WHATEVER>>
 
     for i = 1, #dilemma_data do

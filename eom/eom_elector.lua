@@ -19,7 +19,7 @@ function eom_elector.new(info)
     self.ui_name = info.ui_name --:string
     self.image = info.image --:string
     self.tooltip = info.tooltip --:string
-    self.status = info.status --:ELECTOR_STATES
+    self.status = info.status --:ELECTOR_STATUS
     self.leader_subtype = info.leader_subtype --:string
     self.leader_forename = info.leader_forename --:string
     self.leader_surname = info.leader_surname --:string
@@ -96,13 +96,13 @@ function eom_elector.change_loyalty(self, value)
     self.loyalty = self.loyalty + (value)
 end
 
---v function(self: EOM_ELECTOR, status: ELECTOR_STATES)
+--v function(self: EOM_ELECTOR, status: ELECTOR_STATUS)
 function eom_elector.set_status(self, status)
     EOMLOG("set elector status ["..self.faction_name.."] to ["..tostring(status).."]", "eom_elector.set_status")
     self.status = status
 end
 
---v function(self: EOM_ELECTOR) --> ELECTOR_STATES
+--v function(self: EOM_ELECTOR) --> ELECTOR_STATUS
 function eom_elector.get_status(self)
     return self.status
 end

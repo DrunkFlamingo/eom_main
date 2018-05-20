@@ -164,6 +164,7 @@
 --# assume CM.pending_battle_cache_get_defender: method(pos: int) --> (CA_CQI, CA_CQI, string)
 --# assume CM.pending_battle_cache_get_attacker: method(pos: int) --> (CA_CQI, CA_CQI, string)
 --# assume CM.force_change_cai_faction_personality: method(key: string, personality: string)
+--# assume CM.transfer_region_to_faction: method(region: string, faction:string)
 
 
 -- CAMPAIGN UI MANAGER

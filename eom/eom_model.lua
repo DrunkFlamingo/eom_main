@@ -152,13 +152,13 @@ function eom_model.get_core_data(self, key)
     return self.core_data[key]
 end
 
---v function(self: EOM_MODEL, key: string) --> EOM_ELECTOR
+--v function(self: EOM_MODEL, key: ELECTOR_NAME) --> EOM_ELECTOR
 function eom_model.get_elector(self, key)
     EOMLOG("retrieved elector object ["..key.."]", "eom_model.get_elector(self, key)")
     return self.electors[key]
 end
 
---v function(self: EOM_MODEL, key: string) --> EOM_CULT
+--v function(self: EOM_MODEL, key: CULT_NAME) --> EOM_CULT
 function eom_model.get_cult(self, key)
     EOMLOG("retrieved cult object ["..key.."]", "eom_model.get_cult(self_key)")
     return self.cults[key]
