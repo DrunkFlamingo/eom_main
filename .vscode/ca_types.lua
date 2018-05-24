@@ -188,6 +188,8 @@
 --# assume CA_CHAR.region: method() --> CA_REGION
 --# assume CA_CHAR.faction: method() --> CA_FACTION
 --# assume CA_CHAR.military_force: method() --> CA_MILITARY_FORCE
+--# assume CA_CHAR.won_battle: method() --> boolean
+
 
 -- CHARACTER LIST
 --# assume CA_CHAR_LIST.num_items: method() --> number
@@ -346,3 +348,4 @@
 --# assume CA_CONTEXT.faction: method() --> CA_FACTION
 --# assume CA_CONTEXT.character: method() --> CA_CHAR
 --# assume CA_CONTEXT.region: method() --> CA_REGION
+--# assume CA_CONTEXT.garrison_residence: method() --> CA_GARRISON_RESIDENCE
