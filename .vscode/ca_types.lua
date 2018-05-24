@@ -30,6 +30,10 @@
 --# assume global class CA_UNIT
 --# assume global class CA_UNIT_LIST
 
+--be warned, this type is not a precise type. 
+--# assume global class CA_CONTEXT
+
+
 --# assume global class CORE
 --# assume global class _G
 
@@ -281,8 +285,8 @@
 --# assume CORE.add_listener: method(
 --#     listenerName: string,
 --#     eventName: string,
---#     conditionFunc: function(context: WHATEVER?) --> boolean,
---#     listenerFunc: function(context: WHATEVER?),
+--#     conditionFunc: function(context: CA_CONTEXT) --> boolean,
+--#     listenerFunc: function(context: CA_CONTEXT),
 --#     persistent: boolean
 --# )
 --# assume CORE.remove_listener: method(listenerName: string)
@@ -325,4 +329,9 @@
 --# assume global get_cm: function() --> CM
 
 
-
+--Context
+--# assume CA_CONTEXT.choice: method() --> int
+--# assume CA_CONTEXT.dilemma: method() --> string
+--# assume CA_CONTEXT.faction: method() --> CA_FACTION
+--# assume CA_CONTEXT.character: method() --> CA_CHAR
+--# assume CA_CONTEXT.region: method() --> CA_REGION
