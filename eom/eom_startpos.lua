@@ -4,6 +4,37 @@
 
 --game
 
+--v function(eom: EOM_MODEL)
+function eom_core_data_start_pos(eom)
+    --opening rebellion plot
+    eom:add_core_data("rebellion_plot_active", true)
+    eom:add_core_data("won_grunburg", false)
+    eom:add_core_data("helmgart_defended", true)
+    eom:add_core_data("capitulation_offered", false)
+    eom:add_core_data("zintler_executed", false)
+    eom:add_core_data("funding_dilemma_trigger", false)
+    eom:add_core_data("funding_dilemma_timer", 1000)
+
+    --marienburg plot
+    eom:add_core_data("marienburg_taken", false)
+    eom:add_core_data("drakenhof_taken", false)
+    eom:add_core_data("marienburg_will_rebel", false)
+    eom:add_core_data("marienburg_rebellion_happened", true)
+    eom:add_core_data("marienburg_invaded", false)
+    eom:add_core_data("marienburg_fallen", false)
+
+
+    --central data
+    eom:add_core_data("version", "3 alpha")
+    eom:add_core_data("cult_meeting_timer", 1000)
+    eom:add_core_data("elector_meeting_timer", 1000)
+    eom:add_core_data("last_sigmar_loyalty", 65)
+    eom:add_core_data("last_ulric_loyalty", 35)
+end
+
+
+
+
 
 
 --v function(faction_key: string)
@@ -129,25 +160,6 @@ function ulric_start_pos()
     sp.second_region = "wh_main_middenland_weismund"
     return sp
 end
-
-
---v function(eom: EOM_MODEL)
-function eom_core_data_start_pos(eom)
-    eom:add_core_data("marienburg_taken", false)
-    eom:add_core_data("drakenhof_taken", false)
-    eom:add_core_data("marienburg_will_rebel", false)
-    eom:add_core_data("marienburg_rebellion_happened", true)
-    eom:add_core_data("marienburg_invaded", false)
-    eom:add_core_data("marienburg_defended", false)
-    eom:add_core_data("marienburg_fallen", false)
-    eom:add_core_data("version", "3 alpha")
-    eom:add_core_data("cult_meeting_timer", false)
-    eom:add_core_data("elector_meeting_timer", false)
-    eom:add_core_data("cult_meeting_tooltip", "The Conclave will not convene until the Upper Reik Rebellion has been defeated!")
-    eom:add_core_data("elector_meeting_tooltip", "The Electoral Embassies will not convene until the Upper Reik Rebellion has been defeated!")
-end
-
-
 
 
 

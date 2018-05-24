@@ -167,6 +167,13 @@ function df_politics_main()
           end
         end
     end
+    --data loading functions
+    add_traits_data(eom)
+    add_actions_data(eom)
+    add_dilemma_data(eom)
+    add_plot_listeners(eom)
+
+
   end
   
 
