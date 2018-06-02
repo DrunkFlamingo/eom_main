@@ -30,6 +30,10 @@
 --# assume global class CA_UNIT
 --# assume global class CA_UNIT_LIST
 
+--be warned, this type is not a precise type. 
+--# assume global class CA_CONTEXT
+
+
 --# assume global class CORE
 --# assume global class _G
 
@@ -193,6 +197,8 @@
 --# assume CA_CHAR.region: method() --> CA_REGION
 --# assume CA_CHAR.faction: method() --> CA_FACTION
 --# assume CA_CHAR.military_force: method() --> CA_MILITARY_FORCE
+--# assume CA_CHAR.won_battle: method() --> boolean
+
 
 -- CHARACTER LIST
 --# assume CA_CHAR_LIST.num_items: method() --> number
@@ -301,8 +307,8 @@
 --# assume CORE.add_listener: method(
 --#     listenerName: string,
 --#     eventName: string,
---#     conditionFunc: function(context: WHATEVER?) --> boolean,
---#     listenerFunc: function(context: WHATEVER?),
+--#     conditionFunc: function(context: CA_CONTEXT) --> boolean,
+--#     listenerFunc: function(context: CA_CONTEXT),
 --#     persistent: boolean
 --# )
 --# assume CORE.remove_listener: method(listenerName: string)
@@ -339,4 +345,10 @@
 --# assume global get_cm: function() --> CM
 --# assume global Get_Character_Side_In_Last_Battle: function(char: CA_CHAR) --> BATTLE_SIDE
 
-
+--Context
+--# assume CA_CONTEXT.choice: method() --> int
+--# assume CA_CONTEXT.dilemma: method() --> string
+--# assume CA_CONTEXT.faction: method() --> CA_FACTION
+--# assume CA_CONTEXT.character: method() --> CA_CHAR
+--# assume CA_CONTEXT.region: method() --> CA_REGION
+--# assume CA_CONTEXT.garrison_residence: method() --> CA_GARRISON_RESIDENCE
