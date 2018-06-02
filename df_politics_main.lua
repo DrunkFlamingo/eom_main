@@ -123,7 +123,7 @@ EOMLOG("Init Complete", "file.df_politics_main")
 function df_politics_main()
   EOMLOG("df_politics_main called and starting", "function.df_politics_main()")
   
-  if get_faction("wh_main_emp_empire"):is_human() then
+  if cm:get_faction("wh_main_emp_empire"):is_human() then
     if cm:is_new_game() then
       REFRESHLOG()
       EOMLOG("ITS A NEW GAME! RUNNING START POSITION", "function.df_politics_main()")

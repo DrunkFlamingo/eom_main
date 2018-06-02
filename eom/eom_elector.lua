@@ -32,14 +32,14 @@ function eom_elector.new(info)
     self.revive_happened = info.revive_happened --:boolean
     self.base_regions = info.base_regions --:int
     -- game variables
-    self.dead = get_faction(self.faction_name):is_dead();
+    self.dead = cm:get_faction(self.faction_name):is_dead();
     if self.dead == false then
-        self.regions_count = get_faction(self.faction_name):region_list():num_items();
+        self.regions_count = cm:get_faction(self.faction_name):region_list():num_items();
     else
         self.regions_count = 0;
     end
-    self.capital_x = get_region(self.capital):settlement():logical_position_x() --:number
-    self.capital_y = get_region(self.capital):settlement():logical_position_y() --:number
+    self.capital_x = cm:get_region(self.capital):settlement():logical_position_x() --:number
+    self.capital_y = cm:get_region(self.capital):settlement():logical_position_y() --:number
     return self;
 end;
 
@@ -125,14 +125,14 @@ end
 
 --v function(self: EOM_ELECTOR)
 function eom_elector.refresh(self)
-    self.dead = get_faction(self.faction_name):is_dead();
-    self.regions_count = get_faction(self.faction_name):region_list():num_items();
+    self.dead = cm:get_faction(self.faction_name):is_dead();
+    self.regions_count = cm:get_faction(self.faction_name):region_list():num_items();
     if self.status ~= "normal" then --we only want to count dead turns and cause revivals if the elector exists and is part of the empire.
         if self.dead == true then
             self.turns_dead = self.turns_dead + 1;
         elseif self.dead == false then
             self.turns_dead = 0;
-            self.regions_count = get_faction(self.faction_name):region_list():num_items();
+            self.regions_count = cm:get_faction(self.faction_name):region_list():num_items();
         end
     end
 end
@@ -302,7 +302,7 @@ end
 
 --v function(self: EOM_ELECTOR) --> CA_REGION
 function eom_elector.get_capital_region(self)
-    return get_region(self.capital)
+    return cm:get_region(self.capital)
 end
 
 --v function(self: EOM_ELECTOR) --> (number, number)
@@ -330,12 +330,12 @@ end
 
 --v function(self: EOM_ELECTOR, player: string) --> boolean
 function eom_elector.is_casus_belli_by(self, player)
-    return get_faction(self.faction_name):has_effect_bundle("eom_casus_belli_"..self.faction_name)
+    return cm:get_faction(self.faction_name):has_effect_bundle("eom_casus_belli_"..self.faction_name)
 end
 
 --v function(self: EOM_ELECTOR)
 function eom_elector.grant_casus_belli(self)
-    if not get_faction(self.faction_name):has_effect_bundle("eom_casus_belli_"..self.faction_name) then
+    if not cm:get_faction(self.faction_name):has_effect_bundle("eom_casus_belli_"..self.faction_name) then
         cm:apply_effect_bundle("eom_casus_belli_"..self.faction_name, self.faction_name, 6)
     end
 end

@@ -238,12 +238,12 @@ function add_utlity_listeners()
             if context:character():faction():name() == "wh_main_emp_empire" then
                 if Get_Character_Side_In_Last_Battle(context:character()) == "Attacker" then
                     local echar_cqi, emf_cqi, efaction_name = cm:pending_battle_cache_get_defender(1);
-                    if get_faction(efaction_name):subculture() == "wh_dlc03_sc_bst_beastmen" and context:character():won_battle() == true then
+                    if cm:get_faction(efaction_name):subculture() == "wh_dlc03_sc_bst_beastmen" and context:character():won_battle() == true then
                         return true
                     end
                 else
                     local echar_cqi, emf_cqi, efaction_name = cm:pending_battle_cache_get_attacker(1);
-                    if get_faction(efaction_name):subculture() == "wh_dlc03_sc_bst_beastmen" and context:character():won_battle() == true then
+                    if cm:get_faction(efaction_name):subculture() == "wh_dlc03_sc_bst_beastmen" and context:character():won_battle() == true then
                         return true
                     end
                 end
@@ -264,12 +264,12 @@ function add_utlity_listeners()
             if context:character():faction():name() == "wh_main_emp_empire" then
                 if Get_Character_Side_In_Last_Battle(context:character()) == "Attacker" then
                     local echar_cqi, emf_cqi, efaction_name = cm:pending_battle_cache_get_defender(1);
-                    if get_faction(efaction_name):subculture() == "wh_dlc03_sc_bst_beastmen" and context:character():won_battle() == false then
+                    if cm:get_faction(efaction_name):subculture() == "wh_dlc03_sc_bst_beastmen" and context:character():won_battle() == false then
                         return true
                     end
                 else
                     local echar_cqi, emf_cqi, efaction_name = cm:pending_battle_cache_get_attacker(1);
-                    if get_faction(efaction_name):subculture() == "wh_dlc03_sc_bst_beastmen" and context:character():won_battle() == false then
+                    if cm:get_faction(efaction_name):subculture() == "wh_dlc03_sc_bst_beastmen" and context:character():won_battle() == false then
                         return true
                     end
                 end
@@ -299,10 +299,10 @@ function add_plot_listeners(eom)
                 function(context)
                     if Get_Character_Side_In_Last_Battle(context:character()) == "Attacker" then
                         local echar_cqi, emf_cqi, efaction_name = cm:pending_battle_cache_get_defender(1);
-                        return  context:character():faction():name() == "wh_main_emp_empire" and get_faction(efaction_name):subculture() == "wh_main_sc_emp_empire" and context:character():won_battle() and context:character():region():name() == "wh_main_reikland_grunburg"
+                        return  context:character():faction():name() == "wh_main_emp_empire" and cm:get_faction(efaction_name):subculture() == "wh_main_sc_emp_empire" and context:character():won_battle() and context:character():region():name() == "wh_main_reikland_grunburg"
                     else
                         local echar_cqi, emf_cqi, efaction_name = cm:pending_battle_cache_get_attacker(1);
-                        return  context:character():faction():name() == "wh_main_emp_empire" and get_faction(efaction_name):subculture() == "wh_main_sc_emp_empire" and context:character():won_battle() and context:character():region():name() == "wh_main_reikland_grunburg"
+                        return  context:character():faction():name() == "wh_main_emp_empire" and cm:get_faction(efaction_name):subculture() == "wh_main_sc_emp_empire" and context:character():won_battle() and context:character():region():name() == "wh_main_reikland_grunburg"
                     end
                 end,
                 function(context)

@@ -165,7 +165,16 @@
 --# assume CM.pending_battle_cache_get_attacker: method(pos: int) --> (CA_CQI, CA_CQI, string)
 --# assume CM.force_change_cai_faction_personality: method(key: string, personality: string)
 --# assume CM.transfer_region_to_faction: method(region: string, faction:string)
-
+--# assume CM.kill_character: method(lookup: CA_CQI, kill_army: boolean, throughcq: boolean)
+--# assume CM.set_character_immortality: method(lookup: string, immortal: boolean)
+--# assume CM.remove_all_units_from_character: method(char: CA_CHAR)
+--# assume CM.get_character_by_cqi: method(cqi: CA_CQI) --> CA_CHAR
+--# assume CM.get_region: method(regionName: string) --> CA_REGION
+--# assume CM.get_faction: method(factionName: string) --> CA_FACTION
+--# assume CM.get_character_by_mf_cqi: method(cqi: CA_CQI) --> CA_CHAR
+--# assume CM.char_lookup_str: method(char: CA_CQI | CA_CHAR | number) --> string
+--# assume CM.kill_all_armies_for_faction: method(factionName: string)
+--# assume CM.force_add_and_equip_ancillary: method(lookup: string, ancillary: string)
 
 -- CAMPAIGN UI MANAGER
 --# assume CUIM.get_char_selected: method() --> string
@@ -312,7 +321,7 @@
 -- COMMON
 --# assume global find_uicomponent: function(parent: CA_UIC, string...) --> CA_UIC
 --# assume global UIComponent: function(pointer: CA_Component) --> CA_UIC
---# assume global output: function(output: string | number)  
+--# assume global out: function(output: string | number)  
 --# assume global print_all_uicomponent_children: function(component: CA_UIC)
 --# assume global is_uicomponent: function(object: any) --> boolean
 --# assume global output_uicomponent: function(uic: CA_UIC, omit_children: boolean)
@@ -327,12 +336,6 @@
 --# assume global to_number: function(n: any) --> number
 
 -- CAMPAIGN
---# assume global remove_all_units_from_character: function(char: CA_CHAR)
---# assume global get_character_by_cqi: function(cqi: CA_CQI) --> CA_CHAR
---# assume global get_region: function(regionName: string) --> CA_REGION
---# assume global get_faction: function(factionName: string) --> CA_FACTION
---# assume global char_lookup_str: function(char: CA_CQI | CA_CHAR | number) --> string
---# assume global kill_all_armies_for_faction: function(factionName: string)
 --# assume global get_cm: function() --> CM
 --# assume global Get_Character_Side_In_Last_Battle: function(char: CA_CHAR) --> BATTLE_SIDE
 
