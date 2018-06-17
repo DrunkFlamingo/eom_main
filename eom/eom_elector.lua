@@ -1,345 +1,274 @@
 local eom_elector = {} --# assume eom_elector: EOM_ELECTOR
-EOMLOG("Loading the eom_elector object", "file.eom_elector")
---object assembly
 
---v function(info: map<string, WHATEVER>) --> EOM_ELECTOR
+--v function(info: ELECTOR_INFO) --> EOM_ELECTOR
 function eom_elector.new(info)
-    local self = {}
-    setmetatable(self, {
-        __index = eom_elector
-    })
-    --# assume self: EOM_ELECTOR
+    local self = {} 
+    setmetatable(
+        self, {
+            __index = eom_elector,
+            __tostring = function() return "EOM_ELECTOR" end
+        }
+    )--# assume self: EOM_ELECTOR
 
-    -- script variables
-    self.loyalty = info.loyalty --:integer
-    self.fully_loyal = info.fully_loyal --:boolean
-    self.hidden = info.hidden --:boolean
-    self.base_power = info.base_power --:integer
-    self.faction_name = info.faction_name --:string
-    self.ui_name = info.ui_name --:string
-    self.image = info.image --:string
-    self.tooltip = info.tooltip --:string
-    self.status = info.status --:ELECTOR_STATUS
-    self.leader_subtype = info.leader_subtype --:string
-    self.leader_forename = info.leader_forename --:string
-    self.leader_surname = info.leader_surname --:string
-    self.capital = info.capital --:string
-    self.expedition_x = info.expedition_x --:number
-    self.expedition_y = info.expedition_y --:number
-    self.traits = {} --: vector<map<string, string>>
-    self.expedition_region = info.expedition_region --:string
-    self.turns_dead = info.turns_dead --:number
-    self.revive_happened = info.revive_happened --:boolean
-    self.base_regions = info.base_regions --:int
-    -- game variables
-    self.dead = cm:get_faction(self.faction_name):is_dead();
-    if self.dead == false then
-        self.regions_count = cm:get_faction(self.faction_name):region_list():num_items();
-    else
-        self.regions_count = 0;
-    end
-    self.capital_x = cm:get_region(self.capital):settlement():logical_position_x() --:number
-    self.capital_y = cm:get_region(self.capital):settlement():logical_position_y() --:number
-    return self;
-end;
-
---v function(self: EOM_ELECTOR) --> map<string, WHATEVER>
-function eom_elector.save(self)
-    local save_table = {} --:map<string, WHATEVER>
-    save_table.loyalty = self.loyalty 
-    save_table.fully_loyal = self.fully_loyal 
-    save_table.hidden = self.hidden 
-    save_table.base_power = self.base_power 
-    save_table.faction_name = self.faction_name 
-    save_table.ui_name = self.ui_name
-    save_table.image = self.image 
-    save_table.tooltip = self.tooltip
-    save_table.status = self.status 
-    save_table.leader_subtype = self.leader_subtype
-    save_table.leader_forename = self.leader_forename
-    save_table.leader_surname = self.leader_surname
-    save_table.capital = self.capital 
-    save_table.expedition_x = self.expedition_x 
-    save_table.expedition_y = self.expedition_y 
-    save_table.traits = self.traits
-    save_table.expedition_region = self.expedition_region 
-    save_table.turns_dead = self.turns_dead 
-    save_table.revive_happened = self.revive_happened 
-    save_table.base_regions = self.base_regions 
-    return save_table
+    --central data
+    self._key = info._key
+    self._loyalty = info._loyalty
+    self._power = info._power
+    self._state = info._state
+    self._fullyLoyal = info._fullyLoyal
+    --casus belli 
+    self._baseRegions = info._baseRegions
+    --revival
+    self._turnsDead = info._turnsDead
+    self._capital = info._capital
+    self._expeditionX = info._expeditionX
+    self._expeditionY = info._expeditionY
+    self._expeditionRegion = info._expeditionRegion
+    self._leaderSubtype = info._leaderSubtype
+    self._leaderForename = info._leaderForename
+    self._leaderSurname  = info._leaderSurname
+    --ui
+    self._hideFromUi = info._hideFromUi
+    self._image = info._image
+    self._uiName = info._uiName
+    self._uiTooltip = info._uiTooltip
+    self._isCult = info._isCult
+    return self
 end
 
---general
---most changes handled up stream but functions can be directly called.
+--save
+--v function(self: EOM_ELECTOR) --> ELECTOR_INFO
+function eom_elector.save(self)
+
+    local savetable = {}
+    savetable._key = self._key
+    savetable._loyalty = self._loyalty
+    savetable._power = self._power
+    savetable._state = self._state
+    savetable._fullyLoyal = self._fullyLoyal
+    --casus belli 
+    savetable._baseRegions = self._baseRegions
+    --revival
+    savetable._turnsDead = self._turnsDead
+    savetable._capital = self._capital
+    savetable._expeditionX = self._expeditionX
+    savetable._expeditionY = self._expeditionY
+    savetable._expeditionRegion = self._expeditionRegion
+    savetable._leaderSubtype = self._leaderSubtype
+    savetable._leaderForename = self._leaderForename
+    savetable._leaderSurname  = self._leaderSurname
+    --ui
+    savetable._hideFromUi = self._hideFromUi
+    savetable._image = self._image
+    savetable._uiName = self._uiName
+    savetable._uiTooltip = self._uiTooltip
+    savetable._isCult = self._isCult
+    return savetable
+end
+
+
+--keys
 
 --v function(self: EOM_ELECTOR) --> string
-function eom_elector.get_faction_name(self)
-    return self.faction_name
+function eom_elector.name(self)
+    return self._key
+end
+
+--full loyalty
+
+--v function(self: EOM_ELECTOR) --> boolean
+function eom_elector.is_loyal(self)
+    return self._fullyLoyal
+end
+
+--v function(self: EOM_ELECTOR) 
+function eom_elector.make_fully_loyal(self)
+    self._fullyLoyal = true
 end
 
 
---v function(self: EOM_ELECTOR) --> int
-function eom_elector.get_loyalty(self)
-    EOMLOG("retrieved elector loyalty ["..self.faction_name.."]", "eom_elector.get_loyalty(self)")
-    return self.loyalty
-end;
+--cultiness
 
---v function(self: EOM_ELECTOR, value: int) 
-function eom_elector.set_loyalty(self, value)
-    EOMLOG("set elector loyalty ["..self.faction_name.."] to ["..tostring(value).."]", "eom_elector.set_loyalty(self, value)")
-    self.loyalty = value
+--v function(self: EOM_ELECTOR) --> boolean
+function eom_elector.is_cult(self)
+    return self._isCult
 end
 
---v function(self: EOM_ELECTOR, value: int)
-function eom_elector.change_loyalty(self, value)
-    EOMLOG("changed elector loyalty ["..self.faction_name.."] from ["..self.loyalty.."] to ["..tostring(self.loyalty + value).."]", "eom_elector.change_loyalty(self, value)")
-    self.loyalty = self.loyalty + (value)
+
+--state
+
+--v function(self: EOM_ELECTOR) --> ELECTOR_STATUS
+function eom_elector.status(self)
+    return self._state
 end
 
 --v function(self: EOM_ELECTOR, status: ELECTOR_STATUS)
 function eom_elector.set_status(self, status)
-    EOMLOG("set elector status ["..self.faction_name.."] to ["..tostring(status).."]", "eom_elector.set_status")
-    self.status = status
-end
-
---v function(self: EOM_ELECTOR) --> ELECTOR_STATUS
-function eom_elector.get_status(self)
-    return self.status
-end
-
---v function(self: EOM_ELECTOR) --> int
-function eom_elector.get_base_power(self)
-    return self.base_power
-end
-
---v function(self: EOM_ELECTOR, value: int)
-function eom_elector.set_base_power(self, value)
-    self.base_power = value
-end
-
---v function(self: EOM_ELECTOR, value: int)
-function eom_elector.change_base_power(self, value)
-    self.base_power = self.base_power + value
-end
-
-
---v function(self: EOM_ELECTOR)
-function eom_elector.refresh(self)
-    self.dead = cm:get_faction(self.faction_name):is_dead();
-    self.regions_count = cm:get_faction(self.faction_name):region_list():num_items();
-    if self.status ~= "normal" then --we only want to count dead turns and cause revivals if the elector exists and is part of the empire.
-        if self.dead == true then
-            self.turns_dead = self.turns_dead + 1;
-        elseif self.dead == false then
-            self.turns_dead = 0;
-            self.regions_count = cm:get_faction(self.faction_name):region_list():num_items();
-        end
+    EOMLOG("entered for ["..self:name().."] ", "eom_elector.set_status(self)")
+    if self:is_loyal() then
+        EOMLOG("this elector is fully loyal, aborting")
+        return
     end
+    self._state = status
+    EOMLOG("set status for ["..self:name().."] to ["..self:status().."]")
 end
 
 
---ui api
+--loyalty
+
+--v function(self: EOM_ELECTOR) --> number
+function eom_elector.loyalty(self)
+    return self._loyalty;
+end
+
+--v function(self: EOM_ELECTOR, changevalue: number)
+function eom_elector.change_loyalty(self, changevalue)
+    EOMLOG("entered", "eom_elector.change_loyalty(self, changevalue)")
+    if self:is_loyal() then
+        EOMLOG("Not applying any loyalty change  to ["..self:name().."] because the elector is fully loyal!")
+        return
+    end
+    if not self:status() == "normal" then
+        EOMLOG("Not applying any loyalty change to ["..self:name().."] because the elector has a non-normal status!")
+        return
+    end
+    local ov = self._loyalty;
+    local nv = ov + changevalue;
+    if nv > 100 then nv = 100 end;
+    if nv < 0 then nv = 0 end;
+    self._loyalty = nv;
+    EOMLOG("changed loyalty for ["..self:name().."] by ["..tostring(changevalue).."] to ["..self:loyalty().."] ")
+end
+
+--v function(self: EOM_ELECTOR, setvalue: number)
+function eom_elector.set_loyalty(self, setvalue)
+    EOMLOG("entered", "eom_elector.change_loyalty(self, changevalue)")
+    if self:is_loyal() then
+        EOMLOG("WARNING: setting the loyalty of a fully loyal elector!!!")
+    end
+    self._loyalty = setvalue
+    EOMLOG("set loyalty for ["..self:name().."] to ["..self:loyalty().."] ")
+end
+
+--power
+
+--v function(self: EOM_ELECTOR) --> number
+function eom_elector.power(self)
+    return self._power
+end
+
+--v function(self: EOM_ELECTOR, value: number)
+function eom_elector.set_power(self, value)
+    self._power = value
+end
+
+--v function(self: EOM_ELECTOR, value: number)
+function eom_elector.change_power(self, value)
+    self._power = self._power + value
+end
+
+
+
+
+
+
+
+--ui
 
 --v function(self: EOM_ELECTOR) --> boolean
 function eom_elector.is_hidden(self)
-    return self.hidden
-end
-
---v function(self: EOM_ELECTOR) --> int
-function eom_elector.num_traits(self)
-    return #self.traits
-end
-
---v function(self: EOM_ELECTOR, i: int) --> map<string, string>
-function eom_elector.get_trait(self, i)
-    return self.traits[i]
+    return self._hideFromUi
 end
 
 --v function(self: EOM_ELECTOR) --> string
-function eom_elector.get_image(self)
-    return self.image
+function eom_elector.image(self)
+    return self._image
 end
 
-
---v function(self: EOM_ELECTOR)
-function eom_elector.hide(self)
-    EOMLOG("hid ["..self.faction_name.."]", "eom_elector.hide(self)")
-    self.hidden = true
-end
-
---v function(self: EOM_ELECTOR)
-function eom_elector.show(self)
-    EOMLOG("showed ["..self.faction_name.."]", "eom_elector.show(self)")
-    self.hidden = false
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.ui_name(self)
+    return self._uiName
 end
 
 --v function(self: EOM_ELECTOR, visible: boolean)
 function eom_elector.set_visible(self, visible)
-    self.hidden = visible
+    self._hideFromUi = visible
 end
 
---v function(self: EOM_ELECTOR, tooltip: string)
-function eom_elector.set_tooltip(self, tooltip)
-    self.tooltip = tooltip
+--leadership
+
+
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.leader_subtype(self)
+    return self._leaderSubtype
 end
 
 --v function(self: EOM_ELECTOR) --> string
-function eom_elector.get_tooltip(self)
-    return self.tooltip
+function eom_elector.leader_forename(self)
+    return self._leaderForename
 end
 
---v function(self:EOM_ELECTOR) --> string
-function eom_elector.get_ui_name(self)
-    return self.ui_name
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.leader_surname(self)
+    return self._leaderSurname
 end
 
 
---systems
-
---loyalty bundles and personalities
-
---v function(self: EOM_ELECTOR)
-function eom_elector.set_personality(self)
-	if self.loyalty > 0 and self.loyalty < 21 then
-		cm:force_change_cai_faction_personality(self.faction_name, "df_"..self.faction_name.."_min");
-	elseif self.loyalty > 20 and self.loyalty < 41 then
-		cm:force_change_cai_faction_personality(self.faction_name, "df_"..self.faction_name.."_low");
-	elseif self.loyalty > 40 and self.loyalty < 65 then
-		cm:force_change_cai_faction_personality(self.faction_name, "df_"..self.faction_name.."_mid");
-	elseif self.loyalty > 64 and self.loyalty < 100 then
-        cm:force_change_cai_faction_personality(self.faction_name, "df_"..self.faction_name.."_high");
-    end
-end
-
---v function(self: EOM_ELECTOR)
-function eom_elector.remove_diplomatic_bundles(self)
-
-    local actual_faction = cm:model():world():faction_by_key("wh_main_emp_empire");
-
-    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_one") then 
-        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire");
-    end
-    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_two") then 
-        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire");
-    end
-    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_three") then 
-        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_three", "wh_main_emp_empire");
-    end
-    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_four") then 
-        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_four", "wh_main_emp_empire");
-    end
-    if actual_faction:has_effect_bundle("df_diplomacy_"..self.faction_name.."_five") then 
-        cm:remove_effect_bundle("df_diplomacy_"..self.faction_name.."_five", "wh_main_emp_empire");
-    end
-end
-
---v function(self: EOM_ELECTOR)
-function eom_elector.apply_diplomatic_bundles(self)
-    if self.loyalty < 20 then
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
-    elseif self.loyalty > 19 and self.loyalty < 35 then
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire", 0);
-    elseif self.loyalty > 34 and self.loyalty < 50 then 
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_three", "wh_main_emp_empire", 0);
-    elseif self.loyalty > 49 and self.loyalty < 65 then 
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_three", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_four", "wh_main_emp_empire", 0);
-    elseif self.loyalty > 64 then
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_one", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_two", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_three", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_four", "wh_main_emp_empire", 0);
-        cm:apply_effect_bundle("df_diplomacy_"..self.faction_name.."_five", "wh_main_emp_empire", 0);
-    end
-end
-
---integration API for Mixu's lords
 
 --v function(self: EOM_ELECTOR, subtype: string)
 function eom_elector.set_leader_subtype(self, subtype)
-    self.leader_subtype = subtype
+    self._leaderSubtype = subtype
 end
 
 --v function(self: EOM_ELECTOR, forename: string)
 function eom_elector.set_leader_forename(self, forename)
-    self.leader_forename = forename
+    self._leaderForename = forename
 end
 
 --v function(self: EOM_ELECTOR, surname: string)
 function eom_elector.set_leader_surname(self, surname)
-    self.leader_surname = surname
+    self._leaderSurname = surname
 end
 
 
 
---elector restoration event support
+--base regions
 
-
---v function(self: EOM_ELECTOR) --> string
-function eom_elector.get_leader_subtype(self)
-    return self.leader_subtype
+--v function(self: EOM_ELECTOR) --> number
+function eom_elector.base_region_count(self)
+    return self._baseRegions
 end
 
---v function(self: EOM_ELECTOR) --> string 
-function eom_elector.get_leader_forename(self)
-    return self.leader_forename
+--v function(self: EOM_ELECTOR, count: number)
+function eom_elector.set_base_regions(self, count)
+    EOMLOG("Entered", "eom_elector.set_base_regions(self, count)")
+    self._baseRegions = count
+    EOMLOG("Set base regions for ["..self:name().."] to ["..tostring(self:base_region_count()).."]")
 end
 
---v function(self: EOM_ELECTOR) --> string
-function eom_elector.get_leader_surname(self)
-    return self.leader_surname
+
+--revival system
+
+--v function(self: EOM_ELECTOR) --> number
+function eom_elector.turns_dead(self)
+    return self._turnsDead
 end
 
---v function(self: EOM_ELECTOR) --> string
-function eom_elector.get_capital_key(self)
-    return self.capital
-end
-
---v function(self: EOM_ELECTOR) --> CA_REGION
-function eom_elector.get_capital_region(self)
-    return cm:get_region(self.capital)
+--v function(self: EOM_ELECTOR) 
+function eom_elector.dead_for_turn(self)
+    EOMLOG("entered", "eom_elector.dead_for_turn(self)")
+    self._turnsDead = self._turnsDead + 1;
+    EOMLOG(" ["..self:name().."] is dead this turn, incrementing their dead counter to ["..tostring(self:turns_dead()).."] ")
 end
 
 --v function(self: EOM_ELECTOR) --> (number, number)
-function eom_elector.get_expedition_location(self)
-    return self.expedition_x, self.expedition_y
+function eom_elector.expedition_coordinates(self)
+    return self._expeditionX, self._expeditionY
 end
 
-
---v function(self: EOM_ELECTOR) --> string
-function eom_elector.get_expedition_region(self)
-    return self.expedition_region
-end
-
---casus belli
-
---v function(self: EOM_ELECTOR) --> int
-function eom_elector.get_base_size(self)
-    return self.base_regions
-end
-
---v function(self: EOM_ELECTOR, size: int)
-function eom_elector.set_base_size(self, size)
-    self.base_regions = size
-end
-
---v function(self: EOM_ELECTOR, player: string) --> boolean
-function eom_elector.is_casus_belli_by(self, player)
-    return cm:get_faction(self.faction_name):has_effect_bundle("eom_casus_belli_"..self.faction_name)
-end
-
---v function(self: EOM_ELECTOR)
-function eom_elector.grant_casus_belli(self)
-    if not cm:get_faction(self.faction_name):has_effect_bundle("eom_casus_belli_"..self.faction_name) then
-        cm:apply_effect_bundle("eom_casus_belli_"..self.faction_name, self.faction_name, 6)
-    end
-end
 
 return {
     new = eom_elector.new
 }
+
+

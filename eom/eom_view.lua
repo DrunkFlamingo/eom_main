@@ -1,4 +1,10 @@
+
 local eom_view = {} --# assume eom_view: EOM_VIEW
+
+--controller functions
+--# assume EOM_VIEW.docker_button_pressed: method()
+--# assume EOM_VIEW.close_politics: method()
+
 
 
 --v function() --> EOM_VIEW
@@ -9,7 +15,6 @@ function eom_view.new()
     })
     --# assume self: EOM_VIEW
     self.game_model = nil --:EOM_MODEL
-    self.ui_controller = nil --:EOM_CONTROLLER
     self.button = nil --:BUTTON
     self.button_name = "PoliticsButton"
     self.button_parent = nil --:CA_UIC
@@ -28,10 +33,6 @@ function eom_view.add_model(self, model)
 end
 
 
---v function(self: EOM_VIEW, controller: EOM_CONTROLLER)
-function eom_view.add_controller(self, controller)
-    self.ui_controller = controller
-end
 
 
 --v function(self: EOM_VIEW)
@@ -61,7 +62,7 @@ function eom_view.get_button(self)
         return self.button
     else
         local PoliticsButton = Button.new(self.button_name, self.button_parent, "CIRCULAR", "ui/skins/default/icon_capture_point.png")
-        PoliticsButton:RegisterForClick(function(context) self.ui_controller:docker_button_pressed() end);
+        PoliticsButton:RegisterForClick(function(context) self:docker_button_pressed() end);
         PoliticsButton:Resize(69, 69)
         return PoliticsButton
     end  
@@ -92,12 +93,12 @@ function eom_view.get_frame(self)
         return existingFrame
     else
         PoliticsFrame = Frame.new(self.frame_name)
-        PoliticsFrame:Scale(1.5)
+        PoliticsFrame:Scale(1.70)
         Util.centreComponentOnScreen(PoliticsFrame)
         self.frame = PoliticsFrame
         PoliticsFrame:SetTitle("Imperial Politics")
         local parchment = PoliticsFrame:GetContentPanel()
-        parchment:SetImage("ui/skins/default/politics_panel.png")
+       -- parchment:SetImage("ui/skins/default/politics_panel.png")
         local parchmentX, parchmentY = parchment:Bounds()
        -- local background = Image.new("PoliticsBackground", parchment, "ui/skins/default/panel_leather_frame_red.png")
        -- background:Resize(parchmentX, parchmentY)
@@ -110,7 +111,6 @@ function eom_view.hide_frame(self)
     self.frame:SetVisible(false)
 end
 
---# assume EOM_CONTROLLER.close_politics: method()
 --v function(self: EOM_VIEW)
 function eom_view.frame_buttons(self)
     if self.frame == nil then
@@ -126,7 +126,7 @@ function eom_view.frame_buttons(self)
     local frameWidth, frameHeight = self.frame:Bounds()
     local buttonWidth, buttonHeight = CloseButton:Bounds()
     CloseButton:PositionRelativeTo(self.frame, (frameWidth/2) - (buttonWidth/2), frameHeight - (buttonHeight*2) )
-    CloseButton:RegisterForClick(function(context) self.ui_controller:close_politics() end)
+    CloseButton:RegisterForClick(function(context) self:close_politics() end)
     end
 
 end
@@ -139,46 +139,57 @@ function eom_view.populate_frame(self)
     if not existingView then
         local frameContainer = Container.new(FlowLayout.VERTICAL)
         local fX, fY = self.frame:Bounds()
+        local cultTitleContainer = Container.new(FlowLayout.HORIZONTAL)
         
-        --title bar cults goes here.
-        local firstDivider = Image.new(self.list_name_electors.."divider", self.frame, "ui/skins/default/candidate_divider.png")
-        firstDivider:Resize(fX*(2/3), 5)
-        frameContainer:AddComponent(firstDivider)
+        local cultsTitle = Image.new(self.list_name_electors.."_title", self.frame, "ui/custom/cults_banner.png")
+        cultsTitle:Resize(fX*(1/3), fX*(1/3)/3.34)
+        local ctX, ctY = cultsTitle:Bounds()
+        cultTitleContainer:AddGap(fX/2 - ctX)
+        cultTitleContainer:AddComponent(cultsTitle)
+        frameContainer:AddComponent(cultTitleContainer)
+       -- local firstDivider = Image.new(self.list_name_electors.."divider", self.frame, "ui/skins/default/candidate_divider.png")
+       -- firstDivider:Resize(fX*(2/3), 3)
+      --  frameContainer:AddComponent(firstDivider)
         local cultContainer = Container.new(FlowLayout.HORIZONTAL)
-        cultContainer:AddGap(fX/4 - 10)
-        for k, v in pairs(self.game_model:get_cult_list()) do
-            local currentContainer = Container.new(FlowLayout.VERTICAL)
-            local cultButton = Button.new(k.."cult_button", self.frame, "SQUARE", v:get_image())
-            cultButton:Scale(2)
-            local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
-            local bX, bY = cultButton:Bounds()
-            local tX, tY = dy_loyalty:Bounds()
-            dy_loyalty:Resize(bX, tY)
-            currentContainer:AddComponent(cultButton)
-            currentContainer:AddComponent(dy_loyalty)
-            cultContainer:AddGap(5)
-            cultContainer:AddComponent(currentContainer)
+        cultContainer:AddGap(fX/2 - 352)
+
+        for k, v in pairs(self.game_model:electors()) do
+            if v:is_cult() and (not v:is_hidden()) then
+                local currentContainer = Container.new(FlowLayout.VERTICAL)
+                local cultButton = Button.new(k.."cult_button", self.frame, "SQUARE", v:image())
+                cultButton:Scale(1.75)
+                local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:dark_g]]"..tostring(v:loyalty()).."[[/col]]")
+                local bX, bY = cultButton:Bounds()
+                local tX, tY = dy_loyalty:Bounds()
+                dy_loyalty:Resize(bX, tY)
+                currentContainer:AddComponent(cultButton)
+                currentContainer:AddComponent(dy_loyalty)
+                cultContainer:AddGap(5)
+                cultContainer:AddComponent(currentContainer)
+            end
         end
         frameContainer:AddComponent(cultContainer)
-        local SecondDivider = Image.new(self.list_name_electors.."divider2", self.frame, "ui/skins/default/candidate_divider.png")
-        SecondDivider:Resize(fX*(2/3), 5)
-        frameContainer:AddComponent(SecondDivider)
-        frameContainer:AddGap(10)
-
-        --title bar electors goes here.
-       --frameContainer:AddGap(5)
+       -- local SecondDivider = Image.new(self.list_name_electors.."divider2", self.frame, "ui/skins/default/candidate_divider.png")
+        --SecondDivider:Resize(fX*(2/3), 3)
+        --frameContainer:AddComponent(SecondDivider)
+        local electorTitleContainer = Container.new(FlowLayout.HORIZONTAL)
+        electorTitleContainer:AddGap(fX/2 - ctX)
+        local electorTitle = Image.new(self.list_name_electors.."_title2", self.frame, "ui/custom/electorcounts_banner.png")
+        electorTitle:Resize(fX*(1/3), fX*(1/3)/3.67)
+        electorTitleContainer:AddComponent(electorTitle)
+        frameContainer:AddComponent(electorTitleContainer)
         local electorListView = ListView.new(self.list_name_electors, self.frame, "HORIZONTAL")
         electorListView:Resize(fX*(2/3), fY/4)
         local electorContainer = Container.new(FlowLayout.HORIZONTAL)
         electorContainer:AddGap(10)
         electorListView:AddComponent(electorContainer)
-        for k, v in pairs(self.game_model:get_elector_list()) do
-            if not v:is_hidden() then
+        for k, v in pairs(self.game_model:electors()) do
+            if (not v:is_hidden()) and (not v:is_cult()) then
                 local currentContainer = Container.new(FlowLayout.VERTICAL)
-                local electorButton = Button.new(k.."elector_button", self.frame, "SQUARE", v:get_image())
-                electorButton:Scale(2)
-                local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
-                if v:get_status() == "seceded" then 
+                local electorButton = Button.new(k.."elector_button", self.frame, "SQUARE", v:image())
+                electorButton:Scale(1.75)
+                local dy_loyalty = Text.new(k.."_dy_loyalty", self.frame, "TITLE", "[[col:dark_g]]"..tostring(v:loyalty()).."[[/col]]")
+                if v:status() == "seceded" then 
                     dy_loyalty:SetText("[[col:red]]Seceded[[/col]]")
                 end
                 local bX, bY = electorButton:Bounds()
@@ -194,24 +205,64 @@ function eom_view.populate_frame(self)
         end
         frameContainer:AddComponent(electorListView)
         Util.centreComponentOnComponent(frameContainer, self.frame)
+        local fcX, fcY = frameContainer:Position()
+        frameContainer:MoveTo(fcX, fcY - 15)
 
     else
-        for k, v in pairs(self.game_model:get_cult_list()) do
+        for k, v in pairs(self.game_model:electors()) do
             local dy_loyalty = Util.getComponentWithName(k.."_dy_loyalty")
             --# assume dy_loyalty: TEXT
-            dy_loyalty:SetText("[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
-        end
-        for k, v in pairs(self.game_model:get_elector_list()) do
-            local dy_loyalty = Util.getComponentWithName(k.."_dy_loyalty")
-            --# assume dy_loyalty: TEXT
-            dy_loyalty:SetText("[[col:green]]"..tostring(v:get_loyalty()).."[[/col]]")
-            if v:get_status() == "seceded" then 
+            dy_loyalty:SetText("[[col:dark_g]]"..tostring(v:loyalty()).."[[/col]]")
+            if v:status() == "seceded" then 
                 dy_loyalty:SetText("[[col:red]]Seceded[[/col]]")
             end
         end
     end
 end
 
+--controller methods (assumed)
+
+
+--v function(self: EOM_VIEW)
+function eom_view.close_politics(self)
+    EOMLOG("Close button pressed on politics panel", "eom_controller.close_politics(self)")
+    self:hide_frame()
+    local layout = find_uicomponent(core:get_ui_root(), "layout")
+    layout:SetVisible(true)
+    local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
+    if settlement then
+     settlement:SetVisible(true)
+    end
+    local character = find_uicomponent(core:get_ui_root(), "units_panel")
+    if character then
+        character:SetVisible(true)
+    end
+end
+
+
+--v function(self: EOM_VIEW)
+function eom_view.docker_button_pressed(self)
+    EOMLOG("Docker Button Pressed", "eom_controller.docker_button_pressed(self)")
+    self:get_frame()
+    self:frame_buttons()
+    self:populate_frame()
+    local layout = find_uicomponent(core:get_ui_root(), "layout")
+    layout:SetVisible(false)
+    local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
+    if settlement then
+        EOMLOG("Setting Settlements Panel Invisible")
+     settlement:SetVisible(false)
+    end
+    local character = find_uicomponent(core:get_ui_root(), "units_panel")
+    if character then
+        EOMLOG("Setting Character Panel Invisible")
+        character:SetVisible(false)
+    end
+end
+
+
 return {
     new = eom_view.new
 }
+
+

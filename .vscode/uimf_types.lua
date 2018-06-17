@@ -65,7 +65,7 @@
 --# assume UTIL.getComponentWithName: function(name: string) --> COMPONENT_TYPE
 --# assume UTIL.centreComponentOnScreen: function(component: WHATEVER)
 --# assume UTIL.centreComponentOnComponent: function(component: WHATEVER, other_component: WHATEVER)    
-
+--# assume UTIL.delete: function(uic: WHATEVER)
 
 
 
@@ -110,12 +110,15 @@
 --# assume FRAME.SetTitle: method(title: string)
 --# assume FRAME.AddCloseButton: method(callback: function, cross: WHATEVER?)
 --# assume FRAME.GetContentPanel: method() --> CA_UIC
+--# assume FRAME.Resize: method(height: number, width: number)
 
 --image
 --# assume IMAGE.Resize: method(width: number, height: number)
 --# assume IMAGE.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
 --# assume IMAGE.Scale: method(factor: number)
 --# assume IMAGE.Move: method(xMove: number, yMove: number)
+--# assume IMAGE.Bounds: method() --> (number, number)
+
 --text
 --# assume TEXT.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
 --# assume TEXT.SetText: method(str: string)
@@ -126,6 +129,9 @@
 --# assume CONTAINER.GetContentComponent: method() --> CA_UIC
 --# assume CONTAINER.AddGap: method(num: number)
 --# assume CONTAINER.PositionRelativeTo: method(component: WHATEVER, xDiff: number, yDiff: number)
+--# assume CONTAINER.MoveTo: method(x: number, y: number)
+--# assume CONTAINER.Position: method() --> (number, number)
+
 
 --listview
 --# assume LIST_VIEW.AddComponent: method(component: WHATEVER)

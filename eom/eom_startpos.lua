@@ -1,494 +1,368 @@
 
-
---contains starting position data for all cults, electors, etc. 
-
---game
-
---v function(eom: EOM_MODEL)
-function eom_core_data_start_pos(eom)
-    --opening rebellion plot
-    eom:add_core_data("rebellion_plot_active", true)
-    eom:add_core_data("won_grunburg", false)
-    eom:add_core_data("helmgart_defended", true)
-    eom:add_core_data("capitulation_offered", false)
-    eom:add_core_data("zintler_executed", false)
-    eom:add_core_data("funding_dilemma_trigger", false)
-    eom:add_core_data("funding_dilemma_timer", 1000)
-
-    --marienburg plot
-    eom:add_core_data("marienburg_taken", false)
-    eom:add_core_data("drakenhof_taken", false)
-    eom:add_core_data("marienburg_will_rebel", false)
-    eom:add_core_data("marienburg_rebellion_happened", true)
-    eom:add_core_data("marienburg_invaded", false)
-    eom:add_core_data("marienburg_fallen", false)
-
-
-    --central data
-    eom:add_core_data("version", "3 alpha")
-    eom:add_core_data("cult_meeting_timer", 1000)
-    eom:add_core_data("elector_meeting_timer", 1000)
-    eom:add_core_data("last_sigmar_loyalty", 65)
-    eom:add_core_data("last_ulric_loyalty", 35)
-end
-
-
-
-
-
-
---v function(faction_key: string)
-function eom_start_pos(faction_key)
-
-	---diplomacy setup time
-
-	--list of all the elector counts, we could get this from the main list to save space, but this is easier.
-	local elector_diplo_list = {
-        "faction:wh_main_emp_averland",
-        "faction:wh_main_emp_hochland",
-        "faction:wh_main_emp_ostermark",
-        "faction:wh_main_emp_stirland",
-        "faction:wh_main_emp_middenland",
-        "faction:wh_main_emp_nordland",
-        "faction:wh_main_emp_ostland",
-        "faction:wh_main_emp_wissenland",
-        "faction:wh_main_emp_talabecland"
-    }--:vector<string>
-
---list of all the factions within the empire, including the player	
-
-    local diplomacy_list = {
-        "faction:wh_main_emp_averland",
-        "faction:wh_main_emp_hochland",
-        "faction:wh_main_emp_ostermark",
-        "faction:wh_main_emp_stirland",
-        "faction:wh_main_emp_middenland",
-        "faction:wh_main_emp_nordland",
-        "faction:wh_main_emp_ostland",
-        "faction:wh_main_emp_wissenland",
-        "faction:wh_main_emp_talabecland",
-        "faction:wh_main_emp_empire"
-    }--:vector<string>
-    --list of external human factions
-    local external_list = {
-        "faction:wh_main_ksl_kislev",
-        "faction:wh_main_teb_border_princes"
-    }--:vector<string>
-
-    --first, disable anyone in the empire from declaring war on anyone else.
-    for i = 1, #elector_diplo_list do
-        for j = 1, #elector_diplo_list do
-            cm:add_default_diplomacy_record(elector_diplo_list[i], elector_diplo_list[j], "defensive alliance", false, false, false);
-            cm:add_default_diplomacy_record(elector_diplo_list[i], elector_diplo_list[j], "peace", true, true, false);
-            cm:add_default_diplomacy_record(elector_diplo_list[i], elector_diplo_list[j], "war", false, false, false);
-            cm:add_default_diplomacy_record(elector_diplo_list[i], elector_diplo_list[j], "form confederation", false, false, false);
-            cm:add_default_diplomacy_record(elector_diplo_list[i], elector_diplo_list[j], "military alliance", false, false, false);
-        end
-    end
-
-
-    --second, disable the elector counts from declaring war on Karl Franz
-
-    for i = 1, #elector_diplo_list do
-        cm:add_default_diplomacy_record(elector_diplo_list[i], "faction:"..faction_key, "war", false, false, false);
-    end
-
-    --next, disable the ability for elector counts to declare war on external factions.
-    for i = 1, #elector_diplo_list do
-        for j = 1, #external_list do
-        cm:add_default_diplomacy_record(elector_diplo_list[i], external_list[j], "war", false, false, false);
-        end
-    end
-
-    ---now, allow the emperor to declare war on anyone.
-    for i = 1, #elector_diplo_list do
-        cm:add_default_diplomacy_record("faction:"..faction_key, elector_diplo_list[i], "war", true, true, false);
-        cm:add_default_diplomacy_record("faction:"..faction_key, elector_diplo_list[i], "military alliance", true, true, false);
-        cm:add_default_diplomacy_record("faction:"..faction_key, elector_diplo_list[i], "defensive alliance", true, true, false);
-        cm:add_default_diplomacy_record("faction:"..faction_key, elector_diplo_list[i], "form confederation", true, true, false);
-        cm:add_default_diplomacy_record("faction:"..faction_key, elector_diplo_list[i], "vassal", true, true, false);
-    end;
-
-    --make some changes to the diplomatic start position.
-    cm:force_make_peace("wh_main_brt_bretonnia", "wh_main_emp_marienburg");
-    cm:force_declare_war("wh_main_brt_bretonnia", "wh_dlc05_vmp_mousillon", true, true);
-
-end;
-
-
---cults
-
---v function() --> map<string,WHATEVER>
-function sigmar_start_pos()
-    local sp = {}
-    sp.faction_name = "wh_main_emp_cult_of_sigmar"
-    sp.ui_name = "Cult of Sigmar"
-    sp.loyalty = 65
-    sp.spawn_x = 523
-    sp.spawn_y = 409
-    sp.second_spawn_x = 581 
-    sp.second_spawn_y = 443
-    sp.leader_forename = "names_name_2147358013"
-    sp.leader_subtype = "dlc04_emp_volkmar"
-    sp.leader_surname = "names_name_2147358014"
-    sp.second_forename = "names_name_2147343993"
-    sp.second_subtype = "dlc04_emp_arch_lector"
-    sp.second_surname = "names_name_2147344000"
-    sp.leader_region = "wh_main_wissenland_nuln"
-    sp.second_region = "wh_main_stirland_wurtbad"
-    return sp
-end
-
-
---v function() --> map<string, WHATEVER>
-function ulric_start_pos()
-    local sp = {}
-    sp.faction_name = "wh_main_emp_cult_of_ulric"
-    sp.ui_name = "Cult of Ulric"
-    sp.loyalty = 35
-    sp.spawn_x = 523
-    sp.spawn_y = 409
-    sp.second_spawn_x = 497
-    sp.second_spawn_y = 494
-    sp.leader_forename = "names_name_2147344088"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_surname = "names_name_2147344098"
-    sp.second_forename = "names_name_2147343937"
-    sp.second_subtype = "emp_lord"
-    sp.second_surname = "names_name_2147344030"
-    sp.leader_region = "wh_main_middenland_middenheim"
-    sp.second_region = "wh_main_middenland_weismund"
-    return sp
-end
-
-
-
-
-
---electors
-
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function averland_start_pos()
     local sp = {}
-    sp.loyalty = 50
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 35
-    sp.faction_name = "wh_main_emp_averland"
-    sp.ui_name = "Averland"
-    sp.image =  "ui/flags/wh_main_emp_averland/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147343941"
-    sp.leader_surname = "names_name_2147343947"
-    sp.capital =  "wh_main_averland_averheim"
-    sp.expedition_x = 573
-    sp.expedition_y = 386
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_wissenland_pfeildorf"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 50 --:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 35 --:number
+    sp._key = "wh_main_emp_averland" --:ELECTOR_NAME
+    sp._uiName = "Averland"
+    sp._image =  "ui/flags/wh_main_emp_averland/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal" --:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147343941"
+    sp._leaderSurname = "names_name_2147343947"
+    sp._capital =  "wh_main_averland_averheim"
+    sp._expeditionX = 573 --:number
+    sp._expeditionY = 386 --:number
+    sp._expeditionRegion = "wh_main_wissenland_pfeildorf"
+    sp._turnsDead = 0--:number
+    sp._baseRegions = 2 --:number
+    sp._isCult = false;
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function hochland_start_pos()
     local sp = {}
-    sp.loyalty = 45
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 25
-    sp.faction_name = "wh_main_emp_hochland"
-    sp.ui_name = "Hochland"
-    sp.image =  "ui/flags/wh_main_emp_hochland/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147344017"
-    sp.leader_surname = "names_name_2147344019"
-    sp.capital =  "wh_main_hochland_hergig"
-    sp.expedition_x = 540
-    sp.expedition_y = 503
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_middenland_middenheim"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 45 --:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 25 --:number
+    sp._key = "wh_main_emp_hochland" --:ELECTOR_NAME
+    sp._uiName = "Hochland"
+    sp._image =  "ui/flags/wh_main_emp_hochland/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal" --:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147344017"
+    sp._leaderSurname = "names_name_2147344019"
+    sp._capital =  "wh_main_hochland_hergig"
+    sp._expeditionX = 540 --:number 
+    sp._expeditionY = 503 --:number
+
+    sp._expeditionRegion = "wh_main_middenland_middenheim"
+    sp._turnsDead = 0 --:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function ostermark_start_pos()
     local sp = {}
-    sp.loyalty = 35
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 25
-    sp.faction_name = "wh_main_emp_ostermark"
-    sp.ui_name = "Ostermark"
-    sp.image =  "ui/flags/wh_main_emp_ostermark/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147344036"
-    sp.leader_surname = "names_name_2147344037"
-    sp.capital =  "wh_main_ostermark_bechafen"
-    sp.expedition_x = 577
-    sp.expedition_y = 497
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_talabecland_talabheim"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 35 --:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 25 --:number
+    sp._key = "wh_main_emp_ostermark" --:ELECTOR_NAME
+    sp._uiName = "Ostermark"
+    sp._image =  "ui/flags/wh_main_emp_ostermark/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147344036"
+    sp._leaderSurname = "names_name_2147344037"
+    sp._capital =  "wh_main_ostermark_bechafen"
+    sp._expeditionX = 577 --:number
+    sp._expeditionY = 497 --:number
+    sp._isCult = false;
+    sp._expeditionRegion = "wh_main_talabecland_talabheim"
+    sp._turnsDead = 0--:number
+
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function stirland_start_pos()
     local sp = {}
-    sp.loyalty = 45
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 30
-    sp.faction_name = "wh_main_emp_stirland"
-    sp.ui_name = "Stirland"
-    sp.image =  "ui/flags/wh_main_emp_stirland/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147344039"
-    sp.leader_surname = "names_name_2147344048"
-    sp.capital =  "wh_main_stirland_wurtbad"
-    sp.expedition_x = 515
-    sp.expedition_y = 434
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_reikland_grunburg"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 45--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 30--:number
+    sp._key = "wh_main_emp_stirland" --:ELECTOR_NAME
+    sp._uiName = "Stirland"
+    sp._image =  "ui/flags/wh_main_emp_stirland/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147344039"
+    sp._leaderSurname = "names_name_2147344048"
+    sp._capital =  "wh_main_stirland_wurtbad"
+    sp._expeditionX = 515--:number
+    sp._expeditionY = 434--:number
+
+    sp._expeditionRegion = "wh_main_reikland_grunburg"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function middenland_start_pos()
     local sp = {}
-    sp.loyalty = 30
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 43
-    sp.faction_name = "wh_main_emp_middenland"
-    sp.ui_name = "Middenland"
-    sp.image =  "ui/flags/wh_main_emp_middenland/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147343937"
-    sp.leader_surname = "names_name_2147343940"
-    sp.capital =  "wh_main_middenland_middenheim"
-    sp.expedition_x = 489
-    sp.expedition_y = 469
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_middenland_carroburg"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 30--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 43--:number
+    sp._key = "wh_main_emp_middenland"--:ELECTOR_NAME
+    sp._uiName = "Middenland"
+    sp._image =  "ui/flags/wh_main_emp_middenland/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147343937"
+    sp._leaderSurname = "names_name_2147343940"
+    sp._capital =  "wh_main_middenland_middenheim"
+    sp._expeditionX = 489--:number
+    sp._expeditionY = 469--:number
+
+    sp._expeditionRegion = "wh_main_middenland_carroburg"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function nordland_start_pos()
     local sp = {}
-    sp.loyalty = 35
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 30
-    sp.faction_name = "wh_main_emp_nordland"
-    sp.ui_name = "Nordland"
-    sp.image =  "ui/flags/wh_main_emp_nordland/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147344022"
-    sp.leader_surname = "names_name_2147344023"
-    sp.capital =  "wh_main_nordland_dietershafen"
-    sp.expedition_x = 528
-    sp.expedition_y = 532
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_middenland_middenheim"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 35--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 30--:number
+    sp._key = "wh_main_emp_nordland"--:ELECTOR_NAME
+    sp._uiName = "Nordland"
+    sp._image =  "ui/flags/wh_main_emp_nordland/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147344022"
+    sp._leaderSurname = "names_name_2147344023"
+    sp._capital =  "wh_main_nordland_dietershafen"
+    sp._expeditionX = 528--:number
+    sp._expeditionY = 532--:number
+
+    sp._expeditionRegion = "wh_main_middenland_middenheim"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function ostland_start_pos()
     local sp = {}
-    sp.loyalty = 40
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 25
-    sp.faction_name = "wh_main_emp_ostland"
-    sp.ui_name = "Ostland"
-    sp.image =  "ui/flags/wh_main_emp_ostland/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147344026"
-    sp.leader_surname = "names_name_2147344030"
-    sp.capital =  "wh_main_ostland_wolfenburg"
-    sp.expedition_x = 586
-    sp.expedition_y = 522
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_hochland_hergig"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 40--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 25--:number
+    sp._key = "wh_main_emp_ostland"--:ELECTOR_NAME
+    sp._uiName = "Ostland"
+    sp._image =  "ui/flags/wh_main_emp_ostland/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147344026"
+    sp._leaderSurname = "names_name_2147344030"
+    sp._capital =  "wh_main_ostland_wolfenburg"
+    sp._expeditionX = 586--:number
+    sp._expeditionY = 522--:number
+
+    sp._expeditionRegion = "wh_main_hochland_hergig"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function wissenland_start_pos()
     local sp = {}
-    sp.loyalty = 60
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 40
-    sp.faction_name = "wh_main_emp_wissenland"
-    sp.ui_name = "Wissenland"
-    sp.image =  "ui/flags/wh_main_emp_wissenland/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147344005"
-    sp.leader_surname = "names_name_2147344064"
-    sp.capital =  "wh_main_wissenland_nuln"
-    sp.expedition_x =515
-    sp.expedition_y = 434
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_reikland_grunburg"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 60--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 40--:number
+    sp._key = "wh_main_emp_wissenland"--:ELECTOR_NAME
+    sp._uiName = "Wissenland"
+    sp._image =  "ui/flags/wh_main_emp_wissenland/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147344005"
+    sp._leaderSurname = "names_name_2147344064"
+    sp._capital =  "wh_main_wissenland_nuln"
+    sp._expeditionX =515--:number
+    sp._expeditionY = 434--:number
+
+    sp._expeditionRegion = "wh_main_reikland_grunburg"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function talabecland_start_pos()
     local sp = {}
-    sp.loyalty = 35
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 40
-    sp.faction_name = "wh_main_emp_talabecland"
-    sp.ui_name = "Talabecland"
-    sp.image =  "ui/flags/wh_main_emp_talabecland/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "normal"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147344050"
-    sp.leader_surname = "names_name_2147344053"
-    sp.capital =  "wh_main_talabecland_talabheim"
-    sp.expedition_x = 515
-    sp.expedition_y = 434
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_reikland_grunburg"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 35--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 40--:number
+    sp._key = "wh_main_emp_talabecland"--:ELECTOR_NAME
+    sp._uiName = "Talabecland"
+    sp._image =  "ui/flags/wh_main_emp_talabecland/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147344050"
+    sp._leaderSurname = "names_name_2147344053"
+    sp._capital =  "wh_main_talabecland_talabheim"
+    sp._expeditionX = 515--:number
+    sp._expeditionY = 434--:number
+
+    sp._expeditionRegion = "wh_main_reikland_grunburg"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function marienburg_start_pos()
     local sp = {}
-    sp.loyalty = 0
-    sp.fully_loyal = false
-    sp.hidden = false
-    sp.base_power = 35
-    sp.faction_name = "wh_main_emp_marienburg"
-    sp.ui_name = "Marienburg"
-    sp.image =  "ui/flags/wh_main_emp_marienburg/mon_256.png"
-    sp.tooltip = "Seceded State"
-    sp.status = "seceded"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147355056"
-    sp.leader_surname = "names_name_2147352481" --change these
-    sp.capital =  "wh_main_the_wasteland_marienburg"
-    sp.expedition_x = 440
-    sp.expedition_y = 553
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_reikland_eilhart"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 0--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 35--:number
+    sp._key = "wh_main_emp_marienburg"--:ELECTOR_NAME
+    sp._uiName = "Marienburg"
+    sp._image =  "ui/flags/wh_main_emp_marienburg/mon_256.png"
+    sp._uiTooltip = "Seceded State"
+    sp._state = "seceded"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147355056"
+    sp._leaderSurname = "names_name_2147352481" --change these
+    sp._capital =  "wh_main_the_wasteland_marienburg"
+    sp._expeditionX = 440--:number
+    sp._expeditionY = 553--:number
+
+    sp._expeditionRegion = "wh_main_reikland_eilhart"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function sylvania_start_pos()
     local sp = {}
-    sp.loyalty = 45
-    sp.fully_loyal = false
-    sp.hidden = true
-    sp.base_power = 25
-    sp.faction_name = "wh_main_emp_sylvania"
-    sp.ui_name = "Sylvania"
-    sp.image =  "ui/flags/wh_main_emp_sylvania/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "notyetexisting"
-    sp.leader_subtype = "emp_lord"
-    sp.leader_forename = "names_name_2147355363"
-    sp.leader_surname = "names_name_2147354856"
-    sp.capital =  "wh_main_western_sylvania_castle_templehof"
-    sp.expedition_x = 687
-    sp.expedition_y = 460
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_eastern_sylvania_waldenhof"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 2
+    sp._loyalty = 45--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = true
+    sp._power = 25--:number
+    sp._key = "wh_main_emp_sylvania"--:ELECTOR_NAME
+    sp._uiName = "Sylvania"
+    sp._image =  "ui/flags/wh_main_emp_sylvania/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "notyetexisting"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147355363"
+    sp._leaderSurname = "names_name_2147354856"
+    sp._capital =  "wh_main_western_sylvania_castle_templehof"
+    sp._expeditionX = 687--:number
+    sp._expeditionY = 460--:number
+
+    sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 2--:number
     return sp
 end
 
---v function() --> map<string, WHATEVER>
+--v function() --> ELECTOR_INFO
 function vampire_start_pos()
     local sp = {}
-    sp.loyalty = 30
-    sp.fully_loyal = false
-    sp.hidden = true
-    sp.base_power = 30
-    sp.faction_name = "wh_main_vmp_schwartzhafen"
-    sp.ui_name = "Sylvania"
-    sp.image =  "ui/flags/wh_dlc07_vmp_von_carstein/mon_256.png"
-    sp.tooltip = "Elector Count"
-    sp.status = "notyetexisting"
-    sp.leader_subtype = "dlc04_vmp_vlad_con_carstein"
-    sp.leader_forename = "names_name_2147345130"
-    sp.leader_surname = "names_name_2147343895"
-    sp.capital =  "wh_main_eastern_sylvania_castle_drakenhof"
-    sp.expedition_x = 677
-    sp.expedition_y = 460
-    sp.traits = {} --to be filled in later
-    sp.expedition_region = "wh_main_eastern_sylvania_waldenhof"
-    sp.turns_dead = 0
-    sp.revive_happened = false
-    sp.base_regions = 6
+    sp._loyalty = 30--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = true
+    sp._power = 30--:number
+    sp._key = "wh_main_vmp_schwartzhafen"--:ELECTOR_NAME
+    sp._uiName = "Sylvania"
+    sp._image =  "ui/flags/wh_dlc07_vmp_von_carstein/mon_256.png"
+    sp._uiTooltip = "Elector Count"
+    sp._state = "notyetexisting"--:ELECTOR_STATUS
+    sp._leaderSubtype = "dlc04_vmp_vlad_con_carstein"
+    sp._leaderForename = "names_name_2147345130"
+    sp._leaderSurname = "names_name_2147343895"
+    sp._capital =  "wh_main_eastern_sylvania_castle_drakenhof"
+    sp._expeditionX = 677--:number
+    sp._expeditionY = 460--:number
+
+    sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
+    sp._turnsDead = 0--:number
+    sp._isCult = false;
+    sp._baseRegions = 6--:number
     return sp
 end
 
+--v function() --> ELECTOR_INFO
+function sigmar_start_pos()
+    local sp = {}
+    sp._loyalty = 65--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 50--:number
+    sp._key = "wh_main_emp_cult_of_sigmar"--:ELECTOR_NAME
+    sp._uiName = "The Cult of Sigmar"
+    sp._image =  "ui/flags/wh_main_emp_cult_of_sigmar/mon_256.png"
+    sp._uiTooltip = "Imperial Cult"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "dlc04_emp_volkmar"
+    sp._leaderForename = "names_name_2147358013"
+    sp._leaderSurname = "names_name_2147358014"
+    sp._capital =  "wh_main_wissenland_nuln"
+    sp._expeditionX = 581--:number
+    sp._expeditionY = 443--:number
 
---civil_wars
+    sp._expeditionRegion = "wh_main_stirland_wurtbad"
+    sp._turnsDead = 0--:number
+    sp._isCult = true;
+    sp._baseRegions = 0--:number
+    return sp
+end
 
+--v function() --> ELECTOR_INFO
+function ulric_start_pos()
+    local sp = {}
+    sp._loyalty = 35--:number
+    sp._fullyLoyal = false
+    sp._hideFromUi = false
+    sp._power = 45--:number
+    sp._key = "wh_main_emp_cult_of_ulric"--:ELECTOR_NAME
+    sp._uiName = "The Cult of Ulric"
+    sp._image =  "ui/flags/wh_main_emp_cult_of_ulric/mon_256.png"
+    sp._uiTooltip = "Imperial Cult"
+    sp._state = "normal"--:ELECTOR_STATUS
+    sp._leaderSubtype = "emp_lord"
+    sp._leaderForename = "names_name_2147344088"
+    sp._leaderSurname = "names_name_2147344098"
+    sp._capital =  "wh_main_middenland_middenheim"
+    sp._expeditionX = 497--:number
+    sp._expeditionY = 494--:number
+    sp._expeditionRegion = "wh_main_middenland_weismund"
+    sp._turnsDead = 0--:number
+    sp._isCult = true;
+    sp._baseRegions = 0--:number
+    return sp
+end
 
-
-
----return functions
-
---v function() --> vector<function() --> map<string,WHATEVER> >
+--v function() --> vector<function() --> ELECTOR_INFO >
 function return_elector_starts()
     local t = {
         averland_start_pos,
@@ -502,17 +376,10 @@ function return_elector_starts()
         talabecland_start_pos,
         marienburg_start_pos,
         sylvania_start_pos,
-        vampire_start_pos
+        vampire_start_pos,
+        sigmar_start_pos,
+        ulric_start_pos
     }
 
     return t;
 end;
-
---v function() --> vector<function() --> map<string,WHATEVER> >
-function return_cult_starts()
-    local c = {
-        sigmar_start_pos,
-        ulric_start_pos
-    }
-    return c;
-end

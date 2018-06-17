@@ -1,40 +1,46 @@
 local eom_action = {} --# assume eom_action: EOM_ACTION
-EOMLOG("Loading the eom_action object", "file.eom_action")
 
---v function(name: string, condition:function(eom: EOM_MODEL) --> boolean, callback: function(eom: EOM_MODEL)) --> EOM_ACTION
-function eom_action.new(name, condition, callback)
+--v function(key: string, conditional: function() --> boolean, choices: map<number, function()>) --> EOM_ACTION
+function eom_action.new(key, conditional, choices)
     local self = {}
-    setmetatable(self, {
-        __index = eom_action
-    })
-    --# assume self: EOM_ACTION
-    self.condition = condition
-    self.callback = callback
-    self.eom = nil --:EOM_MODEL
-    self.name = name 
+    setmetatable(
+        self, {
+            __index = eom_action
+        }
+    )--# assume self: EOM_ACTION
+
+    self._key = key
+    self._condition = conditional
+    self._choices = choices
+    self._alreadyOccured = cm:get_saved_value("eom_action_"..key.."_occured") or false
 
     return self
 end
 
---v function(self: EOM_ACTION, model: EOM_MODEL)
-function eom_action.register_to_model(self, model)
-    self.eom = model
-end;
 
+--v function(self: EOM_ACTION) --> string
+function eom_action.key(self)
+    return self._key
+end
 
 --v function(self: EOM_ACTION) --> boolean
-function eom_action.check(self)
-    EOMLOG("Checking an Action Validity for ["..self.name.."] ", "eom_action.check(self)")
-    return self.condition(self.eom)
+function eom_action.allowed(self)
+    return self._condition()
+end
+
+--v function(self: EOM_ACTION, choice: number)
+function eom_action.do_choice(self, choice)
+    self._choices[choice]()
+end
+
+--v function(self: EOM_ACTION) --> boolean
+function eom_action.already_occured(self)
+    return self._alreadyOccured
 end
 
 --v function(self: EOM_ACTION)
 function eom_action.act(self)
-    EOMLOG("Action ["..self.name.."] is triggering", "eom_action.act(self)")
-    return self.callback(self.eom)
+    cm:trigger_dilemma(EOM_GLOBAL_EMPIRE_FACTION, self:key(), true)
+    cm:set_saved_value("eom_action_"..self:key().."_occured", true)
 end
 
-
-return {
-    new = eom_action.new
-}
