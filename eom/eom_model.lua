@@ -38,6 +38,7 @@ EOM_GLOBAL_EMPIRE_REGIONS = {
 
 require("eom/eom_startpos")
 
+local eom_civil_war = require("eom/eom_civil_war")
 local eom_action = require("eom/eom_action")
 local eom_elector = require("eom/eom_elector")
 local eom_model = {} --# assume eom_model: EOM_MODEL
