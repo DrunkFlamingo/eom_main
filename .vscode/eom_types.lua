@@ -52,7 +52,7 @@
 --# _baseRegions: number, _turnsDead: number, _image: string, _fullyLoyal: boolean, _uiName: string, _uiTooltip: string}
 
 --# type global EOM_EVENT = {
---# key: string, conditional: function(eom: EOM_MODEL),  choices: map<number, function(eom: EOM_MODEL)>
+--# key: string, conditional: function(eom: EOM_MODEL) --> boolean,  choices: map<number, function(eom: EOM_MODEL)>
 --# }
 
 
