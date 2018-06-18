@@ -58,7 +58,7 @@ function eom_model.init()
 
     self._electors = {} --:map<string, EOM_ELECTOR>
     self._civil_war = nil --:EOM_CIVIL_WAR
-    self._events = {} --:vector<EOM_ACTION>
+    self._events = {} --:map<string, EOM_ACTION>
     self._civil_war_index = {} --:vector<EOM_CIVIL_WAR>
 
     self._coredata = {} --:map<string, EOM_CORE_DATA>
@@ -128,13 +128,44 @@ end
 --events 
 --v function(self: EOM_MODEL, event: EOM_EVENT)
 function eom_model.add_event(self, event)
+    local choicetable = event.choices
+    local key = event.key
+    local conditional = event.conditional
+    local action = eom_action.new(key, conditional, choicetable, self)
+    self._events[key] = action
+end
 
+--v function(self: EOM_MODEL, key: string) --> EOM_ACTION
+function eom_model.get_event_by_key(self, key)
+    return self._events[key]
+end
+
+--v function(self: EOM_MODEL) --> map<string, EOM_ACTION>
+function eom_model.events(self)
+    return self._events
+end
+
+---EBS
+
+--v function(self: EOM_MODEL)
+function eom_model.event_and_plot_check(self)
+    --plot check
+
+
+    --events
+    local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
+    if cm:model():turn_number() >= next_event then
+        for key, event in pairs(self:events()) do
+            if event:allowed() then
+                event:act()
+                break
+            end
+        end
+    end
 
 end
 
 
-
----EBS
 
 --v function(self: EOM_MODEL)
 function eom_model.elector_diplomacy(self)
@@ -263,6 +294,10 @@ cm:add_loading_game_callback(
             for i = 1, #electors_to_load do
                 local elector_to_load = electors_to_load[i]()
                 eom:add_elector(elector_to_load)
+            end
+            local core_data_to_load = return_starting_core_data()
+            for key, data in pairs(core_data_to_load) do
+                eom:set_core_data(key, data)
             end
         else
             eom:load(savetable)
