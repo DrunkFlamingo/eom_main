@@ -7,7 +7,7 @@
 --# assume global class EOM_ELECTOR
 --# assume global class EOM_CULT
 --# assume global class EOM_ACTION
---# assume global class EOM_CIVIL_WAR
+--# assume global class EOM_PLOT
 --# assume global class EOM_TRAIT
 
 

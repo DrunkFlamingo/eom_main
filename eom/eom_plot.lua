@@ -1,11 +1,11 @@
-local eom_civil_war = {} --# assume eom_civil_war: EOM_CIVIL_WAR
+local eom_plot = {} --# assume eom_plot: EOM_PLOT
 
---v function(name: string, model: EOM_MODEL) --> EOM_CIVIL_WAR
-function eom_civil_war.new(name, model)
+--v function(name: string, model: EOM_MODEL) --> EOM_PLOT
+function eom_plot.new(name, model)
 local self = {}
 setmetatable(self, {
-    __index = eom_civil_war
-}) --# assume self: EOM_CIVIL_WAR
+    __index = eom_plot
+}) --# assume self: EOM_PLOT
 
 self._name = name
 self._model = model 
@@ -20,34 +20,34 @@ end
 return self
 end
 
---v function(self: EOM_CIVIL_WAR) --> string
-function eom_civil_war.name(self)
+--v function(self: EOM_PLOT) --> string
+function eom_plot.name(self)
     return self._name
 end
 
---v function(self: EOM_CIVIL_WAR) --> EOM_MODEL
-function eom_civil_war.model(self)
+--v function(self: EOM_PLOT) --> EOM_MODEL
+function eom_plot.model(self)
     return self._model
 end
 
---v function(self: EOM_CIVIL_WAR) --> int
-function eom_civil_war.current_stage(self)
+--v function(self: EOM_PLOT) --> int
+function eom_plot.current_stage(self)
     return self._current_stage
 end
 
---v function(self: EOM_CIVIL_WAR, stage: int)
-function eom_civil_war.set_stage(self, stage)
+--v function(self: EOM_PLOT, stage: int)
+function eom_plot.set_stage(self, stage)
     EOMLOG("Advancing stage for civil war ["..self:name().."] to ["..tostring(stage).."] ")
     self._current_stage = stage
 end
 
---v function(self: EOM_CIVIL_WAR, stage: integer) --> boolean
-function eom_civil_war.has_stage(self, stage)
+--v function(self: EOM_PLOT, stage: integer) --> boolean
+function eom_plot.has_stage(self, stage)
     return not not self._triggers[stage]
 end
 
---v function(self: EOM_CIVIL_WAR, stage: integer)
-function eom_civil_war.stage_callback(self, stage)
+--v function(self: EOM_PLOT, stage: integer)
+function eom_plot.stage_callback(self, stage)
     if not self._callbacks[stage] then
         EOMLOG("No callbacks for stage ["..tostring(stage).."] in civil war ["..self:name().."] ")
         return
@@ -56,20 +56,20 @@ function eom_civil_war.stage_callback(self, stage)
 end
 
 
---v function(self: EOM_CIVIL_WAR, stage: integer) --> boolean
-function eom_civil_war.check_trigger(self, stage)
+--v function(self: EOM_PLOT, stage: integer) --> boolean
+function eom_plot.check_trigger(self, stage)
     return self._triggers[stage](self:model())
 end
 
 
 
---v function(self: EOM_CIVIL_WAR) --> boolean
-function eom_civil_war.is_over(self)
+--v function(self: EOM_PLOT) --> boolean
+function eom_plot.is_over(self)
     return cm:get_saved_value("civil_war_ended_"..self:name())
 end
 
---v function(self: EOM_CIVIL_WAR)
-function eom_civil_war.check_advancement(self)
+--v function(self: EOM_PLOT)
+function eom_plot.check_advancement(self)
     if self:is_over() then
         EOMLOG("Checked advancement for civil war ["..self:name().."] but that civil war is over! ")
         return 
@@ -84,8 +84,8 @@ function eom_civil_war.check_advancement(self)
     end
 end
 
---v function(self: EOM_CIVIL_WAR, stage: int, trigger: function(model: EOM_MODEL) --> boolean)
-function eom_civil_war.add_stage_trigger(self, stage, trigger)
+--v function(self: EOM_PLOT, stage: int, trigger: function(model: EOM_MODEL) --> boolean)
+function eom_plot.add_stage_trigger(self, stage, trigger)
 EOMLOG("")
     self._triggers[stage] = trigger
 end
