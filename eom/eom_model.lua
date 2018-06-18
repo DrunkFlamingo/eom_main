@@ -116,14 +116,19 @@ function eom_model.get_elector_faction(self, name)
 end
 
 
-
-
 --v function(self: EOM_MODEL, info: ELECTOR_INFO)
 function eom_model.add_elector(self, info)
     EOMLOG("entered", "eom_model.add_elector(self, info)")
     local elector = eom_elector.new(info)
     self._electors[elector:name()] = elector
     EOMLOG("Added elector ["..elector:name().."] to the model!")
+end
+
+--events 
+--v function(self: EOM_MODEL, event: EOM_EVENT)
+function eom_model.add_event(self, event)
+
+
 end
 
 
