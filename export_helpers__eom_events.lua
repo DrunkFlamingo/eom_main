@@ -1,4 +1,4 @@
-cm = get_cm(); events = get_events(); eom = _G.eom
+cm = get_cm() events = get_events() eom = _G.eom
 
 
 --[[ testing functions
@@ -17,6 +17,8 @@ core:add_listener(
 
 
 --]]
+
+
 
 function eom_starting_settings()
     if cm:is_new_game() then
@@ -93,9 +95,10 @@ core:add_listener(
         return faction:name() == EOM_GLOBAL_EMPIRE_FACTION
     end,
     function(context)
+        eom:event_and_plot_check()
         eom:elector_diplomacy()
     end,
-    true)
+    true);
 
 
 
@@ -257,3 +260,67 @@ core:add_listener(
     end,
     true)
 
+local eom_main_events_table = {
+    {
+        key = "eom_dilemma_nordland_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return true
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_nordland"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_nordland"):change_loyalty(15)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-10)
+        end
+        }
+
+    }
+}--:vector<EOM_EVENT>
+    
+for i = 1, #eom_main_events_table do 
+    local current_event = eom_main_events_table[i];
+    eom:add_event(current_event)
+end
+
+
+--[[
+Templates for events
+    {
+        key = "key",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return 
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+        
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+        
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+        
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+        
+        end
+        }
+
+
+
+
+
+
+]]
