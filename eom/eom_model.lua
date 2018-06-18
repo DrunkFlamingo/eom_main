@@ -74,6 +74,9 @@ end
 
 --v function(self: EOM_MODEL, key: string) --> EOM_CORE_DATA
 function eom_model.get_core_data_with_key(self, key)
+    if self._coredata[key] == nil then
+        return false
+    end
     return self._coredata[key]
 end
 
@@ -105,6 +108,12 @@ function eom_model.elector_list(self)
     return elector_list
 end
 
+--v function(self: EOM_MODEL, name: ELECTOR_NAME)
+function eom_model.grant_casus_belli(self, name)
+    cm:apply_effect_bundle("eom_"..name.."_casus_belli", EOM_GLOBAL_EMPIRE_FACTION, 8)
+end
+
+
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME) --> EOM_ELECTOR
 function eom_model.get_elector(self, name)
@@ -115,6 +124,16 @@ end
 function eom_model.get_elector_faction(self, name)
     return cm:get_faction(self:get_elector(name):name())
 end
+
+--v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
+function eom_model.is_elector_valid(self, name)
+    local elector_active = (self:get_elector(name):status() == "normal")
+    local capital_owned = (cm:get_region(self:get_elector(name):capital()):owning_faction():name() == name)
+    local living = not self:get_elector_faction(name):is_dead()
+    local first_dilemma_triggered =  cm:get_saved_value("eom_action_eom_dilemma_nordland_2_occured") or false
+    return elector_active and capital_owned and living and first_dilemma_triggered
+end
+
 
 
 --v function(self: EOM_MODEL, info: ELECTOR_INFO)
@@ -154,7 +173,7 @@ function eom_model.event_and_plot_check(self)
 
     --events
     local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
-    if cm:model():turn_number() >= next_event then
+    if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
         for key, event in pairs(self:events()) do
             if event:allowed() then
                 event:act()
@@ -162,7 +181,6 @@ function eom_model.event_and_plot_check(self)
             end
         end
     end
-
 end
 
 

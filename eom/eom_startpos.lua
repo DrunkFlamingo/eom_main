@@ -366,8 +366,8 @@ end
 function return_starting_core_data()
     local cd = {} --:map<string, EOM_CORE_DATA>
     cd.next_event_turn = 2
-
-
+    cd.block_events_for_plot = true
+    cd.current_plot = "reikland_rebellion"
 
 
     return cd

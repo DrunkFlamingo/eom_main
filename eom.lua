@@ -495,6 +495,20 @@ function ulric_start_pos()
     return sp
 end
 
+--v function() --> map<string, EOM_CORE_DATA>
+function return_starting_core_data()
+    local cd = {} --:map<string, EOM_CORE_DATA>
+    cd.next_event_turn = 2
+
+
+
+
+    return cd
+end
+
+
+
+
 --v function() --> vector<function() --> ELECTOR_INFO >
 function return_elector_starts()
     local t = {
@@ -517,10 +531,103 @@ function return_elector_starts()
     return t;
 end;
 
+
+local eom_civil_war = {} --# assume eom_civil_war: EOM_CIVIL_WAR
+
+--v function(name: string, model: EOM_MODEL) --> EOM_CIVIL_WAR
+function eom_civil_war.new(name, model)
+local self = {}
+setmetatable(self, {
+    __index = eom_civil_war
+}) --# assume self: EOM_CIVIL_WAR
+
+self._name = name
+self._model = model 
+self._current_stage = 0 --:int
+self._triggers = {} --:vector<function(eom: EOM_MODEL) --> boolean>
+self._callbacks = {} --:vector<function(eom: EOM_MODEL)>
+if cm:get_saved_value("civil_war_ended_"..name) == nil then
+    cm:set_saved_value("civil_war_ended"..name,false) 
+end
+
+
+return self
+end
+
+--v function(self: EOM_CIVIL_WAR) --> string
+function eom_civil_war.name(self)
+    return self._name
+end
+
+--v function(self: EOM_CIVIL_WAR) --> EOM_MODEL
+function eom_civil_war.model(self)
+    return self._model
+end
+
+--v function(self: EOM_CIVIL_WAR) --> int
+function eom_civil_war.current_stage(self)
+    return self._current_stage
+end
+
+--v function(self: EOM_CIVIL_WAR, stage: int)
+function eom_civil_war.set_stage(self, stage)
+    EOMLOG("Advancing stage for civil war ["..self:name().."] to ["..tostring(stage).."] ")
+    self._current_stage = stage
+end
+
+--v function(self: EOM_CIVIL_WAR, stage: integer) --> boolean
+function eom_civil_war.has_stage(self, stage)
+    return not not self._triggers[stage]
+end
+
+--v function(self: EOM_CIVIL_WAR, stage: integer)
+function eom_civil_war.stage_callback(self, stage)
+    if not self._callbacks[stage] then
+        EOMLOG("No callbacks for stage ["..tostring(stage).."] in civil war ["..self:name().."] ")
+        return
+    end
+    self._callbacks[stage](self:model())
+end
+
+
+--v function(self: EOM_CIVIL_WAR, stage: integer) --> boolean
+function eom_civil_war.check_trigger(self, stage)
+    return self._triggers[stage](self:model())
+end
+
+
+
+--v function(self: EOM_CIVIL_WAR) --> boolean
+function eom_civil_war.is_over(self)
+    return cm:get_saved_value("civil_war_ended_"..self:name())
+end
+
+--v function(self: EOM_CIVIL_WAR)
+function eom_civil_war.check_advancement(self)
+    if self:is_over() then
+        EOMLOG("Checked advancement for civil war ["..self:name().."] but that civil war is over! ")
+        return 
+    end
+    local c_stage = self:current_stage()
+    local n_stage = c_stage + 1;
+    if self:has_stage(n_stage) and self:check_trigger(n_stage) then
+        self:set_stage(n_stage)
+        self:stage_callback(n_stage)
+    else 
+        EOMLOG("Civil war ["..self:name().."] is ready to advance but has no next stage!!")
+    end
+end
+
+--v function(self: EOM_CIVIL_WAR, stage: int, trigger: function(model: EOM_MODEL) --> boolean)
+function eom_civil_war.add_stage_trigger(self, stage, trigger)
+EOMLOG("")
+    self._triggers[stage] = trigger
+end
+
 local eom_action = {} --# assume eom_action: EOM_ACTION
 
---v function(key: string, conditional: function() --> boolean, choices: map<number, function()>) --> EOM_ACTION
-function eom_action.new(key, conditional, choices)
+--v function(key: string, conditional: function(eom: EOM_MODEL) --> boolean, choices: map<number, function(eom: EOM_MODEL)>, eom: EOM_MODEL) --> EOM_ACTION
+function eom_action.new(key, conditional, choices, eom)
     local self = {}
     setmetatable(
         self, {
@@ -532,8 +639,14 @@ function eom_action.new(key, conditional, choices)
     self._condition = conditional
     self._choices = choices
     self._alreadyOccured = cm:get_saved_value("eom_action_"..key.."_occured") or false
+    self._eom = eom
 
     return self
+end
+
+--v function(self: EOM_ACTION) --> EOM_MODEL
+function eom_action.model(self)
+    return self._eom
 end
 
 
@@ -544,12 +657,14 @@ end
 
 --v function(self: EOM_ACTION) --> boolean
 function eom_action.allowed(self)
-    return self._condition()
+    return self._condition(self:model())
 end
 
 --v function(self: EOM_ACTION, choice: number)
 function eom_action.do_choice(self, choice)
-    self._choices[choice]()
+    EOMLOG("Doing choice callback ["..tostring(choice).."] for event ["..self:key().."] ")
+    local choice_callback = self._choices[choice]
+    choice_callback(self:model())
 end
 
 --v function(self: EOM_ACTION) --> boolean
@@ -561,6 +676,16 @@ end
 function eom_action.act(self)
     cm:trigger_dilemma(EOM_GLOBAL_EMPIRE_FACTION, self:key(), true)
     cm:set_saved_value("eom_action_"..self:key().."_occured", true)
+    core:add_listener(
+        self:key(),
+        "DilemmaChoiceMadeEvent",
+        function(context)
+           return context:faction():name() == EOM_GLOBAL_EMPIRE_FACTION
+        end,
+        function(context)
+            self:do_choice((context:choice()+1))
+        end,
+        false)
 end
 
 
@@ -831,11 +956,10 @@ end
 function eom_elector.expedition_coordinates(self)
     return self._expeditionX, self._expeditionY
 end
-    
 
-    
-    
-    
+
+
+
 local eom_model = {} --# assume eom_model: EOM_MODEL
 
 
@@ -853,7 +977,7 @@ function eom_model.init()
 
     self._electors = {} --:map<string, EOM_ELECTOR>
     self._civil_war = nil --:EOM_CIVIL_WAR
-    self._events = {} --:vector<EOM_ACTION>
+    self._events = {} --:map<string, EOM_ACTION>
     self._civil_war_index = {} --:vector<EOM_CIVIL_WAR>
 
     self._coredata = {} --:map<string, EOM_CORE_DATA>
@@ -912,8 +1036,6 @@ function eom_model.get_elector_faction(self, name)
 end
 
 
-
-
 --v function(self: EOM_MODEL, info: ELECTOR_INFO)
 function eom_model.add_elector(self, info)
     EOMLOG("entered", "eom_model.add_elector(self, info)")
@@ -922,9 +1044,46 @@ function eom_model.add_elector(self, info)
     EOMLOG("Added elector ["..elector:name().."] to the model!")
 end
 
+--events 
+--v function(self: EOM_MODEL, event: EOM_EVENT)
+function eom_model.add_event(self, event)
+    local choicetable = event.choices
+    local key = event.key
+    local conditional = event.conditional
+    local action = eom_action.new(key, conditional, choicetable, self)
+    self._events[key] = action
+end
 
+--v function(self: EOM_MODEL, key: string) --> EOM_ACTION
+function eom_model.get_event_by_key(self, key)
+    return self._events[key]
+end
+
+--v function(self: EOM_MODEL) --> map<string, EOM_ACTION>
+function eom_model.events(self)
+    return self._events
+end
 
 ---EBS
+
+--v function(self: EOM_MODEL)
+function eom_model.event_and_plot_check(self)
+    --plot check
+
+
+    --events
+    local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
+    if cm:model():turn_number() >= next_event then
+        for key, event in pairs(self:events()) do
+            if event:allowed() then
+                event:act()
+                break
+            end
+        end
+    end
+end
+
+
 
 --v function(self: EOM_MODEL)
 function eom_model.elector_diplomacy(self)
@@ -957,6 +1116,7 @@ function eom_model.elector_diplomacy(self)
                     break
                 end
             end
+            EOMLOG("Set the diplomacy effect bundle to [eom_"..current_elector:name()..loyalty_level.."] for elector ["..current_elector:name().."]")
             cm:apply_effect_bundle("eom_"..current_elector:name()..loyalty_level, EOM_GLOBAL_EMPIRE_FACTION, 0)
         end
     end
@@ -1313,6 +1473,10 @@ cm:add_loading_game_callback(
             for i = 1, #electors_to_load do
                 local elector_to_load = electors_to_load[i]()
                 eom:add_elector(elector_to_load)
+            end
+            local core_data_to_load = return_starting_core_data()
+            for key, data in pairs(core_data_to_load) do
+                eom:set_core_data(key, data)
             end
         else
             eom:load(savetable)
