@@ -69,7 +69,7 @@ end
 
 --keys
 
---v function(self: EOM_ELECTOR) --> string
+--v function(self: EOM_ELECTOR) --> ELECTOR_NAME
 function eom_elector.name(self)
     return self._key
 end

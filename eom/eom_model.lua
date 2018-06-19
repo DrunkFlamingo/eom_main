@@ -56,7 +56,7 @@ function eom_model.init()
         }
     ) --# assume self: EOM_MODEL
 
-    self._electors = {} --:map<string, EOM_ELECTOR>
+    self._electors = {} --:map<ELECTOR_NAME, EOM_ELECTOR>
     self._events = {} --:map<string, EOM_ACTION>
     self._plot = {} --:map<string, EOM_PLOT>
 
@@ -93,7 +93,7 @@ end
 
 
 --electors
---v function(self: EOM_MODEL) --> map<string, EOM_ELECTOR>
+--v function(self: EOM_MODEL) --> map<ELECTOR_NAME, EOM_ELECTOR>
 function eom_model.electors(self)
     return self._electors
 end
@@ -193,6 +193,19 @@ function eom_model.get_story_chain(self, name)
     return self._plot[name]
 end
 
+
+--radiant revival
+--v function (self: EOM_MODEL)
+function eom_model.check_dead(self)
+    for name, elector in pairs(self:electors()) do
+        if self:get_elector_faction(name):is_dead() then
+            elector:dead_for_turn()
+        end
+    end
+end
+
+
+
 ---EBS
 
 --v function(self: EOM_MODEL)
@@ -204,6 +217,10 @@ function eom_model.event_and_plot_check(self)
             return
        end
     end
+    --player restore opportunity.
+
+    
+
     --events
     local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
     if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
@@ -214,6 +231,12 @@ function eom_model.event_and_plot_check(self)
             end
         end
     end
+
+    --revival events.
+
+    --elector falls
+
+    
 end
 
 

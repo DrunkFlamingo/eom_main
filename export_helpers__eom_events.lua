@@ -95,6 +95,7 @@ core:add_listener(
         return faction:name() == EOM_GLOBAL_EMPIRE_FACTION
     end,
     function(context)
+        eom:check_dead()
         eom:event_and_plot_check()
         eom:elector_diplomacy()
     end,
