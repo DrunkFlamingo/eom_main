@@ -141,6 +141,32 @@ function eom_model.change_all_loyalties(self, quantity)
     end
 end
 
+--v function(self: EOM_MODEL, quantity: number)
+function eom_model.change_sigmarite_loyalties(self, quantity)
+    EOMLOG("called for a change in sigmarite loyalties of ["..tostring(quantity).."]")
+    self:get_elector("wh_main_emp_wissenland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_stirland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_ostland"):change_loyalty(quantity)
+end
+
+--v function(self: EOM_MODEL, quantity: number)
+function eom_model.change_ulrican_loyalites(self, quantity)
+    EOMLOG("called for a change in ulrican loyalties of ["..tostring(quantity).."]")
+    self:get_elector("wh_main_emp_middenland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_hochland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_nordland"):change_loyalty(quantity)
+end
+
+--v function(self: EOM_MODEL, quantity: number)
+function eom_model.change_atheist_loyalties(self, quantity)
+    EOMLOG("called for a change in sigmarite loyalties of ["..tostring(quantity).."]")
+    self:get_elector("wh_main_emp_averland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_ostermark"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_marienburg"):change_loyalty(quantity)
+end
+
+
+
 
 --v function(self: EOM_MODEL, info: ELECTOR_INFO)
 function eom_model.add_elector(self, info)
