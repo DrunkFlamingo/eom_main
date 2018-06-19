@@ -101,6 +101,28 @@ core:add_listener(
     true);
 
 
+--civil wars.
+local eom_story_reikland_rebellion = eom:new_story_chain("eom_story_reikland_rebellion")
+eom_story_reikland_rebellion:add_stage_trigger( 1, function(model --: EOM_MODEL
+)
+    return true
+
+end)
+eom_story_reikland_rebellion:add_stage_trigger( 2, function(model --:EOM_MODEL
+)
+    return cm:get_faction("wh_main_emp_empire_rebels"):is_dead()
+
+end)
+
+eom_story_reikland_rebellion:add_stage_callback(2, function(model --:EOM_MODEL
+)
+    model:change_all_loyalties(5)
+    --trigger event 
+    model:get_story_chain("eom_story_reikland_rebellion"):finish()
+end)
+
+
+
 
 
 
@@ -259,6 +281,9 @@ core:add_listener(
         eom:get_elector("wh_main_emp_talabecland"):change_loyalty(-10)
     end,
     true)
+
+--EVENTS
+
 
 local eom_main_events_table = {
     {

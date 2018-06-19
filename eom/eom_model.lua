@@ -57,9 +57,8 @@ function eom_model.init()
     ) --# assume self: EOM_MODEL
 
     self._electors = {} --:map<string, EOM_ELECTOR>
-    self._civil_war = nil --:EOM_PLOT
     self._events = {} --:map<string, EOM_ACTION>
-    self._civil_war_index = {} --:vector<EOM_PLOT>
+    self._plot = {} --:map<string, EOM_PLOT>
 
     self._coredata = {} --:map<string, EOM_CORE_DATA>
     self._view = nil --:EOM_VIEW
@@ -134,6 +133,13 @@ function eom_model.is_elector_valid(self, name)
     return elector_active and capital_owned and living and first_dilemma_triggered
 end
 
+--v function(self: EOM_MODEL, quantity: number)
+function eom_model.change_all_loyalties(self, quantity)
+    EOMLOG("called for an all loyalties change of ["..tostring(quantity).."]")
+    for key, elector in pairs(self:electors()) do
+        elector:change_loyalty(quantity)
+    end
+end
 
 
 --v function(self: EOM_MODEL, info: ELECTOR_INFO)
@@ -166,6 +172,20 @@ end
 --v function(self: EOM_MODEL) --> map<string, EOM_ACTION>
 function eom_model.events(self)
     return self._events
+end
+
+--plot events
+
+--v function(self: EOM_MODEL, name: string) --> EOM_PLOT
+function eom_model.new_story_chain(self, name)
+    local event = eom_plot.new(name, self)
+    self._plot[name] = event
+    return event
+end
+
+--v function(self: EOM_MODEL, name: string) --> EOM_PLOT
+function eom_model.get_story_chain(self, name)
+    return self._plot[name]
 end
 
 ---EBS

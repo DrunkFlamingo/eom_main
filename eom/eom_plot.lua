@@ -52,13 +52,15 @@ function eom_plot.stage_callback(self, stage)
         EOMLOG("No callbacks for stage ["..tostring(stage).."] in civil war ["..self:name().."] ")
         return
     end
-    self._callbacks[stage](self:model())
+    local stage_callback = self._callbacks[stage]
+    stage_callback(self:model())
 end
 
 
 --v function(self: EOM_PLOT, stage: integer) --> boolean
 function eom_plot.check_trigger(self, stage)
-    return self._triggers[stage](self:model())
+    local stage_trigger = self._triggers[stage]
+    return stage_trigger(self:model())
 end
 
 
@@ -66,6 +68,11 @@ end
 --v function(self: EOM_PLOT) --> boolean
 function eom_plot.is_over(self)
     return cm:get_saved_value("civil_war_ended_"..self:name())
+end
+
+--v function(self: EOM_PLOT) --> boolean
+function eom_plot.is_active(self)
+    return (not cm:get_saved_value("civil_war_ended"..self:name())) and (self:current_stage() > 0)
 end
 
 --v function(self: EOM_PLOT)
@@ -86,6 +93,23 @@ end
 
 --v function(self: EOM_PLOT, stage: int, trigger: function(model: EOM_MODEL) --> boolean)
 function eom_plot.add_stage_trigger(self, stage, trigger)
-EOMLOG("")
+EOMLOG("Added trigger for stage ["..tostring(stage).."] in plot line ["..self:name().."]")
     self._triggers[stage] = trigger
 end
+--v function(self: EOM_PLOT, stage: int, callback: function(model: EOM_MODEL))
+function eom_plot.add_stage_callback(self, stage, callback)
+    EOMLOG("Added callback for stage ["..tostring(stage).."] in plot line ["..self:name().."]")
+    self._callbacks[stage] = callback
+end
+
+--v function(self: EOM_PLOT)
+function eom_plot.finish(self)
+    cm:set_saved_value("civil_war_ended_"..self:name(), true)
+end
+
+
+
+
+return {
+    new = eom_plot.new
+}
