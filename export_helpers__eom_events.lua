@@ -95,43 +95,10 @@ core:add_listener(
         return faction:name() == EOM_GLOBAL_EMPIRE_FACTION
     end,
     function(context)
-        eom:check_dead()
         eom:event_and_plot_check()
         eom:elector_diplomacy()
     end,
     true);
-
-
---civil wars.
-local eom_story_reikland_rebellion = eom:new_story_chain("eom_story_reikland_rebellion")
-eom_story_reikland_rebellion:add_stage_trigger( 1, function(model --: EOM_MODEL
-)
-    return true
-
-end)
-
-eom_story_reikland_rebellion:add_stage_callback(2, function(model --:EOM_MODEL
-)
-    model:set_core_data("block_events_for_plot", true)
-    model:set_core_data("plot_event_active", true)
-end)
-
-
-eom_story_reikland_rebellion:add_stage_trigger( 2, function(model --:EOM_MODEL
-)
-    return cm:get_faction("wh_main_emp_empire_rebels"):is_dead()
-
-end)
-
-eom_story_reikland_rebellion:add_stage_callback(2, function(model --:EOM_MODEL
-)
-    model:change_all_loyalties(5)
-    --trigger event 
-    model:get_story_chain("eom_story_reikland_rebellion"):finish()
-    model:set_core_data("block_events_for_plot", false)
-    model:set_core_data("plot_event_active", false)
-end)
-
 
 
 
@@ -293,9 +260,6 @@ core:add_listener(
     end,
     true)
 
---EVENTS
-
-
 local eom_main_events_table = {
     {
         key = "eom_dilemma_nordland_2",
@@ -308,11 +272,13 @@ local eom_main_events_table = {
             ) 
             model:get_elector("wh_main_emp_nordland"):change_loyalty(-15)
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
+            --NEED TO ADD COMMANDS FOR MARIENBURG BEING HAPPY
         end,
             [2] = function(model --:EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_nordland"):change_loyalty(15)
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(-10)
+            --NEED TO ADD COMMANDS FOR ANGRY MBURG
         end
         }
 
@@ -506,14 +472,116 @@ local eom_main_events_table = {
             cm:force_declare_war("wh_main_emp_empire", "wh_main_ksl_kislev", false, false)
         end
         }
+    },
+    {
+        key = "eom_dilemma_wissenland_1",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_wissenland") and (not cm:get_faction("wh_main_brt_parravon"):is_dead())
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            cm:force_declare_war("wh_main_brt_parravon", "wh_main_emp_wissenland", false, false)
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(-5)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(10)
+            --DF: Add treasury mod to event payload.
+        
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            cm:force_declare_war("wh_main_brt_parravon", "wh_main_emp_wissenland", false, false)
+            cm:force_declare_war("wh_main_brt_carcassonne", "wh_main_emp_wissenland", false, false)
+            cm:force_declare_war("wh_main_brt_parravon", "wh_main_emp_empire", false, false)
+            cm:force_declare_war("wh_main_brt_carcassonne", "wh_main_emp_empire", false, false)
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(-15)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_talabecland_1",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_talabecland") and model:is_elector_valid("wh_main_emp_ostermark") and model:is_elector_valid("wh_main_emp_middenland")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(25)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-15)
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-5)
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-5)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(5)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_cult_of_ulric_1",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_cult_of_ulric") and model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_talabecland")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-25)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(25)
+            model:change_ulrican_loyalites(15)
+            model:change_sigmarite_loyalties(-15)
+            model:change_atheist_loyalties(10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(25)
+            model:change_ulrican_loyalites(15)
+            model:change_sigmarite_loyalties(-10)
+            model:change_atheist_loyalties(-10)
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(-15)
+            model:change_ulrican_loyalites(-10)
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(30)
+
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(-10)
+            model:change_ulrican_loyalites(-5)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
+        end
+        }
     }
+
 }--:vector<EOM_EVENT>
     
 for i = 1, #eom_main_events_table do 
     local current_event = eom_main_events_table[i];
-    if not cm:get_saved_value("eom_action_"..current_event.key.."_occured") == true then
-        eom:add_event(current_event)
-    end
+    eom:add_event(current_event)
 end
 
 
