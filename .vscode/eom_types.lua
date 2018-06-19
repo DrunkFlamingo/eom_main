@@ -51,6 +51,11 @@
 --# _leaderForename: string, _leaderSurname: string, _expeditionX: number, _expeditionY: number, _expeditionRegion: string,
 --# _baseRegions: number, _turnsDead: number, _image: string, _fullyLoyal: boolean, _uiName: string, _uiTooltip: string}
 
+--# type global EOM_EVENT = {
+--# key: string, conditional: function(eom: EOM_MODEL) --> boolean,  choices: map<number, function(eom: EOM_MODEL)>
+--# }
+
+
 
 --# type global EOM_MODEL_SAVETABLE = {
 --# _electors: map<string, ELECTOR_INFO>,

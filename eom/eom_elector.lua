@@ -74,6 +74,12 @@ function eom_elector.name(self)
     return self._key
 end
 
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.capital(self)
+    return self._capital
+end
+
+
 --full loyalty
 
 --v function(self: EOM_ELECTOR) --> boolean

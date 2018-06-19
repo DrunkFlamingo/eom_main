@@ -362,6 +362,20 @@ function ulric_start_pos()
     return sp
 end
 
+--v function() --> map<string, EOM_CORE_DATA>
+function return_starting_core_data()
+    local cd = {} --:map<string, EOM_CORE_DATA>
+    cd.next_event_turn = 2
+    cd.block_events_for_plot = true
+    cd.current_plot = "reikland_rebellion"
+
+
+    return cd
+end
+
+
+
+
 --v function() --> vector<function() --> ELECTOR_INFO >
 function return_elector_starts()
     local t = {

@@ -217,6 +217,7 @@ function eom_view.populate_frame(self)
                 dy_loyalty:SetText("[[col:red]]Seceded[[/col]]")
             end
         end
+        EOMLOG("Updated Loyalties", "UI")
     end
 end
 
