@@ -147,6 +147,10 @@ end
 --events 
 --v function(self: EOM_MODEL, event: EOM_EVENT)
 function eom_model.add_event(self, event)
+    if cm:get_saved_value("eom_action_"..event.key.."_occured") == true then
+        EOMLOG("Event ["..event.key.."] already occured this save, not adding it back to the model!")
+        return
+    end
     local choicetable = event.choices
     local key = event.key
     local conditional = event.conditional

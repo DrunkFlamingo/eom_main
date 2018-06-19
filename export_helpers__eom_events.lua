@@ -475,7 +475,9 @@ local eom_main_events_table = {
     
 for i = 1, #eom_main_events_table do 
     local current_event = eom_main_events_table[i];
-    eom:add_event(current_event)
+    if not cm:get_saved_value("eom_action_"..current_event.key.."_occured") == true then
+        eom:add_event(current_event)
+    end
 end
 
 
