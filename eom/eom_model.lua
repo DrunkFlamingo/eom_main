@@ -38,7 +38,7 @@ EOM_GLOBAL_EMPIRE_REGIONS = {
 
 require("eom/eom_startpos")
 
-local eom_civil_war = require("eom/eom_civil_war")
+local eom_plot = require("eom/eom_plot")
 local eom_action = require("eom/eom_action")
 local eom_elector = require("eom/eom_elector")
 local eom_model = {} --# assume eom_model: EOM_MODEL
@@ -57,9 +57,9 @@ function eom_model.init()
     ) --# assume self: EOM_MODEL
 
     self._electors = {} --:map<string, EOM_ELECTOR>
-    self._civil_war = nil --:EOM_CIVIL_WAR
+    self._civil_war = nil --:EOM_PLOT
     self._events = {} --:map<string, EOM_ACTION>
-    self._civil_war_index = {} --:vector<EOM_CIVIL_WAR>
+    self._civil_war_index = {} --:vector<EOM_PLOT>
 
     self._coredata = {} --:map<string, EOM_CORE_DATA>
     self._view = nil --:EOM_VIEW
