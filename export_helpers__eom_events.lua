@@ -108,6 +108,14 @@ eom_story_reikland_rebellion:add_stage_trigger( 1, function(model --: EOM_MODEL
     return true
 
 end)
+
+eom_story_reikland_rebellion:add_stage_callback(2, function(model --:EOM_MODEL
+)
+    model:set_core_data("block_events_for_plot", true)
+    model:set_core_data("plot_event_active", true)
+end)
+
+
 eom_story_reikland_rebellion:add_stage_trigger( 2, function(model --:EOM_MODEL
 )
     return cm:get_faction("wh_main_emp_empire_rebels"):is_dead()
@@ -119,6 +127,8 @@ eom_story_reikland_rebellion:add_stage_callback(2, function(model --:EOM_MODEL
     model:change_all_loyalties(5)
     --trigger event 
     model:get_story_chain("eom_story_reikland_rebellion"):finish()
+    model:set_core_data("block_events_for_plot", false)
+    model:set_core_data("plot_event_active", false)
 end)
 
 

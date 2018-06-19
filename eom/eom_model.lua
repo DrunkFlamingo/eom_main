@@ -183,6 +183,11 @@ function eom_model.new_story_chain(self, name)
     return event
 end
 
+--v function(self: EOM_MODEL) --> map<string, EOM_PLOT>
+function eom_model.get_story(self)
+    return self._plot
+end
+
 --v function(self: EOM_MODEL, name: string) --> EOM_PLOT
 function eom_model.get_story_chain(self, name)
     return self._plot[name]
@@ -193,15 +198,19 @@ end
 --v function(self: EOM_MODEL)
 function eom_model.event_and_plot_check(self)
     --plot check
-
-
+    for key, story in pairs(self:get_story()) do
+       if story:check_advancement() == true then
+            story:advance()
+            return
+       end
+    end
     --events
     local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
     if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
         for key, event in pairs(self:events()) do
             if event:allowed() then
                 event:act()
-                break
+                return
             end
         end
     end
@@ -260,16 +269,21 @@ end
 function eom_model.save(self)
     EOMLOG("entered", "eom_model.save(self)")
     local savetable = {} 
-
+    --electors
     savetable._electors = {}--:map<string, ELECTOR_INFO>
     for k, v in pairs(self:electors()) do
         local info = v:save()
         savetable._electors[k] = info
         EOMLOG("saved Elector ["..k.."]")
     end
-
+    --core data
     savetable._coredata = self:coredata()
     EOMLOG("Core data saved!")
+
+    for k, v in pairs(self:get_story()) do
+        v:save()
+    end
+
     return savetable
 end
 

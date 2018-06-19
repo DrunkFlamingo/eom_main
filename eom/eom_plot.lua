@@ -9,10 +9,15 @@ setmetatable(self, {
 
 self._name = name
 self._model = model 
-self._current_stage = 0 --:int
+if cm:get_saved_value("plot_line_stage"..name) then
+    self._current_stage = cm:get_saved_value("plot_line_stage"..name) --:int
+    EOMLOG("Loaded stage ["..tostring(self._current_stage).."] for plot element ["..name.."]")
+else
+    self._current_stage = 0
+end
 self._triggers = {} --:vector<function(eom: EOM_MODEL) --> boolean>
 self._callbacks = {} --:vector<function(eom: EOM_MODEL)>
-if cm:get_saved_value("civil_war_ended_"..name) == nil then
+if cm:get_saved_value("plot_line_ended_"..name) == nil then
     cm:set_saved_value("civil_war_ended"..name,false) 
 end
 
@@ -67,28 +72,36 @@ end
 
 --v function(self: EOM_PLOT) --> boolean
 function eom_plot.is_over(self)
-    return cm:get_saved_value("civil_war_ended_"..self:name())
+    return cm:get_saved_value("plot_line_ended_"..self:name())
 end
 
 --v function(self: EOM_PLOT) --> boolean
 function eom_plot.is_active(self)
-    return (not cm:get_saved_value("civil_war_ended"..self:name())) and (self:current_stage() > 0)
+    return (not cm:get_saved_value("plot_line_ended_"..self:name())) and (self:current_stage() > 0)
 end
 
---v function(self: EOM_PLOT)
-function eom_plot.check_advancement(self)
+--v function(self: EOM_PLOT)--> boolean
+function eom_plot.check_advancement(self) 
     if self:is_over() then
         EOMLOG("Checked advancement for civil war ["..self:name().."] but that civil war is over! ")
-        return 
+        return false
     end
     local c_stage = self:current_stage()
     local n_stage = c_stage + 1;
     if self:has_stage(n_stage) and self:check_trigger(n_stage) then
-        self:set_stage(n_stage)
-        self:stage_callback(n_stage)
+        return true
     else 
-        EOMLOG("Civil war ["..self:name().."] is ready to advance but has no next stage!!")
+        EOMLOG("Civil war ["..self:name().."] is not advancing")
+        return false
     end
+end
+
+--v function (self: EOM_PLOT)
+function eom_plot.advance(self)
+    local c_stage = self:current_stage()
+    local n_stage = c_stage + 1;
+    self:set_stage(n_stage)
+    self:stage_callback(n_stage)
 end
 
 --v function(self: EOM_PLOT, stage: int, trigger: function(model: EOM_MODEL) --> boolean)
@@ -104,9 +117,13 @@ end
 
 --v function(self: EOM_PLOT)
 function eom_plot.finish(self)
-    cm:set_saved_value("civil_war_ended_"..self:name(), true)
+    cm:set_saved_value("plot_line_ended_"..self:name(), true)
 end
 
+--v function(self: EOM_PLOT)
+function eom_plot.save(self)
+    cm:set_saved_value("plot_line_stage"..self:name(), self:current_stage())
+end
 
 
 
