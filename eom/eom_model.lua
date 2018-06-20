@@ -128,7 +128,7 @@ end
 function eom_model.is_elector_valid(self, name)
     local elector_active = (self:get_elector(name):status() == "normal")
     local capital_owned = (cm:get_region(self:get_elector(name):capital()):owning_faction():name() == name)
-    local living = not self:get_elector_faction(name):is_dead()
+    local living = (not self:get_elector_faction(name):is_dead()) or self:get_elector(name):is_cult()
     local first_dilemma_triggered =  cm:get_saved_value("eom_action_eom_dilemma_nordland_2_occured") or false
     return elector_active and capital_owned and living and first_dilemma_triggered
 end
