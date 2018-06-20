@@ -3,7 +3,7 @@
 --# assume global class EOM_CONTROLLER
 
 --# assume global class EOM_MODEL
-
+--# assume global class EOM_KNIGHTS
 --# assume global class EOM_ELECTOR
 --# assume global class EOM_CULT
 --# assume global class EOM_ACTION
@@ -49,7 +49,8 @@
 --# _loyalty: number, _power: number, _state: ELECTOR_STATUS, _isCult: boolean,
 --# _capital: string, _hideFromUi: boolean, _leaderSubtype: string,
 --# _leaderForename: string, _leaderSurname: string, _expeditionX: number, _expeditionY: number, _expeditionRegion: string,
---# _baseRegions: number, _turnsDead: number, _image: string, _fullyLoyal: boolean, _uiName: string, _uiTooltip: string}
+--# _baseRegions: number, _turnsDead: number, _image: string, _fullyLoyal: boolean, _uiName: string, _uiTooltip: string,
+--# _knights: boolean, _unitList: string, _canRevive: boolean}
 
 --# type global EOM_EVENT = {
 --# key: string, conditional: function(eom: EOM_MODEL) --> boolean,  choices: map<number, function(eom: EOM_MODEL)>

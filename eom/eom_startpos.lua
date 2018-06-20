@@ -21,6 +21,9 @@ function averland_start_pos()
     sp._turnsDead = 0--:number
     sp._baseRegions = 2 --:number
     sp._isCult = false;
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     return sp
 end
 
@@ -47,6 +50,9 @@ function hochland_start_pos()
     sp._turnsDead = 0 --:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     return sp
 end
 
@@ -71,7 +77,9 @@ function ostermark_start_pos()
     sp._isCult = false;
     sp._expeditionRegion = "wh_main_talabecland_talabheim"
     sp._turnsDead = 0--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._baseRegions = 2--:number
     return sp
 end
@@ -94,7 +102,9 @@ function stirland_start_pos()
     sp._capital =  "wh_main_stirland_wurtbad"
     sp._expeditionX = 515--:number
     sp._expeditionY = 434--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -121,7 +131,9 @@ function middenland_start_pos()
     sp._capital =  "wh_main_middenland_middenheim"
     sp._expeditionX = 489--:number
     sp._expeditionY = 469--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_middenland_carroburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -147,7 +159,9 @@ function nordland_start_pos()
     sp._capital =  "wh_main_nordland_dietershafen"
     sp._expeditionX = 528--:number
     sp._expeditionY = 532--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_middenland_middenheim"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -173,7 +187,9 @@ function ostland_start_pos()
     sp._capital =  "wh_main_ostland_wolfenburg"
     sp._expeditionX = 586--:number
     sp._expeditionY = 522--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_hochland_hergig"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -199,7 +215,9 @@ function wissenland_start_pos()
     sp._capital =  "wh_main_wissenland_nuln"
     sp._expeditionX =515--:number
     sp._expeditionY = 434--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -225,7 +243,9 @@ function talabecland_start_pos()
     sp._capital =  "wh_main_talabecland_talabheim"
     sp._expeditionX = 515--:number
     sp._expeditionY = 434--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -251,7 +271,9 @@ function marienburg_start_pos()
     sp._capital =  "wh_main_the_wasteland_marienburg"
     sp._expeditionX = 440--:number
     sp._expeditionY = 553--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_reikland_eilhart"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -277,7 +299,9 @@ function sylvania_start_pos()
     sp._capital =  "wh_main_western_sylvania_castle_templehof"
     sp._expeditionX = 687--:number
     sp._expeditionY = 460--:number
-
+    sp._knights = false;
+    sp._canRevive = false;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -303,7 +327,9 @@ function vampire_start_pos()
     sp._capital =  "wh_main_eastern_sylvania_castle_drakenhof"
     sp._expeditionX = 677--:number
     sp._expeditionY = 460--:number
-
+    sp._knights = false;
+    sp._canRevive = false;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -329,7 +355,9 @@ function sigmar_start_pos()
     sp._capital =  "wh_main_wissenland_nuln"
     sp._expeditionX = 581--:number
     sp._expeditionY = 443--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_stirland_wurtbad"
     sp._turnsDead = 0--:number
     sp._isCult = true;
@@ -359,6 +387,9 @@ function ulric_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = true;
     sp._baseRegions = 0--:number
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     return sp
 end
 

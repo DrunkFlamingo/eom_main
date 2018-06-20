@@ -33,6 +33,10 @@ function eom_elector.new(info)
     self._uiName = info._uiName
     self._uiTooltip = info._uiTooltip
     self._isCult = info._isCult
+
+    self._knights = info._knights
+    self._canRevive = info._canRevive
+    self._unitList = info._unitList
     return self
 end
 
@@ -63,6 +67,9 @@ function eom_elector.save(self)
     savetable._uiName = self._uiName
     savetable._uiTooltip = self._uiTooltip
     savetable._isCult = self._isCult
+    savetable._knights = self._knights
+    savetable._unitList = self._unitList
+    savetable._canRevive = self._canRevive
     return savetable
 end
 
