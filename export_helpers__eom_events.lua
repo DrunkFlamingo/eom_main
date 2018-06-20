@@ -20,7 +20,7 @@ core:add_listener(
 
 
 
-function eom_starting_settings()
+local function eom_starting_settings()
     if cm:is_new_game() then
         out("EOM STARTING CHANGES RUNNING")
         local karl = "wh_main_emp_empire"
@@ -676,7 +676,44 @@ local eom_main_events_table = {
             model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(20)
         end
         }
+    },
+    {
+        key = "eom_dilemma_averland_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_averland") and model:is_elector_valid("wh_main_emp_wissenland")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(20)
+            model:change_atheist_loyalties(-10)
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_averland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(-10)
+            cm:force_declare_war("wh_main_emp_averland", "wh_main_emp_wissenland", false, false)
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            if cm:random_number(10) > 7 then
+                cm:force_declare_war("wh_main_emp_averland", "wh_main_emp_empire", false, false)
+                model:get_elector("wh_main_emp_averland"):change_loyalty(-20)
+                --@ sam, might need a new dummy effect. Called it "risk_of_escalation" or something so it can be reused in future random chance events.
+                --@ localise as "[[col:yellow]]The Emperor Risks Escalating the Situation [[/col]]"
+            end
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(10)
+        end
+        }
     }
+
 
 }--:vector<EOM_EVENT>
     
@@ -686,6 +723,7 @@ for i = 1, #eom_main_events_table do
 end
 
 --eom_dilemma_schwartzhafen_1
+
 
 
 --[[
