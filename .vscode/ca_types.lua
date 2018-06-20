@@ -204,6 +204,7 @@
 --# assume CM.force_make_trade_agreement: method(faction1: string, faction2: string)
 --# assume CM.faction_has_trade_agreement_with_faction: method( first_faction: CA_FACTION, second_faction: CA_FACTION)
 --# assume CM.faction_has_nap_with_faction: method(first_faction: CA_FACTION, second_faction: CA_FACTION)
+--# assume CM.force_confederation: method(confederator: string, confederated: string)
 
 --# assume CM.pending_battle_cache_get_defender: method(pos: int) --> (CA_CQI, CA_CQI, string)
 --# assume CM.pending_battle_cache_get_attacker: method(pos: int) --> (CA_CQI, CA_CQI, string)
