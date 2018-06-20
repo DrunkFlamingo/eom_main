@@ -247,6 +247,7 @@ end
 --v function(self: EOM_MODEL)
 function eom_model.event_and_plot_check(self)
     --plot check
+    EOMLOG("Core event and plot check function checking story events")
     for key, story in pairs(self:get_story()) do
        if story:check_advancement() == true then
             story:advance()
@@ -254,10 +255,12 @@ function eom_model.event_and_plot_check(self)
        end
     end
     --player restore opportunity.
+    EOMLOG("Core event and plot check function checking player restoration opportunities")
 
     
 
     --events
+    EOMLOG("Core event and plot check function checking political events")
     local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
     if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
         for key, event in pairs(self:events()) do
@@ -269,10 +272,23 @@ function eom_model.event_and_plot_check(self)
     end
 
     --revival events.
-
+    EOMLOG("Core event and plot check function checking revivification events")
+    for name, elector in pairs(self:electors()) do
+        if self:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() then
+        if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
+            elector:trigger_coup()
+            return
+        else
+            elector:trigger_expedition() 
+            return
+        end
+        end
+    end
     --elector falls
+    EOMLOG("Core event and plot check function checking elector fallen events.")
+    for name, elector in pairs(self:electors()) do
 
-    
+    end
 end
 
 

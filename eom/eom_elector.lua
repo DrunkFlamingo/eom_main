@@ -243,6 +243,18 @@ function eom_elector.set_leader_surname(self, surname)
     self._leaderSurname = surname
 end
 
+--armies
+
+--v function(self: EOM_ELECTOR, army_list: string)
+function eom_elector.set_army_list(self, army_list)
+    self._armyList = army_list
+end
+
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.get_army_list(self)
+    return self._armyList
+end
+
 
 
 --base regions
@@ -267,6 +279,16 @@ function eom_elector.turns_dead(self)
     return self._turnsDead
 end
 
+--v function(self: EOM_ELECTOR) --> boolean
+function eom_elector.can_revive(self)
+    return self._canRevive
+end
+
+--v function(self: EOM_ELECTOR, can_revive: boolean)
+function eom_elector.set_can_revive(self, can_revive)
+    self._canRevive = can_revive
+end
+
 --v function(self: EOM_ELECTOR) 
 function eom_elector.dead_for_turn(self)
     EOMLOG("entered", "eom_elector.dead_for_turn(self)")
@@ -277,6 +299,62 @@ end
 --v function(self: EOM_ELECTOR) --> (number, number)
 function eom_elector.expedition_coordinates(self)
     return self._expeditionX, self._expeditionY
+end
+
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.expedition_region(self)
+    return self._expeditionRegion
+end
+
+--v function(self: EOM_ELECTOR)
+function eom_elector.trigger_coup(self)
+    local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
+    cm:create_force_with_general(
+        self:name(),
+        self:get_army_list(),
+        self:capital(),
+        cm:get_region(self:capital()):settlement():logical_position_x() + 1,
+        cm:get_region(self:capital()):settlement():logical_position_y() + 1,
+        "general",
+        self:leader_subtype(),
+        self:leader_forename(),
+        "",
+        self:leader_surname(), 
+        "",
+        true,
+        function(cqi)
+
+        end)
+    cm:callback( function()
+        cm:transfer_region_to_faction(self:capital(), self:name())
+        cm:force_declare_war(self:name(), old_owner, false, false)
+       -- cm:treasury_mod(self:name(), 5000)
+    end, 0.2)
+    
+end
+
+--v function(self: EOM_ELECTOR)
+function eom_elector.trigger_expedition(self)
+    local x, y = self:expedition_coordinates();
+    local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
+    cm:create_force_with_general(
+        self:name(),
+        self:get_army_list(),
+        self:expedition_region(),
+        x,
+        y,
+        "general",
+        self:leader_subtype(),
+        self:leader_forename(),
+        "",
+        self:leader_surname(), 
+        "",
+        true,
+        function(cqi)
+
+        end)
+   -- cm:treasury_mod(self:name(), 10000)
+    cm:force_declare_war(self:name(), old_owner, false, false)
 end
 
 
