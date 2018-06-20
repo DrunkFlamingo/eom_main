@@ -712,8 +712,60 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_wissenland"):change_loyalty(10)
         end
         }
-    }
+    },
+    {
+        key = "eom_dilemma_hochland_2",
+        conditional = function(model --:EOM_MODEL
+        )
 
+            return model:is_elector_valid("wh_main_emp_hochland") and model:is_elector_valid("wh_main_emp_cult_of_sigmar")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_ostermark_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_middenland") and model:is_elector_valid("wh_main_emp_cult_of_ulric")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-15)
+            model:change_sigmarite_loyalties(-10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(-20)
+            model:change_ulrican_loyalites(-10)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
+            model:change_sigmarite_loyalties(10)
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
+            cm:force_declare_war("wh_main_emp_empire", "wh_main_emp_middenland", false, false)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
+            --NOTE: add reduced income payload
+        end
+        }
+    }
 
 }--:vector<EOM_EVENT>
     
