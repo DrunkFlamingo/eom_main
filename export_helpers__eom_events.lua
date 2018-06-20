@@ -618,7 +618,7 @@ local eom_main_events_table = {
         conditional = function(model --:EOM_MODEL
         )
 
-            return (not cm:get_faction("wh2_main_hef_eataine")) and model:is_elector_valid("wh_main_emp_marienburg")
+            return (not cm:get_faction("wh2_main_hef_eataine")) and model:is_elector_valid("wh_main_emp_marienburg") and cm:get_faction("wh_main_emp_empire"):treasury() > 5000
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -629,6 +629,27 @@ local eom_main_events_table = {
             [2] = function(model --:EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_marienburg"):change_loyalty(10)
+            --NOTE: Treasury Cost Payload
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_sylvania_1",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_sylvania") and cm:get_faction("wh_main_emp_empire"):treasury() > 6000
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_sylvania"):change_loyalty(-10)
+           -- cm:apply_effect_bundle_to_region("NEEDTOMAKE", "CASTLEDRAKENHOF")
+           -- Create bundle to apply corruption to drakenhof
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_sylvania"):change_loyalty(20)
             --NOTE: Treasury Cost Payload
         end
         }
