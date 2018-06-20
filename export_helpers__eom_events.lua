@@ -653,6 +653,29 @@ local eom_main_events_table = {
             --NOTE: Treasury Cost Payload
         end
         }
+    },
+    {
+        key = "eom_dilemma_schwartzhafen_1",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_vmp_schwartzhafen")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
+            model:change_sigmarite_loyalties(10)
+            model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(-20)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-20)
+            model:change_sigmarite_loyalties(-10)
+            model:get_elector("wh_main_emp_averland"):change_loyalty(-10)
+            model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(20)
+        end
+        }
     }
 
 }--:vector<EOM_EVENT>
@@ -662,7 +685,8 @@ for i = 1, #eom_main_events_table do
     eom:add_event(current_event)
 end
 
---eom_dilemma_cult_of_sigmar_1
+--eom_dilemma_schwartzhafen_1
+
 
 --[[
 Templates for events
