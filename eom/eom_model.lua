@@ -141,6 +141,16 @@ function eom_model.change_all_loyalties(self, quantity)
     end
 end
 
+--v function(self: EOM_MODEL, exception: vector<ELECTOR_NAME>, quantity: number)
+function eom_model.change_loyalty_for_all_except(self, exception, quantity)    
+    local reverse_quantity = -(quantity)
+    self:change_all_loyalties(quantity)
+    for i = 1, #exception do
+        self:get_elector(exception[i]):change_loyalty(reverse_quantity)
+    end
+end
+
+
 --v function(self: EOM_MODEL, quantity: number)
 function eom_model.change_sigmarite_loyalties(self, quantity)
     EOMLOG("called for a change in sigmarite loyalties of ["..tostring(quantity).."]")
