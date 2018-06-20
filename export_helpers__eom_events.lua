@@ -795,7 +795,39 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_ostland"):change_loyalty(-15)
         end
         }
+    },
+    {
+        key = "eom_dilemma_wissenland_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_wissenland") and model:is_elector_valid("wh_main_emp_cult_of_ulric") and (cm:get_faction("wh_main_emp_empire"):treasury() > 5000)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(15)
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(-15)
+            model:change_ulrican_loyalites(-10)
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(10)
+            --NOTE: Add treasury cost payload
+        end
+        }
     }
+
 
 }--:vector<EOM_EVENT>
     
