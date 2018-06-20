@@ -575,6 +575,43 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
         end
         }
+    },
+    {
+        key = "eom_dilemma_cult_of_sigmar_1",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_wissenland") and model:is_elector_valid("wh_main_emp_middenland")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
+            --NOTE: Add increased Skaven Corruption effect.
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            --panic effect bundle
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-25) 
+            model:change_loyalty_for_all_except({"wh_main_emp_cult_of_sigmar", "wh_main_emp_cult_of_ulric"}, 10)
+
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(5)
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(5)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(5)
+            --NOTE: Add reduced income effect
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(5)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(5)
+        end
+        }
     }
 
 }--:vector<EOM_EVENT>
@@ -584,6 +621,7 @@ for i = 1, #eom_main_events_table do
     eom:add_event(current_event)
 end
 
+--eom_dilemma_cult_of_sigmar_1
 
 --[[
 Templates for events
