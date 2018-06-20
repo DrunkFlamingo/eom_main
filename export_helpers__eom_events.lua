@@ -262,28 +262,6 @@ core:add_listener(
 
 local eom_main_events_table = {
     {
-        key = "eom_dilemma_nordland_2",
-        conditional = function(model --:EOM_MODEL
-        )
-            return true
-        end,
-        choices = {
-            [1] = function(model --: EOM_MODEL
-            ) 
-            model:get_elector("wh_main_emp_nordland"):change_loyalty(-15)
-            model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
-            --NEED TO ADD COMMANDS FOR MARIENBURG BEING HAPPY
-        end,
-            [2] = function(model --:EOM_MODEL
-            ) 
-            model:get_elector("wh_main_emp_nordland"):change_loyalty(15)
-            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-10)
-            --NEED TO ADD COMMANDS FOR ANGRY MBURG
-        end
-        }
-
-    },
-    {
         key = "eom_dilemma_averland_1",
         conditional = function(model --:EOM_MODEL
         )
@@ -763,6 +741,58 @@ local eom_main_events_table = {
             ) 
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
             --NOTE: add reduced income payload
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_nordland_2",
+        conditional = function(model --:EOM_MODEL
+        )
+            return true
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_nordland"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
+            --NEED TO ADD COMMANDS FOR MARIENBURG BEING HAPPY
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_nordland"):change_loyalty(15)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-10)
+            --NEED TO ADD COMMANDS FOR ANGRY MBURG
+        end
+        }
+
+    },
+    {
+        key = "eom_dilemma_ostland_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_ostland") and model:is_elector_valid("wh_main_emp_hochland") and (not model:get_core_data_with_key("hochland_ostland_allied") == true)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_ostland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(-15)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_ostland"):change_loyalty(10)
+            --NOTE Add Increased building cost debuff payload
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_ostland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-10)
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_ostland"):change_loyalty(-15)
         end
         }
     }
