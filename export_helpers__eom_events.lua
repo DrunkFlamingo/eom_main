@@ -912,6 +912,43 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_talabecland"):change_loyalty(10)
         end
         }
+    },
+    {
+        key = "eom_dilemma_marienburg_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_marienburg") and model:is_elector_valid("wh_main_emp_middenland") and (cm:get_faction("wh_main_emp_empire"):treasury() > 7000)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_marienburg"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(15)
+            cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_middenland", false, false)
+            model:grant_casus_belli("wh_main_emp_marienburg")
+            --@ sam there are effects for casus belli's in the effects table.
+            --ADD COMMANDS FOR CARROBURG INVOLVEMENT
+            
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_marienburg"):change_loyalty(15)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(-25)
+            --ADD COMMANDS FOR CARROBURG INVOLVEMENT
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_marienburg"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(15)
+            --NOTE: Add treasury cost
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
+            cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_middenland", false, false)
+        end
+        }
     }
 
 }--:vector<EOM_EVENT>
