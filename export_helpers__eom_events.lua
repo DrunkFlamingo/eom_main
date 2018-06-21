@@ -859,6 +859,39 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_middenland"):change_loyalty(10)
         end
         }
+    },
+    {
+        key = "eom_dilemma_cult_of_ulric_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_cult_of_ulric") and model:is_elector_valid("wh_main_emp_talabecland")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_averland"):change_loyalty(10)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-5)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(-5)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(5)
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(10)
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:set_core_data("eom_conclave_cancelled", false)
+            --@ sam: risk of escalation
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-10)
+        end
+        }
     }
 
 
