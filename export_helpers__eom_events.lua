@@ -949,6 +949,26 @@ local eom_main_events_table = {
             cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_middenland", false, false)
         end
         }
+    },
+    {
+        key = "eom_dilemma_sylvania_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_sylvania")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
+            model:get_elector("wh_main_emp_sylvania"):change_loyalty(-15)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_sylvania"):change_loyalty(10)
+        end
+        }
     }
 
 }--:vector<EOM_EVENT>
