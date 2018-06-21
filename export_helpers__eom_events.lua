@@ -969,7 +969,30 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_sylvania"):change_loyalty(10)
         end
         }
+    },
+    {
+        key = "eom_dilemma_schwartzhafen_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_vmp_schwartzhafen") and model:is_elector_valid("wh_main_emp_cult_of_sigmar")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(15)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-20)
+            model:change_sigmarite_loyalties(-15)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(-20)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
+            model:change_sigmarite_loyalties(10)
+        end
+        }
     }
+
 
 }--:vector<EOM_EVENT>
     
