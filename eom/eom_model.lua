@@ -191,6 +191,13 @@ end
 function eom_model.offer_capitulation(self, name)
     EOMLOG("Offering capitulation for ["..name.."] ")
     --needs filling
+
+    --cause dilemma
+
+
+    --create listener for dilemma responce
+
+
 end
     
     
@@ -199,6 +206,8 @@ end
 
 
 --events 
+--@name: add_event
+--@description: creates a new event from a table template.
 --v function(self: EOM_MODEL, event: EOM_EVENT)
 function eom_model.add_event(self, event)
     if cm:get_saved_value("eom_action_"..event.key.."_occured") == true then
@@ -256,11 +265,14 @@ end
 
 ---EBS
 
+--@name: event_and_plot_check
+--@description: causes all events on a prioritized basis.
 --v function(self: EOM_MODEL)
 function eom_model.event_and_plot_check(self)
 
     --capitulation
 
+    --full loyalty
 
     --plot check
     EOMLOG("Core event and plot check function checking story events")
