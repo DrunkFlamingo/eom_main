@@ -1112,25 +1112,6 @@ local eom_main_events_table = {
         }
     },
     {
-        key = "eom_dilemma_stirland_3",
-        conditional = function(model --:EOM_MODEL
-        )
-
-            return model:is_elector_valid("wh_main_emp_middenland") and (model:get_elector("wh_main_emp_middenland"):loyalty() < 20) and (cm:model():turn_number() > 50)
-        end,
-        choices = {
-            [1] = function(model --: EOM_MODEL
-            ) 
-            model:change_loyalty_for_all_except({"wh_main_emp_middenland", "wh_main_emp_cult_of_sigmar", "wh_main_emp_cult_of_ulric"}, -10)
-            model:get_elector("wh_main_emp_middenland"):change_loyalty(10)
-        end,
-            [2] = function(model --:EOM_MODEL
-            ) 
-            model:get_elector("wh_main_emp_middenland"):change_loyalty(-20)
-        end
-        }
-    },
-    {
         key = "eom_dilemma_middenland_3",
         conditional = function(model --:EOM_MODEL
         )
