@@ -197,9 +197,6 @@ function eom_view.populate_frame(self)
                 dy_loyalty:Resize(bX, tY)
                 currentContainer:AddComponent(electorButton)
                 currentContainer:AddComponent(dy_loyalty)
-
-                
-
                 electorListView:AddComponent(currentContainer)
             end
         end
@@ -230,18 +227,18 @@ function eom_view.close_politics(self)
     EOMLOG("Close button pressed on politics panel", "eom_controller.close_politics(self)")
     self:hide_frame()
     local layout = find_uicomponent(core:get_ui_root(), "layout")
-    if layout then
+    if not not layout then
         layout:SetVisible(true)
         EOMLOG("Showing the layout!")
     else
         EOMLOG("Could not find the layout?!?")
     end
     local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
-    if settlement then
+    if not not settlement then
      settlement:SetVisible(true)
     end
     local character = find_uicomponent(core:get_ui_root(), "units_panel")
-    if character then
+    if not not character then
         character:SetVisible(true)
     end
 end
@@ -252,18 +249,22 @@ function eom_view.docker_button_pressed(self)
     EOMLOG("Docker Button Pressed", "eom_controller.docker_button_pressed(self)")
     self:get_frame()
     self:frame_buttons()
-    self:populate_frame()
+    local ok, err = pcall( function() self:populate_frame() end)
+    if not ok then
+        --# assume err: string
+        EOM_ERROR(err)
+    end
     local layout = find_uicomponent(core:get_ui_root(), "layout")
-    if layout then
+    if not not layout then
         layout:SetVisible(false)
     end
     local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
-    if settlement then
+    if not not settlement then
         EOMLOG("Setting Settlements Panel Invisible")
      settlement:SetVisible(false)
     end
     local character = find_uicomponent(core:get_ui_root(), "units_panel")
-    if character then
+    if not not character then
         EOMLOG("Setting Character Panel Invisible")
         character:SetVisible(false)
     end
