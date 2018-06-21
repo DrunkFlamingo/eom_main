@@ -9,7 +9,7 @@ function EOMLOG(text, ftext)
         return; --if our bool isn't set true, we don't want to spam the end user with logs. 
     end
     if not ftext then
-        ftext = "no context set"
+        ftext = EOM_LAST_CONTEXT
     else
         EOM_LAST_CONTEXT = ftext
     end
