@@ -107,12 +107,6 @@ function eom_model.elector_list(self)
     return elector_list
 end
 
---v function(self: EOM_MODEL, name: ELECTOR_NAME)
-function eom_model.grant_casus_belli(self, name)
-    cm:apply_effect_bundle("eom_"..name.."_casus_belli", EOM_GLOBAL_EMPIRE_FACTION, 8)
-end
-
-
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME) --> EOM_ELECTOR
 function eom_model.get_elector(self, name)
@@ -186,6 +180,24 @@ function eom_model.add_elector(self, info)
     EOMLOG("Added elector ["..elector:name().."] to the model!")
 end
 
+
+--war systems
+--v function(self: EOM_MODEL, name: ELECTOR_NAME)
+function eom_model.grant_casus_belli(self, name)
+    cm:apply_effect_bundle("eom_"..name.."_casus_belli", EOM_GLOBAL_EMPIRE_FACTION, 8)
+end
+
+--v function(self: EOM_MODEL, name: ELECTOR_NAME)
+function eom_model.offer_capitulation(self, name)
+    EOMLOG("Offering capitulation for ["..name.."] ")
+    --needs filling
+end
+    
+    
+    
+
+
+
 --events 
 --v function(self: EOM_MODEL, event: EOM_EVENT)
 function eom_model.add_event(self, event)
@@ -246,6 +258,10 @@ end
 
 --v function(self: EOM_MODEL)
 function eom_model.event_and_plot_check(self)
+
+    --capitulation
+
+
     --plot check
     EOMLOG("Core event and plot check function checking story events")
     for key, story in pairs(self:get_story()) do
