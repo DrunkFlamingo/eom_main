@@ -37,6 +37,7 @@ function eom_elector.new(info)
     self._knights = info._knights
     self._canRevive = info._canRevive
     self._unitList = info._unitList
+    self._willCapitulate = info._willCapitulate 
     return self
 end
 
@@ -70,6 +71,7 @@ function eom_elector.save(self)
     savetable._knights = self._knights
     savetable._unitList = self._unitList
     savetable._canRevive = self._canRevive
+    savetable._willCapitulate = self._willCapitulate
     return savetable
 end
 
@@ -180,7 +182,17 @@ function eom_elector.change_power(self, value)
     self._power = self._power + value
 end
 
+--capitulation
 
+--v function(self: EOM_ELECTOR, should_capitulate: boolean)
+function eom_elector.set_should_capitulate(self, should_capitulate)
+    self._willCapitulate = should_capitulate
+end
+
+--v function(self: EOM_ELECTOR) --> boolean
+function eom_elector.will_capitulate(self)
+    return self._willCapitulate
+end
 
 
 
