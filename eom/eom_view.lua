@@ -219,6 +219,7 @@ function eom_view.populate_frame(self)
         end
         EOMLOG("Updated Loyalties", "UI")
     end
+    EOMLOG("Populate frame completed with no errors")
 end
 
 --controller methods (assumed)
@@ -229,7 +230,12 @@ function eom_view.close_politics(self)
     EOMLOG("Close button pressed on politics panel", "eom_controller.close_politics(self)")
     self:hide_frame()
     local layout = find_uicomponent(core:get_ui_root(), "layout")
-    layout:SetVisible(true)
+    if layout then
+        layout:SetVisible(true)
+        EOMLOG("Showing the layout!")
+    else
+        EOMLOG("Could not find the layout?!?")
+    end
     local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
     if settlement then
      settlement:SetVisible(true)
@@ -248,7 +254,9 @@ function eom_view.docker_button_pressed(self)
     self:frame_buttons()
     self:populate_frame()
     local layout = find_uicomponent(core:get_ui_root(), "layout")
-    layout:SetVisible(false)
+    if layout then
+        layout:SetVisible(false)
+    end
     local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
     if settlement then
         EOMLOG("Setting Settlements Panel Invisible")
