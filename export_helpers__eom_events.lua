@@ -716,6 +716,46 @@ local eom_main_events_table = {
         conditional = function(model --:EOM_MODEL
         )
 
+            return model:is_elector_valid("wh_main_emp_ostermark") and model:is_elector_valid("wh_main_emp_cult_of_sigmar")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(15)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-15)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_stirland_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_stirland") and model:is_elector_valid("wh_main_emp_averland")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_stirland"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_averland"):change_loyalty(10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_stirland"):change_loyalty(15)
+            model:get_elector("wh_main_emp_averland"):change_loyalty(-15)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_middenland_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
             return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_middenland") and model:is_elector_valid("wh_main_emp_cult_of_ulric")
         end,
         choices = {
@@ -991,6 +1031,66 @@ local eom_main_events_table = {
             model:change_sigmarite_loyalties(10)
         end
         }
+    },
+    {
+        key = "eom_dilemma_averland_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_averland") and (model:get_elector("wh_main_emp_averland"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_averland"):change_loyalty(15)
+            model:change_loyalty_for_all_except({"wh_main_emp_averland", "wh_main_emp_cult_of_sigmar", "wh_main_emp_cult_of_ulric"}, -15)
+            --@sam use all.
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_averland"):change_loyalty(-20)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_hochland_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_hochland") and (model:get_elector("wh_main_emp_hochland"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(15)
+            model:change_loyalty_for_all_except({"wh_main_emp_hochland", "wh_main_emp_cult_of_sigmar", "wh_main_emp_cult_of_ulric"}, -15)
+            --NOTE: add construction cost and trade income malus's
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(-20)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_ostermark_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_ostermark") and (model:get_elector("wh_main_emp_ostermark"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(25)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-20)
+        end
+        }
     }
 
 
@@ -1001,7 +1101,7 @@ for i = 1, #eom_main_events_table do
     eom:add_event(current_event)
 end
 
---eom_dilemma_schwartzhafen_1
+--eom_dilemma_ostermark_3
 
 
 
