@@ -342,7 +342,7 @@ function eom_elector.trigger_coup(self)
         cm:force_declare_war(self:name(), old_owner, false, false)
        -- cm:treasury_mod(self:name(), 5000)
     end, 0.2)
-    
+    self:set_can_revive(false)
 end
 
 --v function(self: EOM_ELECTOR)
@@ -367,6 +367,7 @@ function eom_elector.trigger_expedition(self)
         end)
    -- cm:treasury_mod(self:name(), 10000)
     cm:force_declare_war(self:name(), old_owner, false, false)
+    self:set_can_revive(false)
 end
 
 

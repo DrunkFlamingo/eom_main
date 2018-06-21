@@ -33,7 +33,33 @@ EOM_GLOBAL_EMPIRE_REGIONS = {
     ["wh_main_ostermark_essen"] = 1,
     ["wh_main_the_wasteland_gorssel"] = 1,
     ["wh_main_the_wasteland_marienburg"] = 2
-}--:map<EMPIRE_REGION, number>
+}--:map<string, number>
+
+EOM_GLOBAL_REGION_TO_ELECTOR = {
+    ["wh_main_ostland_castle_von_rauken"] = "wh_main_emp_ostland",
+    ["wh_main_ostland_norden"] = "wh_main_emp_ostland",
+    ["wh_main_ostland_wolfenburg"] = "wh_main_emp_ostland",
+    ["wh_main_stirland_the_moot"] = "wh_main_emp_stirland",
+    ["wh_main_stirland_wurtbad"] = "wh_main_emp_stirland",
+    ["wh_main_talabecland_kemperbad"] = "wh_main_emp_talabecland",
+    ["wh_main_wissenland_nuln"] = "wh_main_emp_wissenland",
+    ["wh_main_wissenland_pfeildorf"] = "wh_main_emp_wissenland",
+    ["wh_main_wissenland_wissenburg"] = "wh_main_emp_wissenland",
+    ["wh_main_hochland_brass_keep"] = "wh_main_emp_hochland",
+    ["wh_main_hochland_hergig"] = "wh_main_emp_hochland",
+    ["wh_main_middenland_carroburg"] = "wh_main_emp_middenland",
+    ["wh_main_middenland_middenheim"] = "wh_main_emp_middenland",
+    ["wh_main_middenland_weismund"] = "wh_main_emp_middenland",
+    ["wh_main_nordland_dietershafen"] = "wh_main_emp_nordland",
+    ["wh_main_nordland_salzenmund"] = "wh_main_emp_nordland",
+    ["wh_main_talabecland_talabheim"] = "wh_main_emp_talabecland",
+    ["wh_main_averland_averheim"] = "wh_main_emp_averland",
+    ["wh_main_averland_grenzstadt"] = "wh_main_emp_averland",
+    ["wh_main_ostermark_bechafen"] = "wh_main_emp_ostermark",
+    ["wh_main_ostermark_essen"] = "wh_main_emp_ostermark",
+    ["wh_main_the_wasteland_gorssel"] = "wh_main_emp_marienburg",
+    ["wh_main_the_wasteland_marienburg"] = "wh_main_emp_marienburg"
+}--:map<string, ELECTOR_NAME>
 
 
 require("eom/eom_startpos")
@@ -261,7 +287,14 @@ function eom_model.check_dead(self)
     end
 end
 
-
+--v function(self: EOM_MODEL, name:ELECTOR_NAME)
+function eom_model.elector_fallen(self, name)
+    local elector = self:get_elector(name)
+    self:change_all_loyalties(-10)
+    --NOTE: trigger elector fallen event.
+    elector:set_status("fallen")
+    elector:set_visible(false)
+end
 
 ---EBS
 
@@ -271,7 +304,13 @@ end
 function eom_model.event_and_plot_check(self)
 
     --capitulation
-
+    for name, elector in pairs(self:electors()) do
+        if elector:will_capitulate() then
+            self:offer_capitulation(name)
+            elector:set_should_capitulate(false)
+            return
+        end
+    end
     --full loyalty
 
     --plot check
@@ -302,7 +341,7 @@ function eom_model.event_and_plot_check(self)
     --revival events.
     EOMLOG("Core event and plot check function checking revivification events")
     for name, elector in pairs(self:electors()) do
-        if self:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() then
+        if self:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() and (not elector:is_cult()) then
         if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
             elector:trigger_coup()
             return
@@ -315,7 +354,9 @@ function eom_model.event_and_plot_check(self)
     --elector falls
     EOMLOG("Core event and plot check function checking elector fallen events.")
     for name, elector in pairs(self:electors()) do
-
+        if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
+            self:elector_fallen(name)
+        end
     end
 end
 
@@ -509,4 +550,33 @@ core:add_listener(
     end, 
     true)
 
-
+core:add_listener(
+    "EOMSettlementSacked",
+    "", --NOTE: add event
+    function(context)
+        local gar_res = context:garrison_residence() --:CA_GARRISON_RESIDENCE
+        local region =  gar_res:region():name()
+        return not not EOM_GLOBAL_REGION_TO_ELECTOR[region]
+    end,
+    function(context)
+        local elector = EOM_GLOBAL_REGION_TO_ELECTOR[context:garrison_residence():region():name()]
+        if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):at_war_with(cm:get_faction(elector)) and eom:get_elector(elector):status() == "normal" or eom:get_elector(elector):status() == "open_rebellion" then
+            eom:get_elector(elector):set_should_capitulate(true)
+        end
+    end,
+    true);
+core:add_listener(
+    "EOMSettlementOccupied",
+    "", --NOTE: add event
+    function(context)
+        local gar_res = context:garrison_residence() --:CA_GARRISON_RESIDENCE
+        local region =  gar_res:region():name()
+        return not not EOM_GLOBAL_REGION_TO_ELECTOR[region]
+    end,
+    function(context)
+        local elector = EOM_GLOBAL_REGION_TO_ELECTOR[context:garrison_residence():region():name()]
+        if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):at_war_with(cm:get_faction(elector)) and eom:get_elector(elector):status() == "normal" or eom:get_elector(elector):status() == "open_rebellion" then
+            eom:get_elector(elector):set_should_capitulate(true)
+        end
+    end,
+    true);
