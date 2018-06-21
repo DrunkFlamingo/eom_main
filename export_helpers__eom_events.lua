@@ -826,6 +826,39 @@ local eom_main_events_table = {
             --NOTE: Add treasury cost payload
         end
         }
+    },
+    {
+        key = "eom_dilemma_talabecland_2",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_talabecland") and model:is_elector_valid("wh_main_emp_hochland") and model:is_elector_valid("wh_main_emp_ostermark")
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(5)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(10)
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(10)
+        end,
+            [3] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(15)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-10)
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(-10)
+        end,
+            [4] = function(model --: EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-25)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(15)
+            model:get_elector("wh_main_emp_hochland"):change_loyalty(15)
+            model:get_elector("wh_main_emp_middenland"):change_loyalty(10)
+        end
+        }
     }
 
 
