@@ -1142,13 +1142,34 @@ local eom_main_events_table = {
             ) 
             model:change_loyalty_for_all_except({"wh_main_emp_middenland", "wh_main_emp_cult_of_sigmar", "wh_main_emp_cult_of_ulric"}, -10)
             model:get_elector("wh_main_emp_middenland"):change_loyalty(10)
+            model:set_core_data("middenland_conceded_to", true)
         end,
             [2] = function(model --:EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_middenland"):change_loyalty(-20)
+            model:set_core_data("middenland_conceded_to", false)
         end
         }
     },
+    {
+        key = "eom_dilemma_nordland_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_nordland") and (model:get_elector("wh_main_emp_nordland"):loyalty() < 20) and cm:get_region("wh_main_the_wasteland_marienburg"):owning_faction():name() == "wh_main_emp_empire" and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            cm:transfer_region_to_faction("wh_main_the_wasteland_marienburg", "wh_main_emp_nordland")
+            model:get_elector("wh_main_emp_nordland"):change_loyalty(10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_nordland"):change_loyalty(-20)
+        end
+        }
+    }
 }--:vector<EOM_EVENT>
     
 for i = 1, #eom_main_events_table do 
