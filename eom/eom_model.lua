@@ -324,7 +324,7 @@ function eom_model.event_and_plot_check(self)
     --player restore opportunity.
     EOMLOG("Core event and plot check function checking player restoration opportunities")
 
-    
+    --open rebellion
 
     --events
     EOMLOG("Core event and plot check function checking political events")
@@ -498,6 +498,14 @@ cm:add_loading_game_callback(
             local core_data_to_load = return_starting_core_data()
             for key, data in pairs(core_data_to_load) do
                 eom:set_core_data(key, data)
+            end
+            --randomize which plot events happen when
+            if cm:random_number(10) > 6 then
+                eom:set_core_data("vampire_war_turn", 30)
+                eom:set_core_data("marienburg_plot_turn", 55)
+            else
+                eom:set_core_data("vampire_war_turn", 55)
+                eom:set_core_data("marienburg_plot_turn", 30)
             end
         else
             eom:load(savetable)
