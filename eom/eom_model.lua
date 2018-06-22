@@ -312,6 +312,12 @@ function eom_model.event_and_plot_check(self)
         end
     end
     --full loyalty
+    for name, elector in pairs(self:electors()) do
+        if elector:loyalty() > 99 then
+            elector:set_fully_loyal(self)
+            return
+        end
+    end
 
     --plot check
     EOMLOG("Core event and plot check function checking story events")
@@ -323,8 +329,8 @@ function eom_model.event_and_plot_check(self)
     end
     --player restore opportunity.
     EOMLOG("Core event and plot check function checking player restoration opportunities")
-
-    --open rebellion
+    --[[NOTE: NOT IN INITIAL BETA]]
+    
 
     --events
     EOMLOG("Core event and plot check function checking political events")

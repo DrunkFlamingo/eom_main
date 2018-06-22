@@ -38,6 +38,7 @@ function eom_elector.new(info)
     self._canRevive = info._canRevive
     self._unitList = info._unitList
     self._willCapitulate = info._willCapitulate 
+    self._fullLoyaltyCallback = function(model) end --:function(model: EOM_MODEL)
     return self
 end
 
@@ -370,6 +371,19 @@ function eom_elector.trigger_expedition(self)
     self:set_can_revive(false)
 end
 
+--v function(self: EOM_ELECTOR, callback: function(model: EOM_MODEL))
+function eom_elector.set_full_loyalty_callback(self, callback)
+    self._fullLoyaltyCallback = callback
+end
+
+
+
+--v function(self: EOM_ELECTOR, model: EOM_MODEL)
+function eom_elector.set_fully_loyal(self, model)
+    self:make_fully_loyal()
+    self:set_status("loyal")
+    self._fullLoyaltyCallback(model)
+end
 
 return {
     new = eom_elector.new
