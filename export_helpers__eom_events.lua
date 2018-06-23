@@ -1,5 +1,9 @@
 cm = get_cm() events = get_events() eom = _G.eom
 
+if not eom then 
+    out("EOM IS NOT FOUND!")
+    return
+end
 
 --[[ testing functions
 
@@ -1150,7 +1154,175 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_nordland"):change_loyalty(-20)
         end
         }
-    }
+    },
+    {
+        key = "eom_dilemma_ostland_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_middenland") and (model:get_elector("wh_main_emp_middenland"):loyalty() < 20) and (cm:model():turn_number() > 50) and (cm:get_faction("wh_main_emp_empire"):treasury() > 5000)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            --NOTE: add treasury cost payload
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(15)
+            model:get_elector("wh_main_emp_ostland"):change_loyalty(10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_ostland"):change_loyalty(-20)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_wissenland_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_wissenland") and (model:get_elector("wh_main_emp_wissenland"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            --NOTE: add treasury cost payload
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(15)
+            model:change_loyalty_for_all_except({"wh_main_emp_wissenland", "wh_main_emp_cult_of_sigmar"}, -15)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_wissenland"):change_loyalty(-20)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_talabecland_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_talabecland") and (model:get_elector("wh_main_emp_talabecland"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            --NOTE: add treasury cost payload
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(15)
+            model:change_loyalty_for_all_except({"wh_main_emp_talabecland"}, -15)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-20)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_cult_of_ulric_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_cult_of_ulric") and (model:get_elector("wh_main_emp_cult_of_ulric"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            --NOTE: add treasury cost payload
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(15)
+            model:change_ulrican_loyalites(10)
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-20)
+            model:change_sigmarite_loyalties(-15)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(-20)
+            model:change_ulrican_loyalites(-10)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_cult_of_sigmar_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and (model:get_elector("wh_main_emp_cult_of_sigmar"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            --NOTE: add treasury cost payload
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
+            model:change_ulrican_loyalites(-15)
+            model:change_atheist_loyalties(-15)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-20)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_marienburg_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_marienburg") and (model:get_elector("wh_main_emp_marienburg"):loyalty() < 50) and (cm:model():turn_number() > 30)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            --NOTE: add treasury cost payload
+            model:get_elector("wh_main_emp_marienburg"):change_loyalty(10)
+            model:get_elector("wh_main_emp_nordland"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_talabecland"):change_loyalty(-15)
+            --@ sam can you add a dummy effect: key: eom_high_elf_trade_restriction, localisation: "Only Marienburg may with the city of Lothern", image: "icon_effects_army.png"
+            cm:force_diplomacy("faction:wh_main_emp_empire", "faction:wh2_main_hef_eataine", "trade", false, false, true)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_marienburg"):change_loyalty(-15)
+        end
+        }
+    },
+    {
+        key = "eom_dilemma_sylvania_3",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_emp_sylvania") and (model:get_elector("wh_main_emp_sylvania"):loyalty() < 50) and (cm:model():turn_number() > 30)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            --NOTE: add treasury cost payload
+            model:get_elector("wh_main_emp_sylvania"):change_loyalty(10)
+            model:get_elector("wh_main_emp_averland"):change_loyalty(-15)
+            model:get_elector("wh_main_emp_ostermark"):change_loyalty(-15)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_emp_sylvania"):change_loyalty(-20)
+        end
+        }
+    },
+    {
+        key = "wh_main_vmp_schwartzhafen",
+        conditional = function(model --:EOM_MODEL
+        )
+
+            return model:is_elector_valid("wh_main_vmp_schwartzhafen") and (model:get_elector("wh_main_vmp_schwartzhafen"):loyalty() < 50) and (cm:model():turn_number() > 50)
+        end,
+        choices = {
+            [1] = function(model --: EOM_MODEL
+            ) 
+            --NOTE: add treasury cost payload
+            model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(20)
+            model:change_loyalty_for_all_except({"wh_main_vmp_schwartzhafen"}, -10)
+        end,
+            [2] = function(model --:EOM_MODEL
+            ) 
+            model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(-25)
+        end
+        }
+    }, 
 }--:vector<EOM_EVENT>
     
 for i = 1, #eom_main_events_table do 
