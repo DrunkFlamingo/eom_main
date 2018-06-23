@@ -1,3 +1,7 @@
+--v function() --> string
+local function get_default_start_army()
+    return "wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_halberdiers,wh_main_emp_inf_halberdiers,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_handgunners,wh_main_emp_inf_handgunners,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen"
+end
 
 --v function() --> ELECTOR_INFO
 function averland_start_pos()
@@ -23,7 +27,7 @@ function averland_start_pos()
     sp._isCult = false;
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     return sp
 end
 
@@ -52,7 +56,7 @@ function hochland_start_pos()
     sp._baseRegions = 2--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     return sp
 end
 
@@ -79,7 +83,7 @@ function ostermark_start_pos()
     sp._turnsDead = 0--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._baseRegions = 2--:number
     return sp
 end
@@ -104,7 +108,7 @@ function stirland_start_pos()
     sp._expeditionY = 434--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -133,7 +137,7 @@ function middenland_start_pos()
     sp._expeditionY = 469--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_middenland_carroburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -161,7 +165,7 @@ function nordland_start_pos()
     sp._expeditionY = 532--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_middenland_middenheim"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -189,7 +193,7 @@ function ostland_start_pos()
     sp._expeditionY = 522--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_hochland_hergig"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -217,7 +221,7 @@ function wissenland_start_pos()
     sp._expeditionY = 434--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -245,7 +249,7 @@ function talabecland_start_pos()
     sp._expeditionY = 434--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -273,7 +277,7 @@ function marienburg_start_pos()
     sp._expeditionY = 553--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_reikland_eilhart"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -301,7 +305,7 @@ function sylvania_start_pos()
     sp._expeditionY = 460--:number
     sp._knights = false;
     sp._canRevive = false;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -329,7 +333,7 @@ function vampire_start_pos()
     sp._expeditionY = 460--:number
     sp._knights = false;
     sp._canRevive = false;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -357,7 +361,7 @@ function sigmar_start_pos()
     sp._expeditionY = 443--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_stirland_wurtbad"
     sp._turnsDead = 0--:number
     sp._isCult = true;
@@ -389,7 +393,7 @@ function ulric_start_pos()
     sp._baseRegions = 0--:number
     sp._knights = false;
     sp._canRevive = true;
-    sp._unitList = "";
+    sp._unitList = get_default_start_army()
     return sp
 end
 
