@@ -10,5 +10,6 @@ core:add_listener(
     function(context)
         eom:event_and_plot_check()
         eom:elector_diplomacy()
+        eom:elector_personalities()
     end,
     true);

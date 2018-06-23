@@ -405,7 +405,18 @@ function eom_model.elector_diplomacy(self)
     end
 end
 
-
+--v function(self: EOM_MODEL)
+function eom_model.elector_personalities(self)
+    for name, elector in pairs(self:electors()) do
+        if elector:status() == "normal" then
+            cm:force_change_cai_faction_personality(name, "eom_normal_elector")
+        elseif elector:status() == "civil_war_enemy" or elector:status() == "open_rebellion" then
+            cm:force_change_cai_faction_personality(name, "eom_disloyal_elector")
+        elseif elector:status() == "civil_war_emperor" then
+            cm:force_change_cai_faction_personality(name, "eom_pretender")
+        end
+    end
+end
 
 
 
