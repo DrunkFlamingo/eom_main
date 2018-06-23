@@ -234,6 +234,8 @@
 --# assume CM.replenish_action_points: method(lookup:string)
 --# assume CM.force_add_skill: method(lookup: string, skill_key: string)
 --# assume CM.scroll_camera_from_current: WHATEVER
+--# assume CM.treasury_mod: method(faction_key: string, quantity: number)
+
 
 -- CAMPAIGN UI MANAGER
 --# assume CUIM.get_char_selected: method() --> string
