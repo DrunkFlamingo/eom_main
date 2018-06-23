@@ -56,7 +56,7 @@ core:add_listener(
     function(context)
         local elector = EOM_GLOBAL_REGION_TO_ELECTOR[context:garrison_residence():region():name()]
         if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):at_war_with(cm:get_faction(elector)) and eom:get_elector(elector):status() == "normal" or eom:get_elector(elector):status() == "open_rebellion" then
-            if eom:is_elector_valid(context:character():faction():name()) then
+            if eom:is_elector_valid(context:character():faction():name()) and eom:get_elector(elector):capital() == context:garrison_residence():region():name() then
                 eom:get_elector(elector):set_should_capitulate(true)
             end
         end
@@ -73,7 +73,7 @@ core:add_listener(
     function(context)
         local elector = EOM_GLOBAL_REGION_TO_ELECTOR[context:garrison_residence():region():name()]
         if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):at_war_with(cm:get_faction(elector)) and eom:get_elector(elector):status() == "normal" or eom:get_elector(elector):status() == "open_rebellion" then
-            if eom:is_elector_valid(context:character():faction():name()) then
+            if eom:is_elector_valid(context:character():faction():name()) and eom:get_elector(elector):capital() == context:garrison_residence():region():name() then
                 eom:get_elector(elector):set_should_capitulate(true)
             end
         end
