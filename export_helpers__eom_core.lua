@@ -14,6 +14,7 @@ core:add_listener(
         eom:event_and_plot_check()
         eom:elector_diplomacy()
         eom:elector_personalities()
+        eom:elector_taxation()
     end,
     true);
 

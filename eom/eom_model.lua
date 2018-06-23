@@ -147,11 +147,25 @@ end
 --v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
 function eom_model.is_elector_valid(self, name)
     local elector_active = (self:get_elector(name):status() == "normal")
-    local capital_owned = (cm:get_region(self:get_elector(name):capital()):owning_faction():name() == name) or self:get_elector(name):is_cult()
-    local living = (not self:get_elector_faction(name):is_dead()) or self:get_elector(name):is_cult()
+    local capital_owned = (cm:get_region(self:get_elector(name):capital()):owning_faction():name() == name)
+    local living = (not self:get_elector_faction(name):is_dead()) 
+    if self:get_elector(name):is_cult() then
+        living = true 
+        capital_owned = true
+    end
     local first_dilemma_triggered =  cm:get_saved_value("eom_action_eom_dilemma_nordland_2_occured") or false
+    EOMLOG("is Elector Valid returning ["..tostring(elector_active and capital_owned and living and first_dilemma_triggered).."] ")
     return elector_active and capital_owned and living and first_dilemma_triggered
 end
+
+--v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
+function eom_model.is_elector_valid_for_taxes(self, name)
+    local elector_active = (self:get_elector(name):status() == "normal")
+    local capital_owned = (cm:get_region(self:get_elector(name):capital()):owning_faction():name() == name)
+    local living = (not self:get_elector_faction(name):is_dead()) 
+    return elector_active and capital_owned and living
+end
+
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
 function eom_model.is_elector_rebelling(self, name)
@@ -508,13 +522,14 @@ end
 
 --v function (name:ELECTOR_NAME)
 local function remove_taxation_bundles(name)
-    EOMLOG("Removing all tax bundles for ["..name.."] ")
+    
     local empire = cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION)
     for i = 1, 4 do 
         if empire:has_effect_bundle("eom_"..name.."_taxation_"..i) then
-            cm:remove_effect_bundle("eom_"..name.."_taxation_"..i, EOM_GLOBAL_EMPIRE_FACTION)
+            cm:remove_effect_bundle(tostring("eom_"..name.."_taxation_"..i), EOM_GLOBAL_EMPIRE_FACTION)
         end
     end
+    EOMLOG("Removing all tax bundles for ["..name.."] ")
 end
 
 
@@ -522,7 +537,7 @@ end
 function eom_model.elector_taxation(self)
     local empire = cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION)
     for name, elector in pairs(self:electors()) do
-        if (not elector:is_cult()) and self:is_elector_valid(name) then
+        if (not elector:is_cult()) and self:is_elector_valid_for_taxes(name) then
             if elector:loyalty() <= 25 then
                 if not empire:has_effect_bundle("eom_"..name.."_taxation_1") then
                     remove_taxation_bundles(name)
@@ -548,7 +563,7 @@ function eom_model.elector_taxation(self)
                     EOMLOG("Assigning tax level 4 to ["..name.."] ")
                 end
             end
-        elseif (not self:is_elector_valid(name)) then
+        elseif (not self:is_elector_valid_for_taxes(name)) then
             remove_taxation_bundles(name)
         end
     end
