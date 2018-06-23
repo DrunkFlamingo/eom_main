@@ -90,6 +90,11 @@ function eom_model.init()
     self._view = nil --:EOM_VIEW
     return self
 end
+--v function(self: EOM_MODEL) --> string
+function eom_model.empire(self)
+    return "wh_main_emp_empire"
+end
+
 
 --core data
 --v function(self: EOM_MODEL) --> map<string, EOM_CORE_DATA>
