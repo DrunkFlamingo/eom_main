@@ -2,7 +2,7 @@
 --v function() --> ELECTOR_INFO
 function averland_start_pos()
     local sp = {}
-    sp._loyalty = 50 --:number
+    sp._loyalty = 45 --:number
     sp._fullyLoyal = false
     sp._hideFromUi = false
     sp._power = 35 --:number
