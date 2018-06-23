@@ -1,52 +1,8 @@
 cm = get_cm(); events = get_events(); eom = _G.eom;
-
 if not eom then 
-    out("EOM IS NOT FOUND!")
+    script_error("EOM IS NOT FOUND!")
     return
 end
-
---[[ testing functions
-
-core:add_listener(
-    "EOM_TEST_BATTLES",
-    "VictoryAgainstSubcultureKey_wh_main_sc_emp_empire",
-    true,
-    function(context)
-        eom:get_elector("wh_main_emp_averland"):change_loyalty(4)
-        eom:get_elector("wh_main_emp_ostermark"):change_loyalty(8)
-        eom:get_elector("wh_main_emp_stirland"):change_loyalty(4)
-    end,
-    true);
-
-
-
---]]
-
-
-
-
-
-
-
-
-
-core:add_listener(
-    "EOMTurnStart",
-    "FactionTurnStart",
-    function(context)
-        local faction = context:faction()
-        return faction:name() == EOM_GLOBAL_EMPIRE_FACTION
-    end,
-    function(context)
-        eom:event_and_plot_check()
-        eom:elector_diplomacy()
-    end,
-    true);
-
-
-
-
-
 
 
 
@@ -1090,7 +1046,7 @@ local eom_main_events_table = {
         }
     },
     {
-        key = "wh_main_vmp_schwartzhafen",
+        key = "eom_dilemma_schwartzhafen_3",
         conditional = function(model --:EOM_MODEL
         )
 
