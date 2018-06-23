@@ -312,13 +312,14 @@ function eom_model.event_and_plot_check(self)
         end
     end
     --full loyalty
-    for name, elector in pairs(self:electors()) do
-        if elector:loyalty() > 99 then
-            elector:set_fully_loyal(self)
-            return
+    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
+        for name, elector in pairs(self:electors()) do
+            if elector:loyalty() > 99 then
+                elector:set_fully_loyal(self)
+                return
+            end
         end
     end
-
     --plot check
     EOMLOG("Core event and plot check function checking story events")
     for key, story in pairs(self:get_story()) do
