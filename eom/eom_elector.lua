@@ -383,6 +383,8 @@ function eom_elector.set_fully_loyal(self, model)
     self:make_fully_loyal()
     self:set_status("loyal")
     self._fullLoyaltyCallback(model)
+    cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_full_loyalty_"..self:name(), true)
+    cm:force_confederation(EOM_GLOBAL_EMPIRE_FACTION, self:name())
 end
 
 return {

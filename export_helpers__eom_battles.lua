@@ -1,29 +1,8 @@
 cm = get_cm(); events = get_events(); eom = _G.eom;
-
-
-core:add_listener(
-    "EOMTurnStart",
-    "FactionTurnStart",
-    function(context)
-        local faction = context:faction()
-        return faction:name() == EOM_GLOBAL_EMPIRE_FACTION
-    end,
-    function(context)
-        eom:event_and_plot_check()
-        eom:elector_diplomacy()
-    end,
-    true);
-
-
-
-
-
-
-
-
-
-
-
+if not eom then 
+    script_error("EOM IS NOT FOUND!")
+    return
+end
 core:add_listener(
     "EOMVampiresDefeated",
     "VictoryAgainstSubcultureKey_wh_main_sc_vmp_vampire_counts",

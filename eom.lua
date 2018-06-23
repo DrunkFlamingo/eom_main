@@ -9,7 +9,7 @@ function EOMLOG(text, ftext)
         return; --if our bool isn't set true, we don't want to spam the end user with logs. 
     end
     if not ftext then
-        ftext = "no context set"
+        ftext = EOM_LAST_CONTEXT
     else
         EOM_LAST_CONTEXT = ftext
     end
@@ -128,8 +128,33 @@ EOM_GLOBAL_EMPIRE_REGIONS = {
     ["wh_main_ostermark_essen"] = 1,
     ["wh_main_the_wasteland_gorssel"] = 1,
     ["wh_main_the_wasteland_marienburg"] = 2
-}--:map<EMPIRE_REGION, number>
+}--:map<string, number>
 
+EOM_GLOBAL_REGION_TO_ELECTOR = {
+    ["wh_main_ostland_castle_von_rauken"] = "wh_main_emp_ostland",
+    ["wh_main_ostland_norden"] = "wh_main_emp_ostland",
+    ["wh_main_ostland_wolfenburg"] = "wh_main_emp_ostland",
+    ["wh_main_stirland_the_moot"] = "wh_main_emp_stirland",
+    ["wh_main_stirland_wurtbad"] = "wh_main_emp_stirland",
+    ["wh_main_talabecland_kemperbad"] = "wh_main_emp_talabecland",
+    ["wh_main_wissenland_nuln"] = "wh_main_emp_wissenland",
+    ["wh_main_wissenland_pfeildorf"] = "wh_main_emp_wissenland",
+    ["wh_main_wissenland_wissenburg"] = "wh_main_emp_wissenland",
+    ["wh_main_hochland_brass_keep"] = "wh_main_emp_hochland",
+    ["wh_main_hochland_hergig"] = "wh_main_emp_hochland",
+    ["wh_main_middenland_carroburg"] = "wh_main_emp_middenland",
+    ["wh_main_middenland_middenheim"] = "wh_main_emp_middenland",
+    ["wh_main_middenland_weismund"] = "wh_main_emp_middenland",
+    ["wh_main_nordland_dietershafen"] = "wh_main_emp_nordland",
+    ["wh_main_nordland_salzenmund"] = "wh_main_emp_nordland",
+    ["wh_main_talabecland_talabheim"] = "wh_main_emp_talabecland",
+    ["wh_main_averland_averheim"] = "wh_main_emp_averland",
+    ["wh_main_averland_grenzstadt"] = "wh_main_emp_averland",
+    ["wh_main_ostermark_bechafen"] = "wh_main_emp_ostermark",
+    ["wh_main_ostermark_essen"] = "wh_main_emp_ostermark",
+    ["wh_main_the_wasteland_gorssel"] = "wh_main_emp_marienburg",
+    ["wh_main_the_wasteland_marienburg"] = "wh_main_emp_marienburg"
+}--:map<string, ELECTOR_NAME>
 
 
 --v function() --> ELECTOR_INFO
@@ -154,6 +179,9 @@ function averland_start_pos()
     sp._turnsDead = 0--:number
     sp._baseRegions = 2 --:number
     sp._isCult = false;
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     return sp
 end
 
@@ -180,6 +208,9 @@ function hochland_start_pos()
     sp._turnsDead = 0 --:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     return sp
 end
 
@@ -204,7 +235,9 @@ function ostermark_start_pos()
     sp._isCult = false;
     sp._expeditionRegion = "wh_main_talabecland_talabheim"
     sp._turnsDead = 0--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._baseRegions = 2--:number
     return sp
 end
@@ -227,7 +260,9 @@ function stirland_start_pos()
     sp._capital =  "wh_main_stirland_wurtbad"
     sp._expeditionX = 515--:number
     sp._expeditionY = 434--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -254,7 +289,9 @@ function middenland_start_pos()
     sp._capital =  "wh_main_middenland_middenheim"
     sp._expeditionX = 489--:number
     sp._expeditionY = 469--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_middenland_carroburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -280,7 +317,9 @@ function nordland_start_pos()
     sp._capital =  "wh_main_nordland_dietershafen"
     sp._expeditionX = 528--:number
     sp._expeditionY = 532--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_middenland_middenheim"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -306,7 +345,9 @@ function ostland_start_pos()
     sp._capital =  "wh_main_ostland_wolfenburg"
     sp._expeditionX = 586--:number
     sp._expeditionY = 522--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_hochland_hergig"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -332,7 +373,9 @@ function wissenland_start_pos()
     sp._capital =  "wh_main_wissenland_nuln"
     sp._expeditionX =515--:number
     sp._expeditionY = 434--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -358,7 +401,9 @@ function talabecland_start_pos()
     sp._capital =  "wh_main_talabecland_talabheim"
     sp._expeditionX = 515--:number
     sp._expeditionY = 434--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_reikland_grunburg"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -384,7 +429,9 @@ function marienburg_start_pos()
     sp._capital =  "wh_main_the_wasteland_marienburg"
     sp._expeditionX = 440--:number
     sp._expeditionY = 553--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_reikland_eilhart"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -410,7 +457,9 @@ function sylvania_start_pos()
     sp._capital =  "wh_main_western_sylvania_castle_templehof"
     sp._expeditionX = 687--:number
     sp._expeditionY = 460--:number
-
+    sp._knights = false;
+    sp._canRevive = false;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -436,7 +485,9 @@ function vampire_start_pos()
     sp._capital =  "wh_main_eastern_sylvania_castle_drakenhof"
     sp._expeditionX = 677--:number
     sp._expeditionY = 460--:number
-
+    sp._knights = false;
+    sp._canRevive = false;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
     sp._turnsDead = 0--:number
     sp._isCult = false;
@@ -462,7 +513,9 @@ function sigmar_start_pos()
     sp._capital =  "wh_main_wissenland_nuln"
     sp._expeditionX = 581--:number
     sp._expeditionY = 443--:number
-
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     sp._expeditionRegion = "wh_main_stirland_wurtbad"
     sp._turnsDead = 0--:number
     sp._isCult = true;
@@ -492,6 +545,9 @@ function ulric_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = true;
     sp._baseRegions = 0--:number
+    sp._knights = false;
+    sp._canRevive = true;
+    sp._unitList = "";
     return sp
 end
 
@@ -499,8 +555,8 @@ end
 function return_starting_core_data()
     local cd = {} --:map<string, EOM_CORE_DATA>
     cd.next_event_turn = 2
-
-
+    cd.block_events_for_plot = true
+    cd.current_plot = "reikland_rebellion"
 
 
     return cd
@@ -530,23 +586,28 @@ function return_elector_starts()
 
     return t;
 end;
+    
 
+local eom_plot = {} --# assume eom_plot: EOM_PLOT
 
-local eom_civil_war = {} --# assume eom_civil_war: EOM_CIVIL_WAR
-
---v function(name: string, model: EOM_MODEL) --> EOM_CIVIL_WAR
-function eom_civil_war.new(name, model)
+--v function(name: string, model: EOM_MODEL) --> EOM_PLOT
+function eom_plot.new(name, model)
 local self = {}
 setmetatable(self, {
-    __index = eom_civil_war
-}) --# assume self: EOM_CIVIL_WAR
+    __index = eom_plot
+}) --# assume self: EOM_PLOT
 
 self._name = name
 self._model = model 
-self._current_stage = 0 --:int
+if cm:get_saved_value("plot_line_stage"..name) then
+    self._current_stage = cm:get_saved_value("plot_line_stage"..name) --:int
+    EOMLOG("Loaded stage ["..tostring(self._current_stage).."] for plot element ["..name.."]")
+else
+    self._current_stage = 0
+end
 self._triggers = {} --:vector<function(eom: EOM_MODEL) --> boolean>
 self._callbacks = {} --:vector<function(eom: EOM_MODEL)>
-if cm:get_saved_value("civil_war_ended_"..name) == nil then
+if cm:get_saved_value("plot_line_ended_"..name) == nil then
     cm:set_saved_value("civil_war_ended"..name,false) 
 end
 
@@ -554,75 +615,106 @@ end
 return self
 end
 
---v function(self: EOM_CIVIL_WAR) --> string
-function eom_civil_war.name(self)
+--v function(self: EOM_PLOT) --> string
+function eom_plot.name(self)
     return self._name
 end
 
---v function(self: EOM_CIVIL_WAR) --> EOM_MODEL
-function eom_civil_war.model(self)
+--v function(self: EOM_PLOT) --> EOM_MODEL
+function eom_plot.model(self)
     return self._model
 end
 
---v function(self: EOM_CIVIL_WAR) --> int
-function eom_civil_war.current_stage(self)
+--v function(self: EOM_PLOT) --> int
+function eom_plot.current_stage(self)
     return self._current_stage
 end
 
---v function(self: EOM_CIVIL_WAR, stage: int)
-function eom_civil_war.set_stage(self, stage)
+--v function(self: EOM_PLOT, stage: int)
+function eom_plot.set_stage(self, stage)
     EOMLOG("Advancing stage for civil war ["..self:name().."] to ["..tostring(stage).."] ")
     self._current_stage = stage
 end
 
---v function(self: EOM_CIVIL_WAR, stage: integer) --> boolean
-function eom_civil_war.has_stage(self, stage)
+--v function(self: EOM_PLOT, stage: integer) --> boolean
+function eom_plot.has_stage(self, stage)
     return not not self._triggers[stage]
 end
 
---v function(self: EOM_CIVIL_WAR, stage: integer)
-function eom_civil_war.stage_callback(self, stage)
+--v function(self: EOM_PLOT, stage: integer)
+function eom_plot.stage_callback(self, stage)
     if not self._callbacks[stage] then
         EOMLOG("No callbacks for stage ["..tostring(stage).."] in civil war ["..self:name().."] ")
         return
     end
-    self._callbacks[stage](self:model())
+    local stage_callback = self._callbacks[stage]
+    stage_callback(self:model())
 end
 
 
---v function(self: EOM_CIVIL_WAR, stage: integer) --> boolean
-function eom_civil_war.check_trigger(self, stage)
-    return self._triggers[stage](self:model())
+--v function(self: EOM_PLOT, stage: integer) --> boolean
+function eom_plot.check_trigger(self, stage)
+    local stage_trigger = self._triggers[stage]
+    return stage_trigger(self:model())
 end
 
 
 
---v function(self: EOM_CIVIL_WAR) --> boolean
-function eom_civil_war.is_over(self)
-    return cm:get_saved_value("civil_war_ended_"..self:name())
+--v function(self: EOM_PLOT) --> boolean
+function eom_plot.is_over(self)
+    return cm:get_saved_value("plot_line_ended_"..self:name())
 end
 
---v function(self: EOM_CIVIL_WAR)
-function eom_civil_war.check_advancement(self)
+--v function(self: EOM_PLOT) --> boolean
+function eom_plot.is_active(self)
+    return (not cm:get_saved_value("plot_line_ended_"..self:name())) and (self:current_stage() > 0)
+end
+
+--v function(self: EOM_PLOT)--> boolean
+function eom_plot.check_advancement(self) 
     if self:is_over() then
         EOMLOG("Checked advancement for civil war ["..self:name().."] but that civil war is over! ")
-        return 
+        return false
     end
     local c_stage = self:current_stage()
     local n_stage = c_stage + 1;
     if self:has_stage(n_stage) and self:check_trigger(n_stage) then
-        self:set_stage(n_stage)
-        self:stage_callback(n_stage)
+        return true
     else 
-        EOMLOG("Civil war ["..self:name().."] is ready to advance but has no next stage!!")
+        EOMLOG("Civil war ["..self:name().."] is not advancing")
+        return false
     end
 end
 
---v function(self: EOM_CIVIL_WAR, stage: int, trigger: function(model: EOM_MODEL) --> boolean)
-function eom_civil_war.add_stage_trigger(self, stage, trigger)
-EOMLOG("")
+--v function (self: EOM_PLOT)
+function eom_plot.advance(self)
+    local c_stage = self:current_stage()
+    local n_stage = c_stage + 1;
+    self:set_stage(n_stage)
+    self:stage_callback(n_stage)
+end
+
+--v function(self: EOM_PLOT, stage: int, trigger: function(model: EOM_MODEL) --> boolean)
+function eom_plot.add_stage_trigger(self, stage, trigger)
+EOMLOG("Added trigger for stage ["..tostring(stage).."] in plot line ["..self:name().."]")
     self._triggers[stage] = trigger
 end
+--v function(self: EOM_PLOT, stage: int, callback: function(model: EOM_MODEL))
+function eom_plot.add_stage_callback(self, stage, callback)
+    EOMLOG("Added callback for stage ["..tostring(stage).."] in plot line ["..self:name().."]")
+    self._callbacks[stage] = callback
+end
+
+--v function(self: EOM_PLOT)
+function eom_plot.finish(self)
+    cm:set_saved_value("plot_line_ended_"..self:name(), true)
+end
+
+--v function(self: EOM_PLOT)
+function eom_plot.save(self)
+    cm:set_saved_value("plot_line_stage"..self:name(), self:current_stage())
+end
+
 
 local eom_action = {} --# assume eom_action: EOM_ACTION
 
@@ -687,8 +779,6 @@ function eom_action.act(self)
         end,
         false)
 end
-
-
 local eom_elector = {} --# assume eom_elector: EOM_ELECTOR
 
 --v function(info: ELECTOR_INFO) --> EOM_ELECTOR
@@ -724,6 +814,12 @@ function eom_elector.new(info)
     self._uiName = info._uiName
     self._uiTooltip = info._uiTooltip
     self._isCult = info._isCult
+
+    self._knights = info._knights
+    self._canRevive = info._canRevive
+    self._unitList = info._unitList
+    self._willCapitulate = info._willCapitulate 
+    self._fullLoyaltyCallback = function(model) end --:function(model: EOM_MODEL)
     return self
 end
 
@@ -754,16 +850,26 @@ function eom_elector.save(self)
     savetable._uiName = self._uiName
     savetable._uiTooltip = self._uiTooltip
     savetable._isCult = self._isCult
+    savetable._knights = self._knights
+    savetable._unitList = self._unitList
+    savetable._canRevive = self._canRevive
+    savetable._willCapitulate = self._willCapitulate
     return savetable
 end
 
 
 --keys
 
---v function(self: EOM_ELECTOR) --> string
+--v function(self: EOM_ELECTOR) --> ELECTOR_NAME
 function eom_elector.name(self)
     return self._key
 end
+
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.capital(self)
+    return self._capital
+end
+
 
 --full loyalty
 
@@ -858,7 +964,17 @@ function eom_elector.change_power(self, value)
     self._power = self._power + value
 end
 
+--capitulation
 
+--v function(self: EOM_ELECTOR, should_capitulate: boolean)
+function eom_elector.set_should_capitulate(self, should_capitulate)
+    self._willCapitulate = should_capitulate
+end
+
+--v function(self: EOM_ELECTOR) --> boolean
+function eom_elector.will_capitulate(self)
+    return self._willCapitulate
+end
 
 
 
@@ -921,6 +1037,18 @@ function eom_elector.set_leader_surname(self, surname)
     self._leaderSurname = surname
 end
 
+--armies
+
+--v function(self: EOM_ELECTOR, army_list: string)
+function eom_elector.set_army_list(self, army_list)
+    self._armyList = army_list
+end
+
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.get_army_list(self)
+    return self._armyList
+end
+
 
 
 --base regions
@@ -945,6 +1073,16 @@ function eom_elector.turns_dead(self)
     return self._turnsDead
 end
 
+--v function(self: EOM_ELECTOR) --> boolean
+function eom_elector.can_revive(self)
+    return self._canRevive
+end
+
+--v function(self: EOM_ELECTOR, can_revive: boolean)
+function eom_elector.set_can_revive(self, can_revive)
+    self._canRevive = can_revive
+end
+
 --v function(self: EOM_ELECTOR) 
 function eom_elector.dead_for_turn(self)
     EOMLOG("entered", "eom_elector.dead_for_turn(self)")
@@ -955,6 +1093,77 @@ end
 --v function(self: EOM_ELECTOR) --> (number, number)
 function eom_elector.expedition_coordinates(self)
     return self._expeditionX, self._expeditionY
+end
+
+--v function(self: EOM_ELECTOR) --> string
+function eom_elector.expedition_region(self)
+    return self._expeditionRegion
+end
+
+--v function(self: EOM_ELECTOR)
+function eom_elector.trigger_coup(self)
+    local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
+    cm:create_force_with_general(
+        self:name(),
+        self:get_army_list(),
+        self:capital(),
+        cm:get_region(self:capital()):settlement():logical_position_x() + 1,
+        cm:get_region(self:capital()):settlement():logical_position_y() + 1,
+        "general",
+        self:leader_subtype(),
+        self:leader_forename(),
+        "",
+        self:leader_surname(), 
+        "",
+        true,
+        function(cqi)
+
+        end)
+    cm:callback( function()
+        cm:transfer_region_to_faction(self:capital(), self:name())
+        cm:force_declare_war(self:name(), old_owner, false, false)
+       -- cm:treasury_mod(self:name(), 5000)
+    end, 0.2)
+    self:set_can_revive(false)
+end
+
+--v function(self: EOM_ELECTOR)
+function eom_elector.trigger_expedition(self)
+    local x, y = self:expedition_coordinates();
+    local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
+    cm:create_force_with_general(
+        self:name(),
+        self:get_army_list(),
+        self:expedition_region(),
+        x,
+        y,
+        "general",
+        self:leader_subtype(),
+        self:leader_forename(),
+        "",
+        self:leader_surname(), 
+        "",
+        true,
+        function(cqi)
+
+        end)
+   -- cm:treasury_mod(self:name(), 10000)
+    cm:force_declare_war(self:name(), old_owner, false, false)
+    self:set_can_revive(false)
+end
+
+--v function(self: EOM_ELECTOR, callback: function(model: EOM_MODEL))
+function eom_elector.set_full_loyalty_callback(self, callback)
+    self._fullLoyaltyCallback = callback
+end
+
+
+
+--v function(self: EOM_ELECTOR, model: EOM_MODEL)
+function eom_elector.set_fully_loyal(self, model)
+    self:make_fully_loyal()
+    self:set_status("loyal")
+    self._fullLoyaltyCallback(model)
 end
 
 
@@ -975,10 +1184,9 @@ function eom_model.init()
         }
     ) --# assume self: EOM_MODEL
 
-    self._electors = {} --:map<string, EOM_ELECTOR>
-    self._civil_war = nil --:EOM_CIVIL_WAR
+    self._electors = {} --:map<ELECTOR_NAME, EOM_ELECTOR>
     self._events = {} --:map<string, EOM_ACTION>
-    self._civil_war_index = {} --:vector<EOM_CIVIL_WAR>
+    self._plot = {} --:map<string, EOM_PLOT>
 
     self._coredata = {} --:map<string, EOM_CORE_DATA>
     self._view = nil --:EOM_VIEW
@@ -993,6 +1201,9 @@ end
 
 --v function(self: EOM_MODEL, key: string) --> EOM_CORE_DATA
 function eom_model.get_core_data_with_key(self, key)
+    if self._coredata[key] == nil then
+        return false
+    end
     return self._coredata[key]
 end
 
@@ -1010,7 +1221,7 @@ end
 
 
 --electors
---v function(self: EOM_MODEL) --> map<string, EOM_ELECTOR>
+--v function(self: EOM_MODEL) --> map<ELECTOR_NAME, EOM_ELECTOR>
 function eom_model.electors(self)
     return self._electors
 end
@@ -1035,6 +1246,59 @@ function eom_model.get_elector_faction(self, name)
     return cm:get_faction(self:get_elector(name):name())
 end
 
+--v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
+function eom_model.is_elector_valid(self, name)
+    local elector_active = (self:get_elector(name):status() == "normal")
+    local capital_owned = (cm:get_region(self:get_elector(name):capital()):owning_faction():name() == name)
+    local living = (not self:get_elector_faction(name):is_dead()) or self:get_elector(name):is_cult()
+    local first_dilemma_triggered =  cm:get_saved_value("eom_action_eom_dilemma_nordland_2_occured") or false
+    return elector_active and capital_owned and living and first_dilemma_triggered
+end
+
+--v function(self: EOM_MODEL, quantity: number)
+function eom_model.change_all_loyalties(self, quantity)
+    EOMLOG("called for an all loyalties change of ["..tostring(quantity).."]")
+    for key, elector in pairs(self:electors()) do
+        elector:change_loyalty(quantity)
+    end
+end
+
+--v function(self: EOM_MODEL, exception: vector<ELECTOR_NAME>, quantity: number)
+function eom_model.change_loyalty_for_all_except(self, exception, quantity)    
+    local reverse_quantity = -(quantity)
+    self:change_all_loyalties(quantity)
+    for i = 1, #exception do
+        self:get_elector(exception[i]):change_loyalty(reverse_quantity)
+    end
+end
+
+
+--v function(self: EOM_MODEL, quantity: number)
+function eom_model.change_sigmarite_loyalties(self, quantity)
+    EOMLOG("called for a change in sigmarite loyalties of ["..tostring(quantity).."]")
+    self:get_elector("wh_main_emp_wissenland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_stirland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_ostland"):change_loyalty(quantity)
+end
+
+--v function(self: EOM_MODEL, quantity: number)
+function eom_model.change_ulrican_loyalites(self, quantity)
+    EOMLOG("called for a change in ulrican loyalties of ["..tostring(quantity).."]")
+    self:get_elector("wh_main_emp_middenland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_hochland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_nordland"):change_loyalty(quantity)
+end
+
+--v function(self: EOM_MODEL, quantity: number)
+function eom_model.change_atheist_loyalties(self, quantity)
+    EOMLOG("called for a change in sigmarite loyalties of ["..tostring(quantity).."]")
+    self:get_elector("wh_main_emp_averland"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_ostermark"):change_loyalty(quantity)
+    self:get_elector("wh_main_emp_marienburg"):change_loyalty(quantity)
+end
+
+
+
 
 --v function(self: EOM_MODEL, info: ELECTOR_INFO)
 function eom_model.add_elector(self, info)
@@ -1044,9 +1308,40 @@ function eom_model.add_elector(self, info)
     EOMLOG("Added elector ["..elector:name().."] to the model!")
 end
 
+
+--war systems
+--v function(self: EOM_MODEL, name: ELECTOR_NAME)
+function eom_model.grant_casus_belli(self, name)
+    cm:apply_effect_bundle("eom_"..name.."_casus_belli", EOM_GLOBAL_EMPIRE_FACTION, 8)
+end
+
+--v function(self: EOM_MODEL, name: ELECTOR_NAME)
+function eom_model.offer_capitulation(self, name)
+    EOMLOG("Offering capitulation for ["..name.."] ")
+    --needs filling
+
+    --cause dilemma
+
+
+    --create listener for dilemma responce
+
+
+end
+    
+    
+    
+
+
+
 --events 
+--@name: add_event
+--@description: creates a new event from a table template.
 --v function(self: EOM_MODEL, event: EOM_EVENT)
 function eom_model.add_event(self, event)
+    if cm:get_saved_value("eom_action_"..event.key.."_occured") == true then
+        EOMLOG("Event ["..event.key.."] already occured this save, not adding it back to the model!")
+        return
+    end
     local choicetable = event.choices
     local key = event.key
     local conditional = event.conditional
@@ -1064,21 +1359,111 @@ function eom_model.events(self)
     return self._events
 end
 
+--plot events
+
+--v function(self: EOM_MODEL, name: string) --> EOM_PLOT
+function eom_model.new_story_chain(self, name)
+    local event = eom_plot.new(name, self)
+    self._plot[name] = event
+    return event
+end
+
+--v function(self: EOM_MODEL) --> map<string, EOM_PLOT>
+function eom_model.get_story(self)
+    return self._plot
+end
+
+--v function(self: EOM_MODEL, name: string) --> EOM_PLOT
+function eom_model.get_story_chain(self, name)
+    return self._plot[name]
+end
+
+
+--radiant revival
+--v function (self: EOM_MODEL)
+function eom_model.check_dead(self)
+    for name, elector in pairs(self:electors()) do
+        if self:get_elector_faction(name):is_dead() then
+            elector:dead_for_turn()
+        end
+    end
+end
+
+--v function(self: EOM_MODEL, name:ELECTOR_NAME)
+function eom_model.elector_fallen(self, name)
+    local elector = self:get_elector(name)
+    self:change_all_loyalties(-10)
+    --NOTE: trigger elector fallen event.
+    elector:set_status("fallen")
+    elector:set_visible(false)
+end
+
 ---EBS
 
+--@name: event_and_plot_check
+--@description: causes all events on a prioritized basis.
 --v function(self: EOM_MODEL)
 function eom_model.event_and_plot_check(self)
-    --plot check
 
+    --capitulation
+    for name, elector in pairs(self:electors()) do
+        if elector:will_capitulate() then
+            self:offer_capitulation(name)
+            elector:set_should_capitulate(false)
+            return
+        end
+    end
+    --full loyalty
+    for name, elector in pairs(self:electors()) do
+        if elector:loyalty() > 99 then
+            elector:set_fully_loyal(self)
+            return
+        end
+    end
+
+    --plot check
+    EOMLOG("Core event and plot check function checking story events")
+    for key, story in pairs(self:get_story()) do
+       if story:check_advancement() == true then
+            story:advance()
+            return
+       end
+    end
+    --player restore opportunity.
+    EOMLOG("Core event and plot check function checking player restoration opportunities")
+    --[[NOTE: NOT IN INITIAL BETA]]
+    
 
     --events
+    EOMLOG("Core event and plot check function checking political events")
     local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
-    if cm:model():turn_number() >= next_event then
+    if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
         for key, event in pairs(self:events()) do
             if event:allowed() then
                 event:act()
-                break
+                return
             end
+        end
+    end
+
+    --revival events.
+    EOMLOG("Core event and plot check function checking revivification events")
+    for name, elector in pairs(self:electors()) do
+        if self:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() and (not elector:is_cult()) then
+        if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
+            elector:trigger_coup()
+            return
+        else
+            elector:trigger_expedition() 
+            return
+        end
+        end
+    end
+    --elector falls
+    EOMLOG("Core event and plot check function checking elector fallen events.")
+    for name, elector in pairs(self:electors()) do
+        if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
+            self:elector_fallen(name)
         end
     end
 end
@@ -1122,7 +1507,18 @@ function eom_model.elector_diplomacy(self)
     end
 end
 
-
+--v function(self: EOM_MODEL)
+function eom_model.elector_personalities(self)
+    for name, elector in pairs(self:electors()) do
+        if elector:status() == "normal" then
+            cm:force_change_cai_faction_personality(name, "eom_normal_elector")
+        elseif elector:status() == "civil_war_enemy" or elector:status() == "open_rebellion" then
+            cm:force_change_cai_faction_personality(name, "eom_disloyal_elector")
+        elseif elector:status() == "civil_war_emperor" then
+            cm:force_change_cai_faction_personality(name, "eom_pretender")
+        end
+    end
+end
 
 
 
@@ -1136,16 +1532,21 @@ end
 function eom_model.save(self)
     EOMLOG("entered", "eom_model.save(self)")
     local savetable = {} 
-
+    --electors
     savetable._electors = {}--:map<string, ELECTOR_INFO>
     for k, v in pairs(self:electors()) do
         local info = v:save()
         savetable._electors[k] = info
         EOMLOG("saved Elector ["..k.."]")
     end
-
+    --core data
     savetable._coredata = self:coredata()
     EOMLOG("Core data saved!")
+
+    for k, v in pairs(self:get_story()) do
+        v:save()
+    end
+
     return savetable
 end
 
@@ -1378,9 +1779,6 @@ function eom_view.populate_frame(self)
                 dy_loyalty:Resize(bX, tY)
                 currentContainer:AddComponent(electorButton)
                 currentContainer:AddComponent(dy_loyalty)
-
-                
-
                 electorListView:AddComponent(currentContainer)
             end
         end
@@ -1398,7 +1796,9 @@ function eom_view.populate_frame(self)
                 dy_loyalty:SetText("[[col:red]]Seceded[[/col]]")
             end
         end
+        EOMLOG("Updated Loyalties", "UI")
     end
+    EOMLOG("Populate frame completed with no errors")
 end
 
 --controller methods (assumed)
@@ -1409,13 +1809,18 @@ function eom_view.close_politics(self)
     EOMLOG("Close button pressed on politics panel", "eom_controller.close_politics(self)")
     self:hide_frame()
     local layout = find_uicomponent(core:get_ui_root(), "layout")
-    layout:SetVisible(true)
+    if not not layout then
+        layout:SetVisible(true)
+        EOMLOG("Showing the layout!")
+    else
+        EOMLOG("Could not find the layout?!?")
+    end
     local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
-    if settlement then
+    if not not settlement then
      settlement:SetVisible(true)
     end
     local character = find_uicomponent(core:get_ui_root(), "units_panel")
-    if character then
+    if not not character then
         character:SetVisible(true)
     end
 end
@@ -1426,16 +1831,22 @@ function eom_view.docker_button_pressed(self)
     EOMLOG("Docker Button Pressed", "eom_controller.docker_button_pressed(self)")
     self:get_frame()
     self:frame_buttons()
-    self:populate_frame()
+    local ok, err = pcall( function() self:populate_frame() end)
+    if not ok then
+        --# assume err: string
+        EOM_ERROR(err)
+    end
     local layout = find_uicomponent(core:get_ui_root(), "layout")
-    layout:SetVisible(false)
+    if not not layout then
+        layout:SetVisible(false)
+    end
     local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
-    if settlement then
+    if not not settlement then
         EOMLOG("Setting Settlements Panel Invisible")
      settlement:SetVisible(false)
     end
     local character = find_uicomponent(core:get_ui_root(), "units_panel")
-    if character then
+    if not not character then
         EOMLOG("Setting Character Panel Invisible")
         character:SetVisible(false)
     end
@@ -1477,6 +1888,14 @@ cm:add_loading_game_callback(
             local core_data_to_load = return_starting_core_data()
             for key, data in pairs(core_data_to_load) do
                 eom:set_core_data(key, data)
+            end
+            --randomize which plot events happen when
+            if cm:random_number(10) > 6 then
+                eom:set_core_data("vampire_war_turn", 30)
+                eom:set_core_data("marienburg_plot_turn", 55)
+            else
+                eom:set_core_data("vampire_war_turn", 55)
+                eom:set_core_data("marienburg_plot_turn", 30)
             end
         else
             eom:load(savetable)
@@ -1529,5 +1948,33 @@ core:add_listener(
     end, 
     true)
 
-
-
+core:add_listener(
+    "EOMSettlementSacked",
+    "", --NOTE: add event
+    function(context)
+        local gar_res = context:garrison_residence() --:CA_GARRISON_RESIDENCE
+        local region =  gar_res:region():name()
+        return not not EOM_GLOBAL_REGION_TO_ELECTOR[region]
+    end,
+    function(context)
+        local elector = EOM_GLOBAL_REGION_TO_ELECTOR[context:garrison_residence():region():name()]
+        if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):at_war_with(cm:get_faction(elector)) and eom:get_elector(elector):status() == "normal" or eom:get_elector(elector):status() == "open_rebellion" then
+            eom:get_elector(elector):set_should_capitulate(true)
+        end
+    end,
+    true);
+core:add_listener(
+    "EOMSettlementOccupied",
+    "", --NOTE: add event
+    function(context)
+        local gar_res = context:garrison_residence() --:CA_GARRISON_RESIDENCE
+        local region =  gar_res:region():name()
+        return not not EOM_GLOBAL_REGION_TO_ELECTOR[region]
+    end,
+    function(context)
+        local elector = EOM_GLOBAL_REGION_TO_ELECTOR[context:garrison_residence():region():name()]
+        if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):at_war_with(cm:get_faction(elector)) and eom:get_elector(elector):status() == "normal" or eom:get_elector(elector):status() == "open_rebellion" then
+            eom:get_elector(elector):set_should_capitulate(true)
+        end
+    end,
+    true);
