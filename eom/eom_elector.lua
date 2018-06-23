@@ -341,9 +341,33 @@ function eom_elector.trigger_coup(self)
     cm:callback( function()
         cm:transfer_region_to_faction(self:capital(), self:name())
         cm:force_declare_war(self:name(), old_owner, false, false)
-       -- cm:treasury_mod(self:name(), 5000)
+        cm:treasury_mod(self:name(), 5000)
     end, 0.2)
     self:set_can_revive(false)
+end
+
+--v function(self: EOM_ELECTOR)
+function eom_elector.respawn_at_capital(self)
+    cm:create_force_with_general(
+        self:name(),
+        self:get_army_list(),
+        self:capital(),
+        cm:get_region(self:capital()):settlement():logical_position_x() + 1,
+        cm:get_region(self:capital()):settlement():logical_position_y() + 1,
+        "general",
+        self:leader_subtype(),
+        self:leader_forename(),
+        "",
+        self:leader_surname(), 
+        "",
+        true,
+        function(cqi)
+
+        end)
+    cm:callback( function()
+        cm:transfer_region_to_faction(self:capital(), self:name())
+        cm:treasury_mod(self:name(), 5000)
+    end, 0.2)
 end
 
 --v function(self: EOM_ELECTOR)
@@ -366,7 +390,7 @@ function eom_elector.trigger_expedition(self)
         function(cqi)
 
         end)
-   -- cm:treasury_mod(self:name(), 10000)
+    cm:treasury_mod(self:name(), 10000)
     cm:force_declare_war(self:name(), old_owner, false, false)
     self:set_can_revive(false)
 end
