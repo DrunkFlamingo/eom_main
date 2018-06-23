@@ -305,6 +305,7 @@ function eom_model.event_and_plot_check(self)
 
     --capitulation
     for name, elector in pairs(self:electors()) do
+        EOMLOG("Checking for Electors willing to capitulate")
         if elector:will_capitulate() then
             self:offer_capitulation(name)
             elector:set_should_capitulate(false)
@@ -313,6 +314,7 @@ function eom_model.event_and_plot_check(self)
     end
     --full loyalty
     if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
+        EOMLOG("Checking for fully loyal electors")
         for name, elector in pairs(self:electors()) do
             if elector:loyalty() > 99 then
                 elector:set_fully_loyal(self)
