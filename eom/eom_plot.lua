@@ -83,12 +83,12 @@ end
 
 --v [NO_CHECK] function(self: EOM_PLOT)--> boolean
 function eom_plot.check_advancement(self) 
-    if self:model():get_core_data_with_key("test_all_plot_events") == true then
-        return true
-    end
     if self:is_over() then
         EOMLOG("Checked advancement for civil war ["..self:name().."] but that civil war is over! ")
         return false
+    end
+    if self:model():get_core_data_with_key("test_all_plot_events") == true then
+        return true
     end
     local c_stage = self:current_stage()
     local n_stage = c_stage + 1;
