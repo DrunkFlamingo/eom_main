@@ -432,8 +432,8 @@ end
 function eom_model.event_and_plot_check(self)
 
     --capitulation
+    EOMLOG("Checking for Electors willing to capitulate")
     for name, elector in pairs(self:electors()) do
-        EOMLOG("Checking for Electors willing to capitulate")
         if elector:will_capitulate() and (not elector:is_cult()) then
             self:offer_capitulation(name)
             elector:set_should_capitulate(false)
@@ -444,7 +444,7 @@ function eom_model.event_and_plot_check(self)
     if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
         EOMLOG("Checking for fully loyal electors")
         for name, elector in pairs(self:electors()) do
-            if elector:loyalty() > 99 then
+            if elector:loyalty() > 99 and elector:status() == "normal" then
                 elector:set_fully_loyal(self)
                 return
             end
@@ -462,6 +462,7 @@ function eom_model.event_and_plot_check(self)
     EOMLOG("Core event and plot check function checking open rebellion opportunities")
     for name, elector in pairs(self:electors()) do
         if elector:loyalty() < 1 and (not name == "wh_main_vmp_schwartzhafen") then
+            EOMLOG("Elector ["..name.."] can rebel!")
             self:elector_rebellion_start(name)
         end
     end
@@ -626,7 +627,7 @@ function eom_model.save(self)
     for k, v in pairs(self:electors()) do
         local info = v:save()
         savetable._electors[k] = info
-        EOMLOG("saved Elector ["..k.."]")
+        EOMLOG("saved Elector ["..k.."] with loyalty ["..tostring(v:loyalty()).."], status ["..v:status().."], UI visibility: ["..tostring(v:is_hidden()).."] and capitulation flag ["..tostring(v:will_capitulate()).."] ")
     end
     --core data
     savetable._coredata = self:coredata()
