@@ -156,7 +156,6 @@ EOM_GLOBAL_REGION_TO_ELECTOR = {
     ["wh_main_the_wasteland_marienburg"] = "wh_main_emp_marienburg"
 }--:map<string, ELECTOR_NAME>
 
-
 --v function() --> string
 local function get_default_start_army()
     return "wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_halberdiers,wh_main_emp_inf_halberdiers,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_handgunners,wh_main_emp_inf_handgunners,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen"
@@ -435,7 +434,7 @@ function marienburg_start_pos()
     sp._expeditionX = 440--:number
     sp._expeditionY = 553--:number
     sp._knights = false;
-    sp._canRevive = true;
+    sp._canRevive = false;
     sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_reikland_eilhart"
     sp._turnsDead = 0--:number
@@ -519,7 +518,7 @@ function sigmar_start_pos()
     sp._expeditionX = 581--:number
     sp._expeditionY = 443--:number
     sp._knights = false;
-    sp._canRevive = true;
+    sp._canRevive = false;
     sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_stirland_wurtbad"
     sp._turnsDead = 0--:number
@@ -551,7 +550,7 @@ function ulric_start_pos()
     sp._isCult = true;
     sp._baseRegions = 0--:number
     sp._knights = false;
-    sp._canRevive = true;
+    sp._canRevive = false;
     sp._unitList = get_default_start_army()
     return sp
 end
@@ -562,7 +561,7 @@ function return_starting_core_data()
     cd.next_event_turn = 2
     cd.block_events_for_plot = true
     cd.current_plot = "reikland_rebellion"
-
+    cd.last_unjust_war = 0
 
     return cd
 end
@@ -591,7 +590,7 @@ function return_elector_starts()
 
     return t;
 end;
-    
+
 
 local eom_plot = {} --# assume eom_plot: EOM_PLOT
 
@@ -675,8 +674,12 @@ function eom_plot.is_active(self)
     return (not cm:get_saved_value("plot_line_ended_"..self:name())) and (self:current_stage() > 0)
 end
 
---v function(self: EOM_PLOT)--> boolean
+
+--v [NO_CHECK] function(self: EOM_PLOT)--> boolean
 function eom_plot.check_advancement(self) 
+    if self:model():get_core_data_with_key("test_all_plot_events") == true then
+        return true
+    end
     if self:is_over() then
         EOMLOG("Checked advancement for civil war ["..self:name().."] but that civil war is over! ")
         return false
@@ -719,6 +722,7 @@ end
 function eom_plot.save(self)
     cm:set_saved_value("plot_line_stage"..self:name(), self:current_stage())
 end
+
 
 
 local eom_action = {} --# assume eom_action: EOM_ACTION
@@ -784,6 +788,8 @@ function eom_action.act(self)
         end,
         false)
 end
+
+
 local eom_elector = {} --# assume eom_elector: EOM_ELECTOR
 
 --v function(info: ELECTOR_INFO) --> EOM_ELECTOR
@@ -1125,12 +1131,23 @@ function eom_elector.trigger_coup(self)
         "",
         true,
         function(cqi)
-
+            local dx = cm:get_character_by_cqi(cqi):display_position_x()
+            local dy = cm:get_character_by_cqi(cqi):display_position_y()
+            cm:show_message_event_located(
+                EOM_GLOBAL_EMPIRE_FACTION,
+                "event_feed_strings_text_coup_detat_title",
+                "event_feed_strings_text_coup_detat_"..self:name().."_subtitle",
+                "event_feed_strings_text_coup_detat_"..self:name().."_detail",
+                dx,
+                dy,
+                true,
+                591)
         end)
     cm:callback( function()
         cm:transfer_region_to_faction(self:capital(), self:name())
         cm:force_declare_war(self:name(), old_owner, false, false)
         cm:treasury_mod(self:name(), 5000)
+
     end, 0.2)
     self:set_can_revive(false)
 end
@@ -1177,7 +1194,17 @@ function eom_elector.trigger_expedition(self)
         "",
         true,
         function(cqi)
-
+            local dx = cm:get_character_by_cqi(cqi):display_position_x()
+            local dy = cm:get_character_by_cqi(cqi):display_position_y()
+            cm:show_message_event_located(
+                EOM_GLOBAL_EMPIRE_FACTION,
+                "event_feed_strings_text_expedition_title",
+                "event_feed_strings_text_expedition_"..self:name().."_subtitle",
+                "event_feed_strings_text_expedition_"..self:name().."_detail",
+                dx,
+                dy,
+                true,
+                591)
         end)
     cm:treasury_mod(self:name(), 10000)
     cm:force_declare_war(self:name(), old_owner, false, false)
@@ -1224,11 +1251,11 @@ function eom_model.init()
     self._view = nil --:EOM_VIEW
     return self
 end
-
 --v function(self: EOM_MODEL) --> string
 function eom_model.empire(self)
     return "wh_main_emp_empire"
 end
+
 
 --core data
 --v function(self: EOM_MODEL) --> map<string, EOM_CORE_DATA>
@@ -1258,6 +1285,12 @@ end
 
 
 --electors
+
+--v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
+function eom_model.has_elector(self, name)
+    return not not self._electors[name]
+end
+
 --v function(self: EOM_MODEL) --> map<ELECTOR_NAME, EOM_ELECTOR>
 function eom_model.electors(self)
     return self._electors
@@ -1304,7 +1337,8 @@ function eom_model.is_elector_valid_for_taxes(self, name)
     local living = (not self:get_elector_faction(name):is_dead()) 
     return elector_active and capital_owned and living
 end
-    
+
+
 --v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
 function eom_model.is_elector_rebelling(self, name)
     return self:get_elector(name):status() == "normal" or self:get_elector(name):status() == "fully_loyal"
@@ -1425,6 +1459,7 @@ end
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.elector_rebellion_start(self, name)
+    EOMLOG("triggering rebellion for ["..name.."] ")
     local elector = self:get_elector(name)
     elector:set_status("open_rebellion")
     cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_"..name.."_open_rebellion", true)
@@ -1455,13 +1490,23 @@ function eom_model.check_dead(self)
     end
 end
 
---v function(self: EOM_MODEL, name:ELECTOR_NAME)
-function eom_model.elector_fallen(self, name)
+--v function(self: EOM_MODEL, name:ELECTOR_NAME, show_message_event: boolean?)
+function eom_model.elector_fallen(self, name, show_message_event)
     local elector = self:get_elector(name)
     self:change_all_loyalties(-10)
     --NOTE: trigger elector fallen event.
     elector:set_status("fallen")
     elector:set_visible(false)
+    if show_message_event then
+        cm:show_message_event(
+            self:empire(),
+            "event_feed_strings_text_elector_fallen_title",
+            "event_feed_strings_text_elector_fallen_subtitle",
+            "event_feed_strings_text_elector_"..name.."_fallen_detail",
+            true,
+            591
+        )
+    end
 end
 
     
@@ -1496,6 +1541,28 @@ function eom_model.grant_casus_belli(self, name)
 end
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
+function eom_model.check_unjust_war(self, name)
+    if cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli") then
+        EOMLOG("Casus Belli possessed, doing nothing!")
+    else
+        local last_unjust = self:get_core_data_with_key("last_unjust_war") --# assume last_unjust:number
+        if last_unjust < cm:model():turn_number() then
+            self:change_all_loyalties(-10)
+            self:set_core_data("last_unjust_war", cm:model():turn_number())
+            cm:show_message_event(
+                self:empire(),
+                "event_feed_strings_text_unjust_war_title",
+                "event_feed_strings_text_unjust_war_subtitle",
+                "event_feed_strings_text_unjust_war_detail",
+                true,
+                591)
+        end
+    end
+end
+
+
+
+--v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.offer_capitulation(self, name)
     EOMLOG("Offering capitulation for ["..name.."] ")
     --needs filling
@@ -1527,8 +1594,11 @@ end
 function eom_model.event_and_plot_check(self)
 
     --capitulation
+    EOMLOG("Checking for Electors willing to capitulate")
     for name, elector in pairs(self:electors()) do
-        EOMLOG("Checking for Electors willing to capitulate")
+        if elector:is_cult() and elector:status() == "open_rebellion" and cm:get_faction(name):is_dead() then
+            self:elector_rebellion_end(name)
+        end
         if elector:will_capitulate() and (not elector:is_cult()) then
             self:offer_capitulation(name)
             elector:set_should_capitulate(false)
@@ -1539,7 +1609,7 @@ function eom_model.event_and_plot_check(self)
     if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
         EOMLOG("Checking for fully loyal electors")
         for name, elector in pairs(self:electors()) do
-            if elector:loyalty() > 99 then
+            if elector:loyalty() > 99 and elector:status() == "normal" then
                 elector:set_fully_loyal(self)
                 return
             end
@@ -1556,7 +1626,8 @@ function eom_model.event_and_plot_check(self)
     --open rebellions
     EOMLOG("Core event and plot check function checking open rebellion opportunities")
     for name, elector in pairs(self:electors()) do
-        if elector:loyalty() < 1 and (not name == "wh_main_vmp_schwartzhafen") then
+        if (elector:loyalty() < 1) and (not name == "wh_main_vmp_schwartzhafen") then
+            EOMLOG("Elector ["..name.."] can rebel!")
             self:elector_rebellion_start(name)
         end
     end
@@ -1601,7 +1672,7 @@ function eom_model.event_and_plot_check(self)
     EOMLOG("Core event and plot check function checking elector fallen events.")
     for name, elector in pairs(self:electors()) do
         if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
-            self:elector_fallen(name)
+            self:elector_fallen(name, true)
         end
     end
 end
@@ -1671,7 +1742,6 @@ local function remove_taxation_bundles(name)
 end
 
 
-
 --v function(self: EOM_MODEL)
 function eom_model.elector_taxation(self)
     local empire = cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION)
@@ -1710,6 +1780,8 @@ end
 
 
 
+
+
 --saving
 --v function(self: EOM_MODEL) --> EOM_MODEL_SAVETABLE
 function eom_model.save(self)
@@ -1720,7 +1792,7 @@ function eom_model.save(self)
     for k, v in pairs(self:electors()) do
         local info = v:save()
         savetable._electors[k] = info
-        EOMLOG("saved Elector ["..k.."]")
+        EOMLOG("saved Elector ["..k.."] with loyalty ["..tostring(v:loyalty()).."], status ["..v:status().."], UI visibility: ["..tostring(v:is_hidden()).."] and capitulation flag ["..tostring(v:will_capitulate()).."] ")
     end
     --core data
     savetable._coredata = self:coredata()
@@ -2034,6 +2106,8 @@ function eom_view.docker_button_pressed(self)
         character:SetVisible(false)
     end
 end
+
+
 
 
 

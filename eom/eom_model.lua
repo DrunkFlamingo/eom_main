@@ -298,6 +298,7 @@ end
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.elector_rebellion_start(self, name)
+    EOMLOG("triggering rebellion for ["..name.."] ")
     local elector = self:get_elector(name)
     elector:set_status("open_rebellion")
     cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_"..name.."_open_rebellion", true)
@@ -434,6 +435,9 @@ function eom_model.event_and_plot_check(self)
     --capitulation
     EOMLOG("Checking for Electors willing to capitulate")
     for name, elector in pairs(self:electors()) do
+        if elector:is_cult() and elector:status() == "open_rebellion" and cm:get_faction(name):is_dead() then
+            self:elector_rebellion_end(name)
+        end
         if elector:will_capitulate() and (not elector:is_cult()) then
             self:offer_capitulation(name)
             elector:set_should_capitulate(false)
@@ -461,7 +465,7 @@ function eom_model.event_and_plot_check(self)
     --open rebellions
     EOMLOG("Core event and plot check function checking open rebellion opportunities")
     for name, elector in pairs(self:electors()) do
-        if elector:loyalty() < 1 and (not name == "wh_main_vmp_schwartzhafen") then
+        if (elector:loyalty() < 1) and (not name == "wh_main_vmp_schwartzhafen") then
             EOMLOG("Elector ["..name.."] can rebel!")
             self:elector_rebellion_start(name)
         end
