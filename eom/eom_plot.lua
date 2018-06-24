@@ -44,6 +44,7 @@ end
 function eom_plot.set_stage(self, stage)
     EOMLOG("Advancing stage for civil war ["..self:name().."] to ["..tostring(stage).."] ")
     self._current_stage = stage
+    cm:set_saved_value("plot_line_stage"..self:name(), self:current_stage())
 end
 
 --v function(self: EOM_PLOT, stage: integer) --> boolean

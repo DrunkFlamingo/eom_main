@@ -328,6 +328,7 @@ end
 --radiant revival
 --v function (self: EOM_MODEL)
 function eom_model.check_dead(self)
+    EOMLOG("Checking for dead electors!")
     for name, elector in pairs(self:electors()) do
         if self:get_elector_faction(name):is_dead() then
             elector:dead_for_turn()
@@ -387,6 +388,7 @@ end
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.check_unjust_war(self, name)
+    EOMLOG("Entered", "eom_model.check_unjust_war(self, name)")
     if cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli") then
         EOMLOG("Casus Belli possessed, doing nothing!")
     else
@@ -442,7 +444,7 @@ end
 --@description: causes all events on a prioritized basis.
 --v function(self: EOM_MODEL)
 function eom_model.event_and_plot_check(self)
-
+    EOMLOG("Entered", "eom_model.event_and_plot_check(self)")
     --capitulation
     EOMLOG("Checking for Electors willing to capitulate")
     for name, elector in pairs(self:electors()) do
@@ -557,7 +559,7 @@ function eom_model.elector_diplomacy(self)
         end
 
         if not cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):has_effect_bundle("eom_"..current_elector:name()..loyalty_level) then
-            EOMLOG("The bundle does not currently match!")
+            EOMLOG("The bundle does not currently match for ["..current_elector:name().."]")
             for i = 1, #suffix_list do
                 if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):has_effect_bundle("eom_"..current_elector:name()..suffix_list[i]) then
                     cm:remove_effect_bundle("eom_"..current_elector:name()..suffix_list[i], EOM_GLOBAL_EMPIRE_FACTION)
@@ -572,6 +574,7 @@ end
 
 --v function(self: EOM_MODEL)
 function eom_model.elector_personalities(self)
+    EOMLOG("Entered", "eom_model.elector_personalities(self)")
     for name, elector in pairs(self:electors()) do
         if elector:status() == "normal" then
             cm:force_change_cai_faction_personality(name, "eom_normal_elector")
@@ -598,6 +601,7 @@ end
 
 --v function(self: EOM_MODEL)
 function eom_model.elector_taxation(self)
+    EOMLOG("Entered", "eom_model.elector_taxation(self)")
     local empire = cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION)
     for name, elector in pairs(self:electors()) do
         if (not elector:is_cult()) and self:is_elector_valid_for_taxes(name) then
@@ -626,7 +630,7 @@ function eom_model.elector_taxation(self)
                     EOMLOG("Assigning tax level 4 to ["..name.."] ")
                 end
             end
-        elseif (not self:is_elector_valid_for_taxes(name)) then
+        elseif (not elector:is_cult()) then
             remove_taxation_bundles(name)
         end
     end
