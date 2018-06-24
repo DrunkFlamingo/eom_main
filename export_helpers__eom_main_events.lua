@@ -546,13 +546,14 @@ local eom_main_events_table = {
             ) 
             model:get_elector("wh_main_emp_nordland"):change_loyalty(-15)
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
-            --NEED TO ADD COMMANDS FOR MARIENBURG BEING HAPPY
+            cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "eom_marienburg_appeased")
         end,
             [2] = function(model --:EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_nordland"):change_loyalty(15)
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(-10)
-            --NEED TO ADD COMMANDS FOR ANGRY MBURG
+            cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "eom_marienburg_angry")
+            cm:force_diplomacy("faction:wh_main_emp_empire", "faction:wh_main_emp_marienburg", "trade", false, false, true)
         end
         }
 
