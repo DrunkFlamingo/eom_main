@@ -36,6 +36,7 @@ function EOMNEWLOG()
     popLog :write("NEW LOG ["..logTimeStamp.."] \n")
     popLog :flush()
     popLog :close()
+    cm:set_saved_value("eom_new_log", true)
 end
 EOMNEWLOG()
 
