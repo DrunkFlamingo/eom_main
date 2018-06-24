@@ -371,9 +371,27 @@ function eom_model.trigger_restoration_dilemma(self, name)
                 if self:get_elector(name):status() == "open_rebellion" then
                     self:elector_rebellion_end(name)
                     self:get_elector(name):respawn_at_capital()
+                    local home_regions = self:get_elector(name):home_regions()
+                    for i = 1, #home_regions do
+                        local current_region = home_regions[i]
+                        if cm:get_region(current_region):owning_faction():subculture() == "wh_main_emp_sc_empire" then
+                            cm:callback(function()
+                                cm:transfer_region_to_faction(current_region, name)
+                            end, i/10)
+                        end
+                    end
                 else
                     self:get_elector(name):respawn_at_capital()
                     self:get_elector(name):change_loyalty(20)
+                    local home_regions = self:get_elector(name):home_regions()
+                    for i = 1, #home_regions do
+                        local current_region = home_regions[i]
+                        if cm:get_region(current_region):owning_faction():subculture() == "wh_main_emp_sc_empire" then
+                            cm:callback(function()
+                                cm:transfer_region_to_faction(current_region, name)
+                            end, i/10)
+                        end
+                    end
                 end
             end
         end,
@@ -448,9 +466,6 @@ function eom_model.event_and_plot_check(self)
     --capitulation
     EOMLOG("Checking for Electors willing to capitulate")
     for name, elector in pairs(self:electors()) do
-        if elector:is_cult() and elector:status() == "open_rebellion" and cm:get_faction(name):is_dead() then
-            self:elector_rebellion_end(name)
-        end
         if elector:will_capitulate() and (not elector:is_cult()) then
             self:offer_capitulation(name)
             elector:set_should_capitulate(false)

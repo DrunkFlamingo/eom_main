@@ -289,6 +289,12 @@ function eom_elector.set_base_regions(self, count)
     EOMLOG("Set base regions for ["..self:name().."] to ["..tostring(self:base_region_count()).."]")
 end
 
+--v function(self: EOM_ELECTOR) --> vector<string>
+function eom_elector.home_regions(self)
+    return self._homeRegions
+end
+
+
 
 --revival system
 
@@ -362,8 +368,8 @@ function eom_elector.trigger_coup(self)
     self:set_can_revive(false)
 end
 
---v function(self: EOM_ELECTOR)
-function eom_elector.respawn_at_capital(self)
+--v function(self: EOM_ELECTOR, transfer_no_region: boolean?)
+function eom_elector.respawn_at_capital(self, transfer_no_region)
     cm:create_force_with_general(
         self:name(),
         self:get_army_list(),
@@ -380,10 +386,12 @@ function eom_elector.respawn_at_capital(self)
         function(cqi)
 
         end)
-    cm:callback( function()
-        cm:transfer_region_to_faction(self:capital(), self:name())
-        cm:treasury_mod(self:name(), 5000)
-    end, 0.2)
+    if not transfer_no_region then
+        cm:callback( function()
+            cm:transfer_region_to_faction(self:capital(), self:name())
+            cm:treasury_mod(self:name(), 5000)
+        end, 0.2)
+    end
 end
 
 --v function(self: EOM_ELECTOR)

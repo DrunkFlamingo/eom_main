@@ -38,9 +38,6 @@ local function add_marienburg_retaken_listener()
         if cm:get_faction("wh_main_emp_marienburg"):is_dead() then
             eom:get_elector("wh_main_emp_marienburg"):respawn_at_capital()
         end
-        cm:callback( function()
-            cm:transfer_region_to_faction("wh_main_the_wasteland_marienburg", "wh_main_emp_marienburg")
-        end, 0.5)
     end,
     false)
 
@@ -141,7 +138,7 @@ vampire_wars:add_stage_callback(1, function(model --:EOM_MODEL
     cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_ostermark", false, false)
     cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_stirland", false, false)
     cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_empire", false, false)
-    model:get_elector("wh_main_emp_cult_of_sigmar"):respawn_at_capital()
+    model:get_elector("wh_main_emp_cult_of_sigmar"):respawn_at_capital(true)
     cm:callback( function()
         cm:treasury_mod("wh_main_emp_cult_of_sigmar", 5000)
         cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_cult_of_sigmar", false, false)
