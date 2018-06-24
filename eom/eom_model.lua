@@ -390,8 +390,11 @@ function eom_model.check_unjust_war(self, name)
     if cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli") then
         EOMLOG("Casus Belli possessed, doing nothing!")
     else
+        EOMLOG("Checking unjust war!")
         local last_unjust = self:get_core_data_with_key("last_unjust_war") --# assume last_unjust:number
-        if last_unjust < cm:model():turn_number() then
+        if last_unjust == nil then self:set_core_data("last_unjust_war", cm:model():turn_number()) end
+        if last_unjust ~= cm:model():turn_number() then
+            EOMLOG("triggering unjust war")
             self:change_all_loyalties(-10)
             self:set_core_data("last_unjust_war", cm:model():turn_number())
             cm:show_message_event(
@@ -401,6 +404,8 @@ function eom_model.check_unjust_war(self, name)
                 "event_feed_strings_text_unjust_war_detail",
                 true,
                 591)
+        else
+            EOMLOG("Unjust war already triggered this turn!")
         end
     end
 end

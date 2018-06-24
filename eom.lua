@@ -1553,8 +1553,11 @@ function eom_model.check_unjust_war(self, name)
     if cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli") then
         EOMLOG("Casus Belli possessed, doing nothing!")
     else
+        EOMLOG("Checking unjust war!")
         local last_unjust = self:get_core_data_with_key("last_unjust_war") --# assume last_unjust:number
-        if last_unjust < cm:model():turn_number() then
+        if last_unjust == nil then self:set_core_data("last_unjust_war", cm:model():turn_number()) end
+        if last_unjust ~= cm:model():turn_number() then
+            EOMLOG("triggering unjust war")
             self:change_all_loyalties(-10)
             self:set_core_data("last_unjust_war", cm:model():turn_number())
             cm:show_message_event(
@@ -1564,10 +1567,11 @@ function eom_model.check_unjust_war(self, name)
                 "event_feed_strings_text_unjust_war_detail",
                 true,
                 591)
+        else
+            EOMLOG("Unjust war already triggered this turn!")
         end
     end
 end
-
 
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
@@ -1618,25 +1622,27 @@ function eom_model.event_and_plot_check(self)
         EOMLOG("Checking for fully loyal electors")
         for name, elector in pairs(self:electors()) do
             if elector:loyalty() > 99 and elector:status() == "normal" then
-                elector:set_fully_loyal(self)
-                return
+                elector:set_fully_loyFal(self)
             end
         end
     end
     --plot check
     EOMLOG("Core event and plot check function checking story events")
     for key, story in pairs(self:get_story()) do
-       if story:check_advancement() == true then
+        if story:check_advancement() == true then
             story:advance()
             return
-       end
+        end
     end
     --open rebellions
-    EOMLOG("Core event and plot check function checking open rebellion opportunities")
-    for name, elector in pairs(self:electors()) do
-        if elector:loyalty() == 0 then
-            EOMLOG("Elector ["..name.."] can rebel!")
-            self:elector_rebellion_start(name)
+    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
+        EOMLOG("Core event and plot check function checking open rebellion opportunities")
+        for name, elector in pairs(self:electors()) do
+            if (elector:loyalty() == 0) and elector:status() == "normal" then
+                
+                EOMLOG("Elector ["..name.."] can rebel!")
+                self:elector_rebellion_start(name)
+            end
         end
     end
 
@@ -1644,9 +1650,11 @@ function eom_model.event_and_plot_check(self)
     --player restore opportunity.
     EOMLOG("Core event and plot check function checking player restoration opportunities")
     for name, elector in pairs(self:electors()) do
-        if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
-            if elector:status() == "normal" or elector:status() == "open_rebellion" then
-                self:trigger_restoration_dilemma(name)
+        if not elector:is_cult() then
+            if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
+                if elector:status() == "normal" or elector:status() == "open_rebellion" then
+                    self:trigger_restoration_dilemma(name)
+                end
             end
         end
     end
