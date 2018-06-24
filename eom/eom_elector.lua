@@ -27,6 +27,7 @@ function eom_elector.new(info)
     self._leaderSubtype = info._leaderSubtype
     self._leaderForename = info._leaderForename
     self._leaderSurname  = info._leaderSurname
+    self._homeRegions = info._homeRegions
     --ui
     self._hideFromUi = info._hideFromUi
     self._image = info._image
@@ -73,6 +74,7 @@ function eom_elector.save(self)
     savetable._unitList = self._unitList
     savetable._canRevive = self._canRevive
     savetable._willCapitulate = self._willCapitulate
+    savetable._homeRegions = self._homeRegions
     return savetable
 end
 

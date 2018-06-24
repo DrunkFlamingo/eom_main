@@ -28,6 +28,7 @@ function averland_start_pos()
     sp._knights = false;
     sp._canRevive = true;
     sp._unitList = get_default_start_army()
+    sp._homeRegions = {"wh_main_averland_grenzstadt"} --:vector<string>
     return sp
 end
 
@@ -49,7 +50,7 @@ function hochland_start_pos()
     sp._capital =  "wh_main_hochland_hergig"
     sp._expeditionX = 540 --:number 
     sp._expeditionY = 503 --:number
-
+    sp._homeRegions = {"wh_main_hochland_brass_keep"} --:vector<string>
     sp._expeditionRegion = "wh_main_middenland_middenheim"
     sp._turnsDead = 0 --:number
     sp._isCult = false;
@@ -85,6 +86,7 @@ function ostermark_start_pos()
     sp._canRevive = true;
     sp._unitList = get_default_start_army()
     sp._baseRegions = 2--:number
+    sp._homeRegions = {"wh_main_ostermark_essen"} --:vector<string>
     return sp
 end
 
@@ -113,6 +115,7 @@ function stirland_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._homeRegions = {"wh_main_stirland_the_moot"} --:vector<string>
     return sp
 end
 
@@ -142,6 +145,7 @@ function middenland_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._homeRegions = {"wh_main_middenland_weismund", "wh_main_middenland_carroburg"} --:vector<string>
     return sp
 end
 
@@ -170,6 +174,7 @@ function nordland_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._homeRegions = {"wh_main_nordland_salzenmund"} --:vector<string>
     return sp
 end
 
@@ -198,6 +203,7 @@ function ostland_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._homeRegions = {"wh_main_ostland_norden", "wh_main_ostland_castle_von_rauken"} --:vector<string>
     return sp
 end
 
@@ -226,6 +232,7 @@ function wissenland_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._homeRegions = {"wh_main_wissenland_pfeildorf", "wh_main_wissenland_wissenburg"} --:vector<string>
     return sp
 end
 
@@ -254,6 +261,7 @@ function talabecland_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._homeRegions = {"wh_main_talabecland_kemperbad"} --:vector<string>
     return sp
 end
 
@@ -282,6 +290,7 @@ function marienburg_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._homeRegions = {"wh_main_the_wasteland_gorssel"} --:vector<string>
     return sp
 end
 
@@ -310,6 +319,14 @@ function sylvania_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 2--:number
+    sp._homeRegions = {
+        "wh_main_western_sylvania_fort_oberstyre",
+        "wh_main_eastern_sylvania_castle_drakenhof",
+        "wh_main_eastern_sylvania_eschen",
+        "wh_main_western_sylvania_schwartzhafen",
+        "wh_main_eastern_sylvania_waldenhof",
+        "wh_main_western_sylvania_castle_templehof"
+    }--:vector<string>
     return sp
 end
 
@@ -338,6 +355,14 @@ function vampire_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = false;
     sp._baseRegions = 6--:number
+    sp._homeRegions = {
+        "wh_main_western_sylvania_fort_oberstyre",
+        "wh_main_eastern_sylvania_castle_drakenhof",
+        "wh_main_eastern_sylvania_eschen",
+        "wh_main_western_sylvania_schwartzhafen",
+        "wh_main_eastern_sylvania_waldenhof",
+        "wh_main_western_sylvania_castle_templehof"
+    }--:vector<string>
     return sp
 end
 
@@ -366,6 +391,21 @@ function sigmar_start_pos()
     sp._turnsDead = 0--:number
     sp._isCult = true;
     sp._baseRegions = 0--:number
+    sp._homeRegions = {
+        "wh_main_ostland_castle_von_rauken",
+        "wh_main_ostland_norden",
+        "wh_main_ostland_wolfenburg",
+        "wh_main_reikland_altdorf",
+        "wh_main_reikland_eilhart",
+        "wh_main_reikland_grunburg",
+        "wh_main_reikland_helmgart",
+        "wh_main_stirland_the_moot",
+        "wh_main_stirland_wurtbad",
+        "wh_main_talabecland_kemperbad",
+        "wh_main_wissenland_nuln",
+        "wh_main_wissenland_pfeildorf",
+        "wh_main_wissenland_wissenburg"
+        } --:vector<string>
     return sp
 end
 
@@ -394,6 +434,15 @@ function ulric_start_pos()
     sp._knights = false;
     sp._canRevive = false;
     sp._unitList = get_default_start_army()
+    sp._homeRegions = {
+        "wh_main_hochland_brass_keep",
+        "wh_main_hochland_hergig",
+        "wh_main_middenland_carroburg",
+        "wh_main_middenland_middenheim",
+        "wh_main_middenland_weismund",
+        "wh_main_nordland_dietershafen",
+        "wh_main_nordland_salzenmund"
+        } --:vector<string>
     return sp
 end
 
