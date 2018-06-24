@@ -5,11 +5,6 @@ if not eom then
 end
 
 
-cm:kill_all_armies_for_faction(cm:get_faction("wh_main_emp_talabecland"))
-cm:transfer_region_to_faction("wh_main_talabecland_talabheim", eom:empire())
-cm:transfer_region_to_faction("wh_main_talabecland_kemperbad", eom:empire())
-
-
 --reduce typing
 EOM_GLOBAL_EMPIRE_FACTION = "wh_main_emp_empire"
 --helper for listeners
