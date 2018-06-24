@@ -456,7 +456,6 @@ function eom_model.event_and_plot_check(self)
         for name, elector in pairs(self:electors()) do
             if elector:loyalty() > 99 and elector:status() == "normal" then
                 elector:set_fully_loyal(self)
-                return
             end
         end
     end
@@ -469,11 +468,14 @@ function eom_model.event_and_plot_check(self)
        end
     end
     --open rebellions
-    EOMLOG("Core event and plot check function checking open rebellion opportunities")
-    for name, elector in pairs(self:electors()) do
-        if (elector:loyalty() == 0) then
-            EOMLOG("Elector ["..name.."] can rebel!")
-            self:elector_rebellion_start(name)
+    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
+        EOMLOG("Core event and plot check function checking open rebellion opportunities")
+        for name, elector in pairs(self:electors()) do
+            if (elector:loyalty() == 0) and elector:status() == "normal" then
+                
+                EOMLOG("Elector ["..name.."] can rebel!")
+                self:elector_rebellion_start(name)
+            end
         end
     end
 
@@ -481,9 +483,11 @@ function eom_model.event_and_plot_check(self)
     --player restore opportunity.
     EOMLOG("Core event and plot check function checking player restoration opportunities")
     for name, elector in pairs(self:electors()) do
-        if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
-            if elector:status() == "normal" or elector:status() == "open_rebellion" then
-                self:trigger_restoration_dilemma(name)
+        if not elector:is_cult() then
+            if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
+                if elector:status() == "normal" or elector:status() == "open_rebellion" then
+                    self:trigger_restoration_dilemma(name)
+                end
             end
         end
     end
