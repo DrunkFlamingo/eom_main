@@ -201,8 +201,9 @@ local eom_main_events_table = {
         key = "eom_dilemma_wissenland_1",
         conditional = function(model --:EOM_MODEL
         )
-
-            return model:is_elector_valid("wh_main_emp_wissenland") and (not cm:get_faction("wh_main_brt_parravon"):is_dead())
+            return false
+            --NOT IN BETA1
+            --return model:is_elector_valid("wh_main_emp_wissenland") and (not cm:get_faction("wh_main_brt_parravon"):is_dead())
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -304,8 +305,9 @@ local eom_main_events_table = {
         key = "eom_dilemma_cult_of_sigmar_1",
         conditional = function(model --:EOM_MODEL
         )
-
-            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_wissenland") and model:is_elector_valid("wh_main_emp_middenland")
+            --BETA1
+            return false
+            --return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_wissenland") and model:is_elector_valid("wh_main_emp_middenland")
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -341,8 +343,9 @@ local eom_main_events_table = {
         key = "eom_dilemma_marienburg_1",
         conditional = function(model --:EOM_MODEL
         )
-
-            return (not cm:get_faction("wh2_main_hef_eataine")) and model:is_elector_valid("wh_main_emp_marienburg") and cm:get_faction("wh_main_emp_empire"):treasury() > 5000
+            return false
+            --not in beta1
+            --return (not cm:get_faction("wh2_main_hef_eataine")) and model:is_elector_valid("wh_main_emp_marienburg") and cm:get_faction("wh_main_emp_empire"):treasury() > 5000
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -361,8 +364,9 @@ local eom_main_events_table = {
         key = "eom_dilemma_sylvania_1",
         conditional = function(model --:EOM_MODEL
         )
-
-            return model:is_elector_valid("wh_main_emp_sylvania") and cm:get_faction("wh_main_emp_empire"):treasury() > 6000
+            --note: not in beta 1
+            return false
+            --return model:is_elector_valid("wh_main_emp_sylvania") and cm:get_faction("wh_main_emp_empire"):treasury() > 6000
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -501,8 +505,9 @@ local eom_main_events_table = {
         key = "eom_dilemma_middenland_2",
         conditional = function(model --:EOM_MODEL
         )
-
-            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_middenland") and model:is_elector_valid("wh_main_emp_cult_of_ulric")
+            return false
+            --not in beta 1
+            --return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_middenland") and model:is_elector_valid("wh_main_emp_cult_of_ulric")
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -555,9 +560,9 @@ local eom_main_events_table = {
     {
         key = "eom_dilemma_ostland_2",
         conditional = function(model --:EOM_MODEL
-        )
-
-            return model:is_elector_valid("wh_main_emp_ostland") and model:is_elector_valid("wh_main_emp_hochland") and (not model:get_core_data_with_key("hochland_ostland_allied") == true)
+        )   return false
+            --not in beta 1
+            --return model:is_elector_valid("wh_main_emp_ostland") and model:is_elector_valid("wh_main_emp_hochland") and (not model:get_core_data_with_key("hochland_ostland_allied") == true)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -703,8 +708,8 @@ local eom_main_events_table = {
         key = "eom_dilemma_marienburg_2",
         conditional = function(model --:EOM_MODEL
         )
-
-            return model:is_elector_valid("wh_main_emp_marienburg") and model:is_elector_valid("wh_main_emp_middenland") and (cm:get_faction("wh_main_emp_empire"):treasury() > 7000)
+            return false
+            --return model:is_elector_valid("wh_main_emp_marienburg") and model:is_elector_valid("wh_main_emp_middenland") and (cm:get_faction("wh_main_emp_empire"):treasury() > 7000)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -801,9 +806,9 @@ local eom_main_events_table = {
     {
         key = "eom_dilemma_hochland_3",
         conditional = function(model --:EOM_MODEL
-        )
-
-            return model:is_elector_valid("wh_main_emp_hochland") and (model:get_elector("wh_main_emp_hochland"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        )   return false
+            --not in beta 1
+            --return model:is_elector_valid("wh_main_emp_hochland") and (model:get_elector("wh_main_emp_hochland"):loyalty() < 20) and (cm:model():turn_number() > 50)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -901,8 +906,8 @@ local eom_main_events_table = {
         key = "eom_dilemma_ostland_3",
         conditional = function(model --:EOM_MODEL
         )
-
-            return model:is_elector_valid("wh_main_emp_middenland") and (model:get_elector("wh_main_emp_middenland"):loyalty() < 20) and (cm:model():turn_number() > 50) and (cm:get_faction("wh_main_emp_empire"):treasury() > 5000)
+            return false
+           -- return model:is_elector_valid("wh_main_emp_middenland") and (model:get_elector("wh_main_emp_middenland"):loyalty() < 20) and (cm:model():turn_number() > 50) and (cm:get_faction("wh_main_emp_empire"):treasury() > 5000)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -921,13 +926,12 @@ local eom_main_events_table = {
         key = "eom_dilemma_wissenland_3",
         conditional = function(model --:EOM_MODEL
         )
-
             return model:is_elector_valid("wh_main_emp_wissenland") and (model:get_elector("wh_main_emp_wissenland"):loyalty() < 20) and (cm:model():turn_number() > 50)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
-            --NOTE: add treasury cost payload
+   
             model:get_elector("wh_main_emp_wissenland"):change_loyalty(15)
             model:change_loyalty_for_all_except({"wh_main_emp_wissenland", "wh_main_emp_cult_of_sigmar"}, -15)
         end,
@@ -947,7 +951,7 @@ local eom_main_events_table = {
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
-            --NOTE: add treasury cost payload
+
             model:get_elector("wh_main_emp_talabecland"):change_loyalty(15)
             model:change_loyalty_for_all_except({"wh_main_emp_talabecland"}, -15)
         end,
@@ -962,12 +966,12 @@ local eom_main_events_table = {
         conditional = function(model --:EOM_MODEL
         )
 
-            return model:is_elector_valid("wh_main_emp_cult_of_ulric") and (model:get_elector("wh_main_emp_cult_of_ulric"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        return model:is_elector_valid("wh_main_emp_cult_of_ulric") and (model:get_elector("wh_main_emp_cult_of_ulric"):loyalty() < 20) and (cm:model():turn_number() > 50)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
-            --NOTE: add treasury cost payload
+
             model:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(15)
             model:change_ulrican_loyalites(10)
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-20)
@@ -990,7 +994,7 @@ local eom_main_events_table = {
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
-            --NOTE: add treasury cost payload
+            
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
             model:change_ulrican_loyalites(-15)
             model:change_atheist_loyalties(-15)
@@ -1011,7 +1015,7 @@ local eom_main_events_table = {
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
-            --NOTE: add treasury cost payload
+           
             model:get_elector("wh_main_emp_marienburg"):change_loyalty(10)
             model:get_elector("wh_main_emp_nordland"):change_loyalty(-15)
             model:get_elector("wh_main_emp_talabecland"):change_loyalty(-15)
@@ -1034,7 +1038,7 @@ local eom_main_events_table = {
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
-            --NOTE: add treasury cost payload
+            
             model:get_elector("wh_main_emp_sylvania"):change_loyalty(10)
             model:get_elector("wh_main_emp_averland"):change_loyalty(-15)
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(-15)
@@ -1055,7 +1059,6 @@ local eom_main_events_table = {
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
-            --NOTE: add treasury cost payload
             model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(20)
             model:change_loyalty_for_all_except({"wh_main_vmp_schwartzhafen"}, -10)
         end,
