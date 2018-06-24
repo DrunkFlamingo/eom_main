@@ -116,6 +116,7 @@ function marienburg_invasion_add()
             model:set_core_data("block_events_for_plot", false)
         end,
         false)
+    cm:force_make_peace("wh_main_emp_empire", "wh_main_brt_bretonnia")
     end)
 
 end

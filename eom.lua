@@ -1220,12 +1220,13 @@ end
 
 --v function(self: EOM_ELECTOR, model: EOM_MODEL)
 function eom_elector.set_fully_loyal(self, model)
-    self:make_fully_loyal()
     self:set_status("loyal")
+    self:make_fully_loyal()
     self._fullLoyaltyCallback(model)
     cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_full_loyalty_"..self:name(), true)
     cm:force_confederation(EOM_GLOBAL_EMPIRE_FACTION, self:name())
 end
+
 
 
 local eom_model = {} --# assume eom_model: EOM_MODEL
@@ -1459,6 +1460,13 @@ end
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.elector_rebellion_start(self, name)
+    if name == "wh_main_vmp_schwartzhafen" then
+        EOMLOG("Vlad can't rebel!")
+        return 
+    end
+
+
+
     EOMLOG("triggering rebellion for ["..name.."] ")
     local elector = self:get_elector(name)
     elector:set_status("open_rebellion")
@@ -1626,7 +1634,7 @@ function eom_model.event_and_plot_check(self)
     --open rebellions
     EOMLOG("Core event and plot check function checking open rebellion opportunities")
     for name, elector in pairs(self:electors()) do
-        if (elector:loyalty() < 1) and (not name == "wh_main_vmp_schwartzhafen") then
+        if elector:loyalty() == 0 then
             EOMLOG("Elector ["..name.."] can rebel!")
             self:elector_rebellion_start(name)
         end
