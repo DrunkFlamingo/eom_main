@@ -120,13 +120,169 @@ function marienburg_invasion_add()
 
 end
 
+function vampire_wars_add()
+
+local vampire_wars = eom:new_story_chain("vampire_wars")
+vampire_wars:add_stage_trigger(1, function(model --:EOM_MODEL
+)
+    local plot_turn = model:get_core_data_with_key("vampire_war_turn") --# assume plot_turn: number
+    return cm:model():turn_number() >= plot_turn
+end)
+
+vampire_wars:add_stage_callback(1, function(model --:EOM_MODEL
+)   
+    model:set_core_data("block_events_for_plot", true)
+    cm:trigger_incident(model:empire(), "eom_vampire_war_1", true)
+    model:set_core_data("vampire_war_turn", cm:model():turn_number() + 8)
+    cm:treasury_mod("wh_main_vmp_vampire_counts", 10000)
+    cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war", true, true, true)
+    cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_averland", false, false)
+    cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_ostermark", false, false)
+    cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_stirland", false, false)
+    cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_empire", false, false)
+    model:get_elector("wh_main_emp_cult_of_sigmar"):respawn_at_capital()
+    cm:callback( function()
+        cm:treasury_mod("wh_main_emp_cult_of_sigmar", 5000)
+        cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_cult_of_sigmar", false, false)
+    end, 0.5)
+
+end)
+vampire_wars:add_stage_trigger(2, function(model --:EOM_MODEL
+)
+    local plot_turn = model:get_core_data_with_key("vampire_war_turn") --# assume plot_turn: number
+    return cm:model():turn_number() >= plot_turn
+end)
+
+vampire_wars:add_stage_callback(2, function(model --:EOM_MODEL
+)
+    vlad_x = 687
+    vlad_y = 460
+    isabella_x = 677
+    isabella_y = 460
+    vlad_list = "wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_1,wh_main_vmp_inf_grave_guard_1,wh_main_vmp_cav_black_knights_3,wh_main_vmp_cav_black_knights_3,wh_main_vmp_mon_terrorgheist,wh_main_vmp_veh_black_coach,wh_main_vmp_mon_varghulf,wh_main_vmp_inf_skeleton_warriors_1,wh_main_vmp_inf_skeleton_warriors_1,wh_dlc04_vmp_veh_mortis_engine_0";
+    isabella_list = "wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_cha_vampire_0,wh_main_vmp_cha_vampire_0,wh_main_vmp_inf_crypt_ghouls,wh_main_vmp_inf_crypt_ghouls,wh_main_vmp_mon_vargheists,wh_main_vmp_mon_vargheists,wh_main_vmp_mon_terrorgheist,wh_main_vmp_mon_fell_bats,wh_main_vmp_mon_fell_bats,wh_main_vmp_mon_fell_bats,wh_main_vmp_mon_crypt_horrors";
+    model:set_core_data("vampire_war_turn", cm:model():turn_number() + 2)
+    cm:create_force_with_general(
+            -- faction_key, unit_list, region_key, x, y, agent_type, agent_subtype, forename, clan_name, family_name, other_name, id, make_faction_leader, success_callback
+            "wh_main_vmp_schwartzhafen",
+            vlad_list,
+            "wh_main_eastern_sylvania_waldenhof",
+            vlad_x,
+            vlad_y,
+            "general",
+            "dlc04_vmp_vlad_con_carstein",
+            "names_name_2147345130",		-- Vlad
+            "",
+            "names_name_2147343895",		-- Von Carstein
+            "",
+            true,
+            function(cqi)
+            end
+        );
+
+    cm:create_force_with_general(
+            -- faction_key, unit_list, region_key, x, y, agent_type, agent_subtype, forename, clan_name, family_name, other_name, id, make_faction_leader, success_callback
+            "wh_main_vmp_schwartzhafen",
+            isabella_list,
+            "wh_main_eastern_sylvania_waldenhof",
+            isabella_x,
+            isabella_y,
+            "general",
+            "pro02_vmp_isabella_von_carstein",
+            "names_name_2147345124",		-- Isabella
+            "",
+            "names_name_2147343895",		-- Von Carstein
+            "",
+            true,
+            function(cqi)
+            end
+        );
+
+    cm:callback(function()
+        cm:treasury_mod("wh_main_vmp_schwartzhafen", 10000);
+        cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_vmp_schwartzhafen", false, false);
+        cm:transfer_region_to_faction("wh_main_eastern_sylvania_waldenhof", "wh_main_vmp_schwartzhafen");
+        cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "faction:wh_main_vmp_vampire_counts", "peace", false, false, false);
+        cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "subculture:wh_main_sc_emp_empire", "war", false, false, true);
+        cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "faction:wh_main_vmp_schwartzhafen", "peace", false, false, false);
+        end, 0.5);
+
+end)
+
+vampire_wars:add_stage_trigger(3, function(model --:EOM_MODEL
+)
+    local plot_turn = model:get_core_data_with_key("vampire_war_turn") --# assume plot_turn: number
+    return cm:model():turn_number() >= plot_turn
+end)
+vampire_wars:add_stage_callback(3, function(model
+)
+    cm:trigger_dilemma(model:empire(), "eom_vampire_war_3", true)
+    core:add_listener(
+        "eom_vampire_war_3",
+        "DilemmaChoiceMadeEvent",
+        true,
+        function(context)
+            if context:choice() == 0 then
+                cm:force_alliance("wh_main_emp_empire", "wh_main_vmp_schwartzhafen", true)
+                model:set_core_data("allied_vlad", true)
+                model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
+            else
+                model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
+                model:set_core_data("allied_vlad", false)
+                cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "subculture:wh_main_sc_emp_empire", "war", true, true, true);
+            end
+        end,
+        false)
+end)
+
+vampire_wars:add_stage_trigger(4, function(model--: EOM_MODEL
+)
+    return cm:get_faction("wh_main_vmp_vampire_counts"):is_dead()
+end)
+vampire_wars:add_stage_callback(4, function(model
+)
+
+if cm:get_faction("wh_main_vmp_schwartzhafen"):is_dead() then
+    model:get_story_chain("vampire_wars"):finish()
+    model:set_core_data("block_events_for_plot", false)
+    return
+end
+if model:get_core_data_with_key("allied_vlad") == true then
+    cm:trigger_dilemma(model:empire(), "eom_vampire_war_4", true)
+    core:add_listener(
+        "eom_vampire_war_4",
+        "DilemmaChoiceMadeEvent",
+        true,
+        function(context)
+            if context:choice() == 0 then
+                model:change_sigmarite_loyalties(-10)
+                model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
+                model:get_elector("wh_main_emp_averland"):change_loyalty(-10)
+                cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "subculture:wh_main_sc_emp_empire", "war", false, false, true);
+            else
+                model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
+                model:change_sigmarite_loyalties(10)
+                cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "subculture:wh_main_sc_emp_empire", "war", true, true, true);
+            end
+        end,
+        false);
+else
+    cm:force_declare_war("wh_main_vmp_schwartzhafen", "wh_main_emp_averland", true, true)
+    cm:treasury_mod("wh_main_vmp_schwartzhafen", 10000)
+end
+
+model:get_story_chain("vampire_wars"):finish()
+model:set_core_data("block_events_for_plot", false)
+
+end)
+end
 
 
 
 function eom_plot_events()
     reikland_rebellion_add()
     marienburg_invasion_add()
-
+    vampire_wars_add()
 end
 
 

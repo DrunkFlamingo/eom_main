@@ -19,7 +19,9 @@ local function eom_starting_settings()
             "faction:wh_main_emp_nordland",
             "faction:wh_main_emp_ostland",
             "faction:wh_main_emp_wissenland",
-            "faction:wh_main_emp_talabecland"
+            "faction:wh_main_emp_talabecland",
+            "faction:wh_main_emp_sylvania",
+            "faction:wh_main_vmp_schwartzhafen"
         }--: vector<string>
         local external_list = {
             "faction:wh_main_ksl_kislev",
@@ -82,9 +84,13 @@ local function eom_starting_settings()
             cm:transfer_region_to_faction(provinces_to_transfer_to_mannfred[i], "wh_main_vmp_vampire_counts");
             end, (i/10));
         end
-        
+        --force marienburg and bretonnia to peace
+        cm:force_make_peace("wh_main_brt_bretonnia", "wh_main_emp_marienburg");
+        cm:force_declare_war("wh_main_brt_bretonnia", "wh_dlc05_vmp_mousillon", true, true);
+
         --prevent mannfredd from declaring war on the empire until we want him to
         cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war", false, false, true)
+
 
         --anti beastmen forces
         cm:callback( function() 
