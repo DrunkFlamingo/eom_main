@@ -228,7 +228,7 @@
 --# assume CM.get_faction: method(factionName: string) --> CA_FACTION
 --# assume CM.get_character_by_mf_cqi: method(cqi: CA_CQI) --> CA_CHAR
 --# assume CM.char_lookup_str: method(char: CA_CQI | CA_CHAR | number) --> string
---# assume CM.kill_all_armies_for_faction: method(factionName: string)
+--# assume CM.kill_all_armies_for_faction: method(factionName: CA_FACTION)
 --# assume CM.get_highest_ranked_general_for_faction: method(faction_key: string) --> CA_CHAR
 --# assume CM.force_add_and_equip_ancillary: method(lookup: string, ancillary: string)
 --# assume CM.trigger_dilemma: method(faction_key: string, dilemma_key: string, trigger_immediately: boolean)

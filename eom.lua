@@ -156,6 +156,7 @@ EOM_GLOBAL_REGION_TO_ELECTOR = {
     ["wh_main_the_wasteland_marienburg"] = "wh_main_emp_marienburg"
 }--:map<string, ELECTOR_NAME>
 
+
 --v function() --> string
 local function get_default_start_army()
     return "wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_halberdiers,wh_main_emp_inf_halberdiers,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_handgunners,wh_main_emp_inf_handgunners,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen"
@@ -674,6 +675,7 @@ function eom_plot.is_active(self)
     return (not cm:get_saved_value("plot_line_ended_"..self:name())) and (self:current_stage() > 0)
 end
 
+
 --v [NO_CHECK] function(self: EOM_PLOT)--> boolean
 function eom_plot.check_advancement(self) 
     if self:is_over() then
@@ -692,7 +694,6 @@ function eom_plot.check_advancement(self)
         return false
     end
 end
-    
 
 --v function (self: EOM_PLOT)
 function eom_plot.advance(self)
@@ -788,7 +789,6 @@ function eom_action.act(self)
         end,
         false)
 end
-
 
 local eom_elector = {} --# assume eom_elector: EOM_ELECTOR
 
@@ -1051,17 +1051,19 @@ function eom_elector.set_leader_surname(self, surname)
     self._leaderSurname = surname
 end
 
+
 --armies
 
 --v function(self: EOM_ELECTOR, army_list: string)
 function eom_elector.set_army_list(self, army_list)
-    self._armyList = army_list
+    self._unitList = army_list
 end
 
 --v function(self: EOM_ELECTOR) --> string
 function eom_elector.get_army_list(self)
-    return self._armyList
+    return self._unitList
 end
+    
 
 
 
@@ -1466,7 +1468,6 @@ function eom_model.elector_rebellion_start(self, name)
     end
 
 
-
     EOMLOG("triggering rebellion for ["..name.."] ")
     local elector = self:get_elector(name)
     elector:set_status("open_rebellion")
@@ -1574,6 +1575,7 @@ function eom_model.check_unjust_war(self, name)
 end
 
 
+
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.offer_capitulation(self, name)
     EOMLOG("Offering capitulation for ["..name.."] ")
@@ -1622,17 +1624,17 @@ function eom_model.event_and_plot_check(self)
         EOMLOG("Checking for fully loyal electors")
         for name, elector in pairs(self:electors()) do
             if elector:loyalty() > 99 and elector:status() == "normal" then
-                elector:set_fully_loyFal(self)
+                elector:set_fully_loyal(self)
             end
         end
     end
     --plot check
     EOMLOG("Core event and plot check function checking story events")
     for key, story in pairs(self:get_story()) do
-        if story:check_advancement() == true then
+       if story:check_advancement() == true then
             story:advance()
             return
-        end
+       end
     end
     --open rebellions
     if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
@@ -1851,7 +1853,6 @@ end
 
 
 -- ui view
-
 local eom_view = {} --# assume eom_view: EOM_VIEW
 
 --controller functions
@@ -2122,8 +2123,6 @@ function eom_view.docker_button_pressed(self)
         character:SetVisible(false)
     end
 end
-
-
 
 
 

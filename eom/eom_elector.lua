@@ -263,12 +263,12 @@ end
 
 --v function(self: EOM_ELECTOR, army_list: string)
 function eom_elector.set_army_list(self, army_list)
-    self._armyList = army_list
+    self._unitList = army_list
 end
 
 --v function(self: EOM_ELECTOR) --> string
 function eom_elector.get_army_list(self)
-    return self._armyList
+    return self._unitList
 end
 
 
