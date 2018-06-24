@@ -204,6 +204,7 @@
 --# assume CM.apply_effect_bundle: method(bundle: string, faction: string, timer: int)
 --# assume CM.remove_effect_bundle: method(bundle: string, faction: string)
 
+--# assume CM.make_diplomacy_available: method(faction: string, other_faction: string)
 --# assume CM.force_make_peace: method(faction: string, other_faction: string)
 --# assume CM.force_declare_war: method(declarer: string, declaree: string, attacker_allies: boolean, defender_allies: boolean)
 --# assume CM.force_make_vassal: method(vassaliser: string, vassal: string)

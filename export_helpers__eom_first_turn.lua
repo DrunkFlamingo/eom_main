@@ -21,7 +21,8 @@ local function eom_starting_settings()
             "faction:wh_main_emp_wissenland",
             "faction:wh_main_emp_talabecland",
             "faction:wh_main_emp_sylvania",
-            "faction:wh_main_vmp_schwartzhafen"
+            "faction:wh_main_vmp_schwartzhafen",
+            "faction:wh_main_emp_marienburg"
         }--: vector<string>
         local external_list = {
             "faction:wh_main_ksl_kislev",

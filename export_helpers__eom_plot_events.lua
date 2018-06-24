@@ -194,6 +194,7 @@ vampire_wars:add_stage_callback(2, function(model --:EOM_MODEL
         );
 
     cm:callback(function()
+        cm:make_diplomacy_available("wh_main_vmp_schwartzhafen", "wh_main_emp_empire")
         cm:treasury_mod("wh_main_vmp_schwartzhafen", 10000);
         cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_vmp_schwartzhafen", false, false);
         cm:transfer_region_to_faction("wh_main_eastern_sylvania_waldenhof", "wh_main_vmp_schwartzhafen");
@@ -367,7 +368,7 @@ vampire_wars:add_stage_callback(5, function(model
 model:get_story_chain("vampire_wars"):finish()
     model:set_core_data("block_events_for_plot", false)
     --sylvania dilemma now
-    cm:trigger_dilemma(model:empire(), "eom_empire_war_5", true)
+    cm:trigger_dilemma(model:empire(), "eom_vampire_war_5", true)
     core:add_listener(
         "eom_vampire_war_5",
         "DilemmaChoiceMadeEvent",
