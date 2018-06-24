@@ -276,7 +276,7 @@ function marienburg_start_pos()
     sp._expeditionX = 440--:number
     sp._expeditionY = 553--:number
     sp._knights = false;
-    sp._canRevive = true;
+    sp._canRevive = false;
     sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_reikland_eilhart"
     sp._turnsDead = 0--:number
@@ -360,7 +360,7 @@ function sigmar_start_pos()
     sp._expeditionX = 581--:number
     sp._expeditionY = 443--:number
     sp._knights = false;
-    sp._canRevive = true;
+    sp._canRevive = false;
     sp._unitList = get_default_start_army()
     sp._expeditionRegion = "wh_main_stirland_wurtbad"
     sp._turnsDead = 0--:number
@@ -392,7 +392,7 @@ function ulric_start_pos()
     sp._isCult = true;
     sp._baseRegions = 0--:number
     sp._knights = false;
-    sp._canRevive = true;
+    sp._canRevive = false;
     sp._unitList = get_default_start_army()
     return sp
 end

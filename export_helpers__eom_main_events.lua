@@ -547,6 +547,7 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_nordland"):change_loyalty(-15)
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
             cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "eom_marienburg_appeased")
+            model:set_core_data("friend_of_marienburg", true)
         end,
             [2] = function(model --:EOM_MODEL
             ) 
@@ -554,6 +555,7 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(-10)
             cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "eom_marienburg_angry")
             cm:force_diplomacy("faction:wh_main_emp_empire", "faction:wh_main_emp_marienburg", "trade", false, false, true)
+            model:set_core_data("friend_of_marienburg", false)
         end
         }
 

@@ -149,6 +149,7 @@
 --# )
 
 --# assume CM.show_message_event: method(faction_key: string, primary_detail: string, secondary_detail: string, flavour_text: string, persist: boolean, event_picture_id:  number)
+
 --# assume CM.show_message_event_located: method(
 --#     faction_key: string,
 --#     primary_detail: string,
@@ -192,7 +193,11 @@
 --# assume CM.is_new_game: method() --> boolean
 --# assume CM.apply_effect_bundle_to_region: method(bundle: string, region: string, turns: number)
 --# assume CM.remove_effect_bundle_from_region: method(bundle: string, region: string)
---# assume CM.grant_unit_to_character: method(cqi: CA_CQI, unit: string)
+
+
+--# assume CM.grant_unit_to_character: method(lookup: string , unit: string)
+--# assume CM.remove_all_units_from_general: method(character: CA_CHAR)
+
 --# assume CM.add_saving_game_callback: method(function(context: WHATEVER))
 --# assume CM.add_loading_game_callback: method(function(context: WHATEVER))
 --# assume CM.random_number: method(num: int) --> int
