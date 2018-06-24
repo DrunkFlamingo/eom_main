@@ -339,12 +339,23 @@ function eom_elector.trigger_coup(self)
         "",
         true,
         function(cqi)
-
+            local dx = cm:get_character_by_cqi(cqi):display_position_x()
+            local dy = cm:get_character_by_cqi(cqi):display_position_y()
+            cm:show_message_event_located(
+                EOM_GLOBAL_EMPIRE_FACTION,
+                "event_feed_strings_text_coup_detat_title",
+                "event_feed_strings_text_coup_detat_"..self:name().."_subtitle",
+                "event_feed_strings_text_coup_detat_"..self:name().."_detail",
+                dx,
+                dy,
+                true,
+                591)
         end)
     cm:callback( function()
         cm:transfer_region_to_faction(self:capital(), self:name())
         cm:force_declare_war(self:name(), old_owner, false, false)
         cm:treasury_mod(self:name(), 5000)
+
     end, 0.2)
     self:set_can_revive(false)
 end
@@ -391,7 +402,17 @@ function eom_elector.trigger_expedition(self)
         "",
         true,
         function(cqi)
-
+            local dx = cm:get_character_by_cqi(cqi):display_position_x()
+            local dy = cm:get_character_by_cqi(cqi):display_position_y()
+            cm:show_message_event_located(
+                EOM_GLOBAL_EMPIRE_FACTION,
+                "event_feed_strings_text_expedition_title",
+                "event_feed_strings_text_expedition_"..self:name().."_subtitle",
+                "event_feed_strings_text_expedition_"..self:name().."_detail",
+                dx,
+                dy,
+                true,
+                591)
         end)
     cm:treasury_mod(self:name(), 10000)
     cm:force_declare_war(self:name(), old_owner, false, false)

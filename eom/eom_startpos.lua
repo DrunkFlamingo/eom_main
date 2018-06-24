@@ -403,7 +403,7 @@ function return_starting_core_data()
     cd.next_event_turn = 2
     cd.block_events_for_plot = true
     cd.current_plot = "reikland_rebellion"
-
+    cd.last_unjust_war = 0
 
     return cd
 end

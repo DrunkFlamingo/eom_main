@@ -148,6 +148,7 @@
 --#     callback: (function(CA_CQI))?
 --# )
 
+--# assume CM.show_message_event: method(faction_key: string, primary_detail: string, secondary_detail: string, flavour_text: string, persist: boolean, event_picture_id:  number)
 --# assume CM.show_message_event_located: method(
 --#     faction_key: string,
 --#     primary_detail: string,

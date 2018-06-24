@@ -124,6 +124,12 @@ end
 
 
 --electors
+
+--v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
+function eom_model.has_elector(self, name)
+    return not not self._electors[name]
+end
+
 --v function(self: EOM_MODEL) --> map<ELECTOR_NAME, EOM_ELECTOR>
 function eom_model.electors(self)
     return self._electors
@@ -322,13 +328,23 @@ function eom_model.check_dead(self)
     end
 end
 
---v function(self: EOM_MODEL, name:ELECTOR_NAME)
-function eom_model.elector_fallen(self, name)
+--v function(self: EOM_MODEL, name:ELECTOR_NAME, show_message_event: boolean?)
+function eom_model.elector_fallen(self, name, show_message_event)
     local elector = self:get_elector(name)
     self:change_all_loyalties(-10)
     --NOTE: trigger elector fallen event.
     elector:set_status("fallen")
     elector:set_visible(false)
+    if show_message_event then
+        cm:show_message_event(
+            self:empire(),
+            "event_feed_strings_text_elector_fallen_title",
+            "event_feed_strings_text_elector_fallen_subtitle",
+            "event_feed_strings_text_elector_"..name.."_fallen_detail",
+            true,
+            591
+        )
+    end
 end
 
     
@@ -361,6 +377,28 @@ end
 function eom_model.grant_casus_belli(self, name)
     cm:apply_effect_bundle("eom_"..name.."_casus_belli", EOM_GLOBAL_EMPIRE_FACTION, 8)
 end
+
+--v function(self: EOM_MODEL, name: ELECTOR_NAME)
+function eom_model.check_unjust_war(self, name)
+    if cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli") then
+        EOMLOG("Casus Belli possessed, doing nothing!")
+    else
+        local last_unjust = self:get_core_data_with_key("last_unjust_war") --# assume last_unjust:number
+        if last_unjust < cm:model():turn_number() then
+            self:change_all_loyalties(-10)
+            self:set_core_data("last_unjust_war", cm:model():turn_number())
+            cm:show_message_event(
+                self:empire(),
+                "event_feed_strings_text_unjust_war_title",
+                "event_feed_strings_text_unjust_war_subtitle",
+                "event_feed_strings_text_unjust_war_detail",
+                true,
+                591)
+        end
+    end
+end
+
+
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.offer_capitulation(self, name)
@@ -468,7 +506,7 @@ function eom_model.event_and_plot_check(self)
     EOMLOG("Core event and plot check function checking elector fallen events.")
     for name, elector in pairs(self:electors()) do
         if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
-            self:elector_fallen(name)
+            self:elector_fallen(name, true)
         end
     end
 end
