@@ -259,6 +259,25 @@ if model:get_core_data_with_key("allied_vlad") == true then
                 model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
                 model:get_elector("wh_main_emp_averland"):change_loyalty(-10)
                 cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "subculture:wh_main_sc_emp_empire", "war", false, false, true);
+                model:get_elector("wh_main_vmp_schwartzhafen"):set_loyalty(45)
+                model:get_elector("wh_main_vmp_schwartzhafen"):set_visible(true)
+                model:get_elector("wh_main_vmp_schwartzhafen"):set_status("normal")
+                local sylvania_regions = {
+                    "wh_main_western_sylvania_fort_oberstyre",
+                    "wh_main_eastern_sylvania_castle_drakenhof",
+                    "wh_main_eastern_sylvania_eschen",
+                    "wh_main_western_sylvania_schwartzhafen",
+                    "wh_main_eastern_sylvania_waldenhof",
+                    "wh_main_western_sylvania_castle_templehof"
+                }--:vector<string>
+                for i = 1, #sylvania_regions do
+                    if cm:get_region(sylvania_regions[i]):owning_faction():subculture() == "wh_main_sc_emp_empire" then
+                        cm:callback(function()
+                        cm:transfer_region_to_faction(sylvania_regions[i], "wh_main_vmp_schwartzhafen")
+                        end, i/10);
+                    end
+                end
+
             else
                 model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
                 model:change_sigmarite_loyalties(10)
