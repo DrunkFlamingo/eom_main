@@ -3,6 +3,68 @@ if not eom then
     script_error("EOM IS NOT FOUND!")
     return
 end
+
+
+--reduce typing
+EOM_GLOBAL_EMPIRE_FACTION = "wh_main_emp_empire"
+--helper for listeners
+EOM_GLOBAL_EMPIRE_REGIONS = {
+    ["wh_main_ostland_castle_von_rauken"] = 1,
+    ["wh_main_ostland_norden"] = 1,
+    ["wh_main_ostland_wolfenburg"] = 2,
+    ["wh_main_reikland_altdorf"] = 2,
+    ["wh_main_reikland_eilhart"] = 1,
+    ["wh_main_reikland_grunburg"] = 1,
+    ["wh_main_reikland_helmgart"] = 1,
+    ["wh_main_stirland_the_moot"] = 1,
+    ["wh_main_stirland_wurtbad"] = 2,
+    ["wh_main_talabecland_kemperbad"] = 1,
+    ["wh_main_wissenland_nuln"] = 2,
+    ["wh_main_wissenland_pfeildorf"] = 1,
+    ["wh_main_wissenland_wissenburg"] = 1,
+    ["wh_main_hochland_brass_keep"] = 1,
+    ["wh_main_hochland_hergig"] = 2,
+    ["wh_main_middenland_carroburg"] = 1,
+    ["wh_main_middenland_middenheim"] = 2,
+    ["wh_main_middenland_weismund"] = 1,
+    ["wh_main_nordland_dietershafen"] = 2,
+    ["wh_main_nordland_salzenmund"] = 1,
+    ["wh_main_talabecland_talabheim"] = 2,
+    ["wh_main_averland_averheim"] = 2,
+    ["wh_main_averland_grenzstadt"] = 1,
+    ["wh_main_ostermark_bechafen"] = 2,
+    ["wh_main_ostermark_essen"] = 1,
+    ["wh_main_the_wasteland_gorssel"] = 1,
+    ["wh_main_the_wasteland_marienburg"] = 2
+}
+
+EOM_GLOBAL_REGION_TO_ELECTOR = {
+    ["wh_main_ostland_castle_von_rauken"] = "wh_main_emp_ostland",
+    ["wh_main_ostland_norden"] = "wh_main_emp_ostland",
+    ["wh_main_ostland_wolfenburg"] = "wh_main_emp_ostland",
+    ["wh_main_stirland_the_moot"] = "wh_main_emp_stirland",
+    ["wh_main_stirland_wurtbad"] = "wh_main_emp_stirland",
+    ["wh_main_talabecland_kemperbad"] = "wh_main_emp_talabecland",
+    ["wh_main_wissenland_nuln"] = "wh_main_emp_wissenland",
+    ["wh_main_wissenland_pfeildorf"] = "wh_main_emp_wissenland",
+    ["wh_main_wissenland_wissenburg"] = "wh_main_emp_wissenland",
+    ["wh_main_hochland_brass_keep"] = "wh_main_emp_hochland",
+    ["wh_main_hochland_hergig"] = "wh_main_emp_hochland",
+    ["wh_main_middenland_carroburg"] = "wh_main_emp_middenland",
+    ["wh_main_middenland_middenheim"] = "wh_main_emp_middenland",
+    ["wh_main_middenland_weismund"] = "wh_main_emp_middenland",
+    ["wh_main_nordland_dietershafen"] = "wh_main_emp_nordland",
+    ["wh_main_nordland_salzenmund"] = "wh_main_emp_nordland",
+    ["wh_main_talabecland_talabheim"] = "wh_main_emp_talabecland",
+    ["wh_main_averland_averheim"] = "wh_main_emp_averland",
+    ["wh_main_averland_grenzstadt"] = "wh_main_emp_averland",
+    ["wh_main_ostermark_bechafen"] = "wh_main_emp_ostermark",
+    ["wh_main_ostermark_essen"] = "wh_main_emp_ostermark",
+    ["wh_main_the_wasteland_gorssel"] = "wh_main_emp_marienburg",
+    ["wh_main_the_wasteland_marienburg"] = "wh_main_emp_marienburg"
+}
+
+
 core:add_listener(
     "EOMTurnStart",
     "FactionTurnStart",
@@ -27,7 +89,7 @@ core:add_listener(
     "CharacterCompletedBattle",
     function(context)
         local character = context:character() --:CA_CHAR
-        return character:faction():name() == EOM_GLOBAL_EMPIRE_FACTION 
+        return character:faction():name() == eom:empire() 
     end,
     function(context)
         local character = context:character() --:CA_CHAR

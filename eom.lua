@@ -930,16 +930,19 @@ function eom_elector.change_loyalty(self, changevalue)
         EOMLOG("Not applying any loyalty change  to ["..self:name().."] because the elector is fully loyal!")
         return
     end
-    if not self:status() == "normal" then
+    
+
+    if self:status() == "normal" then
+        local ov = self._loyalty;
+        local nv = ov + changevalue;
+        if nv > 100 then nv = 100 end;
+        if nv < 0 then nv = 0 end;
+        self._loyalty = nv;
+        EOMLOG("changed loyalty for ["..self:name().."] by ["..tostring(changevalue).."] to ["..self:loyalty().."] ")
+    else
         EOMLOG("Not applying any loyalty change to ["..self:name().."] because the elector has a non-normal status!")
         return
     end
-    local ov = self._loyalty;
-    local nv = ov + changevalue;
-    if nv > 100 then nv = 100 end;
-    if nv < 0 then nv = 0 end;
-    self._loyalty = nv;
-    EOMLOG("changed loyalty for ["..self:name().."] by ["..tostring(changevalue).."] to ["..self:loyalty().."] ")
 end
 
 --v function(self: EOM_ELECTOR, setvalue: number)
@@ -1221,6 +1224,7 @@ function eom_model.init()
     self._view = nil --:EOM_VIEW
     return self
 end
+
 --v function(self: EOM_MODEL) --> string
 function eom_model.empire(self)
     return "wh_main_emp_empire"
