@@ -1,6 +1,6 @@
 
 local production = true --:boolean
-require("eom")
+require("eom_main")
 
 --require("df_politics_main")
 

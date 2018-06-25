@@ -2409,3 +2409,6 @@ cm:add_loading_game_callback(
     end
 )
 
+function eom_main()
+
+end
