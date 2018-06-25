@@ -521,6 +521,7 @@ function eom_model.event_and_plot_check(self)
         for key, event in pairs(self:events()) do
             if event:allowed() then
                 event:act()
+                self:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
                 return
             end
         end
