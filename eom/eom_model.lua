@@ -515,18 +515,25 @@ function eom_model.event_and_plot_check(self)
     end
 
     --events
-    EOMLOG("Core event and plot check function checking political events")
     local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
     if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
+        EOMLOG("Core event and plot check function checking political events")
         for key, event in pairs(self:events()) do
-            if event:allowed() then
-                if not event:already_occured() then
+            EOMLOG("Checking Event: ["..key.."] ")
+            if not event:already_occured() then
+                if event:allowed() then
+                    EOMLOG("Event ["..key.."] is allowed!")
                     event:act()
                     self:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
                     return
+              
                 end
+            else
+                EOMLOG("event ["..key.."] already occured ")
             end
         end
+    else
+        EOMLOG("No event this turn")
     end
 
     --revival events.

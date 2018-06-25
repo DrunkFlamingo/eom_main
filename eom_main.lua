@@ -954,12 +954,6 @@ function eom_action.new(key, conditional, choices, eom)
     self._key = key
     self._condition = conditional
     self._choices = choices
-    if cm:get_saved_value("eom_action_"..key.."_occured") == true then
-        self._alreadyOccured = true
-        EOMLOG("Action ["..key.."] already occured!")
-    else
-        self._alreadyOccured = false
-    end
     self._eom = eom
 
     return self
@@ -988,16 +982,15 @@ function eom_action.do_choice(self, choice)
     choice_callback(self:model())
 end
 
---v function(self: EOM_ACTION) --> boolean
+--v [NO_CHECK]  function(self: EOM_ACTION) --> boolean
 function eom_action.already_occured(self)
-    return self._alreadyOccured
+    return self:model():get_core_data_with_key(self:key().."_occured")
 end
 
---v function(self: EOM_ACTION)
+--v  [NO_CHECK] function(self: EOM_ACTION)
 function eom_action.act(self)
     cm:trigger_dilemma(EOM_GLOBAL_EMPIRE_FACTION, self:key(), true)
-    cm:set_saved_value("eom_action_"..self:key().."_occured", true)
-    self._alreadyOccured = true
+    self:model():set_core_data(self:key().."_occured")
     core:add_listener(
         self:key(),
         "DilemmaChoiceMadeEvent",
@@ -1009,6 +1002,7 @@ function eom_action.act(self)
         end,
         false)
 end
+
 
 
 
@@ -1877,10 +1871,10 @@ function eom_model.event_and_plot_check(self)
     --plot check
     EOMLOG("Core event and plot check function checking story events")
     for key, story in pairs(self:get_story()) do
-       if story:check_advancement() == true then
+        if story:check_advancement() == true then
             story:advance()
             return
-       end
+        end
     end
     --open rebellions
     if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
@@ -1908,18 +1902,26 @@ function eom_model.event_and_plot_check(self)
     end
 
     --events
-    EOMLOG("Core event and plot check function checking political events")
+    
     local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
     if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
+        EOMLOG("Core event and plot check function checking political events")
         for key, event in pairs(self:events()) do
-            if event:allowed() then
-                if not event:already_occured() then
+            EOMLOG("Checking Event: ["..key.."] ")
+            if not event:already_occured() then
+                if event:allowed() then
+                    EOMLOG("Event ["..key.."] is allowed!")
                     event:act()
                     self:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
                     return
+              
                 end
+            else
+                EOMLOG("event ["..key.."] already occured ")
             end
         end
+    else
+        EOMLOG("No event this turn")
     end
 
     --revival events.
@@ -1943,6 +1945,7 @@ function eom_model.event_and_plot_check(self)
         end
     end
 end
+    
 
 
 
