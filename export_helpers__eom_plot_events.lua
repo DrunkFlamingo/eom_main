@@ -22,6 +22,96 @@ function reikland_rebellion_add()
     end)
 end
 
+local function marienburg_add_remove_bundle_listener()
+    core:add_listener(
+    "MarienburgRebellionBundles",
+    "GarrisonOccupiedEvent",
+    function(context)
+        return context:garrison_residence():region():name() == "wh_main_the_wasteland_marienburg" and context:character():faction() == "wh_main_emp_marienburg"
+    end,
+    function(context)
+        cm:remove_effect_bundle_from_region("eom_marienburg_rebellion_1_region", "wh_main_the_wasteland_marienburg")
+    end,
+    false)
+
+end
+
+
+function marienburg_rebellion_add()
+
+    local marienburg_rebellion = eom:new_story_chain("marienburg_rebellion")
+    marienburg_rebellion:add_stage_trigger(1, function(model--:EOM_MODEL
+    )
+        local plot_turn = model:get_core_data_with_key("marienburg_plot_turn") --# assume plot_turn: number
+        local plot_progress = (plot_turn <= cm:model():turn_number())
+        local plot_available =  (not model:get_core_data_with_key("block_events_for_plot") == true)
+        local mburg_dead = cm:get_faction("wh_main_emp_marienburg"):is_dead()
+        local mburg_owned = cm:get_region("wh_main_the_wasteland_marienburg"):owning_faction():name() == model:empire()
+        local mburg_attacked = (model:get_core_data_with_key("friend_of_marienburg") == false)
+        return plot_progress and plot_available and mburg_dead and mburg_owned and mburg_attacked
+    end)
+
+
+    marienburg_rebellion:add_stage_callback(1, function(model--:EOM_MODEL
+    )
+        cm:trigger_incident(model:empire(), "eom_marienburg_rebellion_1", true)
+        model:set_core_data("block_events_for_plot", true)
+        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 405, 478, true, true, function(cqi) end)
+        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 403, 480, true, true, function(cqi) end)
+        cm:apply_effect_bundle_to_region("eom_marienburg_rebellion_1_region", "wh_main_the_wasteland_marienburg", 8)
+        marienburg_add_remove_bundle_listener()
+        cm:callback(function()
+            cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_empire", false, false)
+            cm:treasury_mod("wh_main_emp_marienburg", 10000)
+        end, 0.1)
+
+
+    end)
+
+
+    marienburg_rebellion:add_stage_trigger(2, function(model--:EOM_MODEL
+    )
+        local mburg_dead = cm:get_faction("wh_main_emp_marienburg"):is_dead()
+        local mburg_owned = cm:get_region("wh_main_the_wasteland_marienburg"):owning_faction():name() == "wh_main_emp_marienburg"
+        return mburg_dead or mburg_owned
+    end)
+
+    marienburg_rebellion:add_stage_callback(2, function(model--:EOM_MODEL
+    )
+        cm:trigger_dilemma(model:empire(), "eom_marienburg_rebellion_2", true)
+        core:add_listener(
+            "eom_marienburg_invaded_1",
+            "DilemmaChoiceMadeEvent",
+            function(context)
+               return context:dilemma() ==  "eom_marienburg_invaded_1"
+            end,
+            function(context)
+                if context:choice() == 0 then 
+                    cm:force_make_peace("wh_main_emp_marienburg", "wh_main_emp_empire")
+                    model:get_elector("wh_main_emp_marienburg"):set_status("normal")
+                    model:get_elector("wh_main_emp_marienburg"):set_loyalty(45)
+                    model:get_elector("wh_main_emp_marienburg"):set_can_revive(true)
+                else
+                    cm:force_declare_war("wh_main_brt_bretonnia", "wh_main_emp_empire", false, false)
+                    cm:treasury_mod("wh_main_brt_bretonnia", 5000)
+                    if cm:get_faction("wh_main_emp_marienburg"):is_dead() then
+                        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 405, 478, true, true, function(cqi) end)
+                    end
+                end
+            end,
+            false)
+        model:get_story_chain("marienburg_rebellion"):finish()
+        model:set_core_data("block_events_for_plot", false)
+
+
+    end)
+
+
+
+end
+
+
+
 local function add_marienburg_retaken_listener()
 
     core:add_listener(
@@ -47,7 +137,12 @@ function marienburg_invasion_add()
     marienburg_invasion:add_stage_trigger(1, function(model--:EOM_MODEL
     )
         local plot_turn = model:get_core_data_with_key("marienburg_plot_turn") --# assume plot_turn: number
-        return plot_turn <= cm:model():turn_number() and model:get_core_data_with_key("friend_of_marienburg") == true and cm:get_faction("wh_main_brt_bretonnia"):faction_leader():has_military_force() and (not model:get_core_data_with_key("block_events_for_plot") == true)
+        local plot_progress = (plot_turn <= cm:model():turn_number())
+        local plot_available =  (not model:get_core_data_with_key("block_events_for_plot") == true)
+        local friend_of_mburg = (model:get_core_data_with_key("friend_of_marienburg") == true)
+        local louen = cm:get_faction("wh_main_brt_bretonnia"):faction_leader():has_military_force()
+        local mburg_owned = cm:get_region("wh_main_the_wasteland_marienburg"):owning_faction():name() == "wh_main_emp_marienburg"
+        return plot_available and plot_progress and friend_of_mburg and louen and mburg_owned
     end)
     --spawn army for louen, trigger dilemma to aid marienburg
     marienburg_invasion:add_stage_callback(1, function(model--:EOM_MODEL
@@ -441,6 +536,7 @@ end
 
 function eom_plot_events()
     reikland_rebellion_add()
+    marienburg_rebellion_add()
     marienburg_invasion_add()
     vampire_wars_add()
 end

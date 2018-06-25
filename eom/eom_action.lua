@@ -31,7 +31,7 @@ end
 
 --v function(self: EOM_ACTION) --> boolean
 function eom_action.allowed(self)
-    return self._condition(self:model())
+    return self._condition(self:model()) and cm:get_saved_value("eom_action_"..self:key().."_occured") == false
 end
 
 --v function(self: EOM_ACTION, choice: number)
