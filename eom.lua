@@ -675,7 +675,7 @@ end
 
 --v function(self: EOM_ACTION) --> boolean
 function eom_action.allowed(self)
-    return self._condition(self:model())
+    return self._condition(self:model()) and cm:get_saved_value("eom_action_"..self:key().."_occured") == false
 end
 
 --v function(self: EOM_ACTION, choice: number)
@@ -1465,27 +1465,93 @@ end
 --events 
 --@name: add_event
 --@description: creates a new event from a table template.
---v function(self: EOM_MODEL, event: EOM_EVENT)
-function eom_model.add_event(self, event)
-    if cm:get_saved_value("eom_action_"..event.key.."_occured") == true then
-        EOMLOG("Event ["..event.key.."] already occured this save, not adding it back to the model!")
-        return
+--v function(self: EOM_MODEL)
+function eom_model.event_and_plot_check(self)
+    EOMLOG("Entered", "eom_model.event_and_plot_check(self)")
+    --capitulation
+    EOMLOG("Checking for Electors willing to capitulate")
+    for name, elector in pairs(self:electors()) do
+        if elector:will_capitulate() and (not elector:is_cult()) then
+            self:offer_capitulation(name)
+            elector:set_should_capitulate(false)
+            return
+        end
     end
-    local choicetable = event.choices
-    local key = event.key
-    local conditional = event.conditional
-    local action = eom_action.new(key, conditional, choicetable, self)
-    self._events[key] = action
-end
+    --full loyalty
+    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
+        EOMLOG("Checking for fully loyal electors")
+        for name, elector in pairs(self:electors()) do
+            if elector:loyalty() > 99 and elector:status() == "normal" then
+                elector:set_fully_loyal(self)
+            end
+        end
+    end
+    --plot check
+    EOMLOG("Core event and plot check function checking story events")
+    for key, story in pairs(self:get_story()) do
+        if story:check_advancement() == true then
+            story:advance()
+            return
+        end
+    end
+    --open rebellions
+    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
+        EOMLOG("Core event and plot check function checking open rebellion opportunities")
+        for name, elector in pairs(self:electors()) do
+            if (elector:loyalty() == 0) and elector:status() == "normal" then
+                
+                EOMLOG("Elector ["..name.."] can rebel!")
+                self:elector_rebellion_start(name)
+            end
+        end
+    end
 
---v function(self: EOM_MODEL, key: string) --> EOM_ACTION
-function eom_model.get_event_by_key(self, key)
-    return self._events[key]
-end
 
---v function(self: EOM_MODEL) --> map<string, EOM_ACTION>
-function eom_model.events(self)
-    return self._events
+    --player restore opportunity.
+    EOMLOG("Core event and plot check function checking player restoration opportunities")
+    for name, elector in pairs(self:electors()) do
+        if not elector:is_cult() then
+            if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
+                if elector:status() == "normal" or elector:status() == "open_rebellion" then
+                    self:trigger_restoration_dilemma(name)
+                end
+            end
+        end
+    end
+
+    --events
+    EOMLOG("Core event and plot check function checking political events")
+    local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
+    if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
+        for key, event in pairs(self:events()) do
+            if event:allowed() then
+                event:act()
+                self:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
+                return
+            end
+        end
+    end
+
+    --revival events.
+    EOMLOG("Core event and plot check function checking revivification events")
+    for name, elector in pairs(self:electors()) do
+        if self:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() and (not elector:is_cult()) then
+        if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
+            elector:trigger_coup()
+            return
+        else
+            elector:trigger_expedition() 
+            return
+        end
+        end
+    end
+    --elector falls
+    EOMLOG("Core event and plot check function checking elector fallen events.")
+    for name, elector in pairs(self:electors()) do
+        if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
+            self:elector_fallen(name, true)
+        end
+    end
 end
 
 --plot events
