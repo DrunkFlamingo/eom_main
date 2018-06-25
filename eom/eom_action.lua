@@ -12,7 +12,12 @@ function eom_action.new(key, conditional, choices, eom)
     self._key = key
     self._condition = conditional
     self._choices = choices
-    self._alreadyOccured = cm:get_saved_value("eom_action_"..key.."_occured") or false
+    if cm:get_saved_value("eom_action_"..key.."_occured") == true then
+        self._alreadyOccured = true
+        EOMLOG("Action ["..key.."] already occured!")
+    else
+        self._alreadyOccured = false
+    end
     self._eom = eom
 
     return self
@@ -31,7 +36,7 @@ end
 
 --v function(self: EOM_ACTION) --> boolean
 function eom_action.allowed(self)
-    return self._condition(self:model()) and cm:get_saved_value("eom_action_"..self:key().."_occured") == false
+    return self._condition(self:model())
 end
 
 --v function(self: EOM_ACTION, choice: number)
@@ -50,6 +55,7 @@ end
 function eom_action.act(self)
     cm:trigger_dilemma(EOM_GLOBAL_EMPIRE_FACTION, self:key(), true)
     cm:set_saved_value("eom_action_"..self:key().."_occured", true)
+    self._alreadyOccured = true
     core:add_listener(
         self:key(),
         "DilemmaChoiceMadeEvent",

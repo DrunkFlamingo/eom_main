@@ -520,9 +520,11 @@ function eom_model.event_and_plot_check(self)
     if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
         for key, event in pairs(self:events()) do
             if event:allowed() then
-                event:act()
-                self:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
-                return
+                if not event:already_occured() then
+                    event:act()
+                    self:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
+                    return
+                end
             end
         end
     end
