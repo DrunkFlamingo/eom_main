@@ -1,4 +1,5 @@
-
+EOM_SHOULD_LOG = true --:boolean
+EOM_LAST_CONTEXT = "no context set" --:string
 --[[
 --v function(text: string)
 function EOM_ERRORS(text)
@@ -161,8 +162,7 @@ core.add_listener = myAddListener;
 --]]
 
 
-EOM_SHOULD_LOG = true --:boolean
-EOM_LAST_CONTEXT = "no context set" --:string
+
 
 --v function(text: string, ftext: string?)
 function EOMLOG(text, ftext)
@@ -205,29 +205,29 @@ EOMNEWLOG()
 
 --v function(msg: string)
 function EOM_ERROR(msg)
-	local ast_line = "********************";
-	
-	-- do output
-	print(ast_line);
-	print("SCRIPT ERROR, timestamp " .. get_timestamp());
-	print(msg);
-	print("");
-	print(debug.traceback("", 2));
-	print(ast_line);
-	-- assert(false, msg .. "\n" .. debug.traceback());
-	
-	-- logfile output
-		local file = io.open("RCLOG.txt", "a");
-		
-		if file then
-			file:write(ast_line .. "\n");
-			file:write("SCRIPT ERROR, timestamp " .. get_timestamp() .. "\n");
-			file:write(msg .. "\n");
-			file:write("\n");
-			file:write(debug.traceback("", 2) .. "\n");
-			file:write(ast_line .. "\n");
-			file:close();
-		end;
+    local ast_line = "********************";
+    
+    -- do output
+    print(ast_line);
+    print("SCRIPT ERROR, timestamp " .. get_timestamp());
+    print(msg);
+    print("");
+    print(debug.traceback("", 2));
+    print(ast_line);
+    -- assert(false, msg .. "\n" .. debug.traceback());
+    
+    -- logfile output
+        local file = io.open("RCLOG.txt", "a");
+        
+        if file then
+            file:write(ast_line .. "\n");
+            file:write("SCRIPT ERROR, timestamp " .. get_timestamp() .. "\n");
+            file:write(msg .. "\n");
+            file:write("\n");
+            file:write(debug.traceback("", 2) .. "\n");
+            file:write(ast_line .. "\n");
+            file:close();
+        end;
 end;
 
 
@@ -973,7 +973,7 @@ end
 
 --v function(self: EOM_ACTION) --> boolean
 function eom_action.allowed(self)
-    return self._condition(self:model()) and cm:get_saved_value("eom_action_"..self:key().."_occured") == false
+    return self._condition(self:model())
 end
 
 --v function(self: EOM_ACTION, choice: number)
@@ -996,7 +996,7 @@ function eom_action.act(self)
         self:key(),
         "DilemmaChoiceMadeEvent",
         function(context)
-           return context:faction():name() == EOM_GLOBAL_EMPIRE_FACTION
+            return context:faction():name() == EOM_GLOBAL_EMPIRE_FACTION
         end,
         function(context)
             self:do_choice((context:choice()+1))
@@ -1633,93 +1633,27 @@ end
 --events 
 --@name: add_event
 --@description: creates a new event from a table template.
---v function(self: EOM_MODEL)
-function eom_model.event_and_plot_check(self)
-    EOMLOG("Entered", "eom_model.event_and_plot_check(self)")
-    --capitulation
-    EOMLOG("Checking for Electors willing to capitulate")
-    for name, elector in pairs(self:electors()) do
-        if elector:will_capitulate() and (not elector:is_cult()) then
-            self:offer_capitulation(name)
-            elector:set_should_capitulate(false)
-            return
-        end
+--v function(self: EOM_MODEL, event: EOM_EVENT)
+function eom_model.add_event(self, event)
+    if cm:get_saved_value("eom_action_"..event.key.."_occured") == true then
+        EOMLOG("Event ["..event.key.."] already occured this save, not adding it back to the model!")
+        return
     end
-    --full loyalty
-    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
-        EOMLOG("Checking for fully loyal electors")
-        for name, elector in pairs(self:electors()) do
-            if elector:loyalty() > 99 and elector:status() == "normal" then
-                elector:set_fully_loyal(self)
-            end
-        end
-    end
-    --plot check
-    EOMLOG("Core event and plot check function checking story events")
-    for key, story in pairs(self:get_story()) do
-        if story:check_advancement() == true then
-            story:advance()
-            return
-        end
-    end
-    --open rebellions
-    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
-        EOMLOG("Core event and plot check function checking open rebellion opportunities")
-        for name, elector in pairs(self:electors()) do
-            if (elector:loyalty() == 0) and elector:status() == "normal" then
-                
-                EOMLOG("Elector ["..name.."] can rebel!")
-                self:elector_rebellion_start(name)
-            end
-        end
-    end
+    local choicetable = event.choices
+    local key = event.key
+    local conditional = event.conditional
+    local action = eom_action.new(key, conditional, choicetable, self)
+    self._events[key] = action
+end
 
+--v function(self: EOM_MODEL, key: string) --> EOM_ACTION
+function eom_model.get_event_by_key(self, key)
+    return self._events[key]
+end
 
-    --player restore opportunity.
-    EOMLOG("Core event and plot check function checking player restoration opportunities")
-    for name, elector in pairs(self:electors()) do
-        if not elector:is_cult() then
-            if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
-                if elector:status() == "normal" or elector:status() == "open_rebellion" then
-                    self:trigger_restoration_dilemma(name)
-                end
-            end
-        end
-    end
-
-    --events
-    EOMLOG("Core event and plot check function checking political events")
-    local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
-    if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
-        for key, event in pairs(self:events()) do
-            if event:allowed() then
-                event:act()
-                self:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
-                return
-            end
-        end
-    end
-
-    --revival events.
-    EOMLOG("Core event and plot check function checking revivification events")
-    for name, elector in pairs(self:electors()) do
-        if self:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() and (not elector:is_cult()) then
-        if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
-            elector:trigger_coup()
-            return
-        else
-            elector:trigger_expedition() 
-            return
-        end
-        end
-    end
-    --elector falls
-    EOMLOG("Core event and plot check function checking elector fallen events.")
-    for name, elector in pairs(self:electors()) do
-        if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
-            self:elector_fallen(name, true)
-        end
-    end
+--v function(self: EOM_MODEL) --> map<string, EOM_ACTION>
+function eom_model.events(self)
+    return self._events
 end
 
 --plot events
@@ -1936,10 +1870,10 @@ function eom_model.event_and_plot_check(self)
     --plot check
     EOMLOG("Core event and plot check function checking story events")
     for key, story in pairs(self:get_story()) do
-       if story:check_advancement() == true then
+        if story:check_advancement() == true then
             story:advance()
             return
-       end
+        end
     end
     --open rebellions
     if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
@@ -2260,10 +2194,10 @@ function eom_view.get_frame(self)
         self.frame = PoliticsFrame
         PoliticsFrame:SetTitle("Imperial Politics")
         local parchment = PoliticsFrame:GetContentPanel()
-       -- parchment:SetImage("ui/skins/default/politics_panel.png")
+        -- parchment:SetImage("ui/skins/default/politics_panel.png")
         local parchmentX, parchmentY = parchment:Bounds()
-       -- local background = Image.new("PoliticsBackground", parchment, "ui/skins/default/panel_leather_frame_red.png")
-       -- background:Resize(parchmentX, parchmentY)
+        -- local background = Image.new("PoliticsBackground", parchment, "ui/skins/default/panel_leather_frame_red.png")
+        -- background:Resize(parchmentX, parchmentY)
         return PoliticsFrame
     end
 end
@@ -2309,9 +2243,9 @@ function eom_view.populate_frame(self)
         cultTitleContainer:AddGap(fX/2 - ctX)
         cultTitleContainer:AddComponent(cultsTitle)
         frameContainer:AddComponent(cultTitleContainer)
-       -- local firstDivider = Image.new(self.list_name_electors.."divider", self.frame, "ui/skins/default/candidate_divider.png")
-       -- firstDivider:Resize(fX*(2/3), 3)
-      --  frameContainer:AddComponent(firstDivider)
+        -- local firstDivider = Image.new(self.list_name_electors.."divider", self.frame, "ui/skins/default/candidate_divider.png")
+        -- firstDivider:Resize(fX*(2/3), 3)
+        --  frameContainer:AddComponent(firstDivider)
         local cultContainer = Container.new(FlowLayout.HORIZONTAL)
         cultContainer:AddGap(fX/2 - 352)
 
@@ -2331,7 +2265,7 @@ function eom_view.populate_frame(self)
             end
         end
         frameContainer:AddComponent(cultContainer)
-       -- local SecondDivider = Image.new(self.list_name_electors.."divider2", self.frame, "ui/skins/default/candidate_divider.png")
+        -- local SecondDivider = Image.new(self.list_name_electors.."divider2", self.frame, "ui/skins/default/candidate_divider.png")
         --SecondDivider:Resize(fX*(2/3), 3)
         --frameContainer:AddComponent(SecondDivider)
         local electorTitleContainer = Container.new(FlowLayout.HORIZONTAL)
@@ -2397,7 +2331,7 @@ function eom_view.close_politics(self)
     end
     local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
     if not not settlement then
-     settlement:SetVisible(true)
+        settlement:SetVisible(true)
     end
     local character = find_uicomponent(core:get_ui_root(), "units_panel")
     if not not character then
@@ -2423,7 +2357,7 @@ function eom_view.docker_button_pressed(self)
     local settlement = find_uicomponent(core:get_ui_root(), "settlement_panel")
     if not not settlement then
         EOMLOG("Setting Settlements Panel Invisible")
-     settlement:SetVisible(false)
+        settlement:SetVisible(false)
     end
     local character = find_uicomponent(core:get_ui_root(), "units_panel")
     if not not character then
@@ -2474,5 +2408,4 @@ cm:add_loading_game_callback(
         end
     end
 )
-
 
