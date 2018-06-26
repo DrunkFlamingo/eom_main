@@ -209,41 +209,6 @@ core:add_listener(
     end, 
     true)
 
-core:add_listener(
-    "EOMSettlementSacked",
-    "CharacterSackedSettlement", 
-    function(context)
-        local gar_res = context:garrison_residence() --:CA_GARRISON_RESIDENCE
-        local region =  gar_res:region():name()
-        return (not not EOM_GLOBAL_REGION_TO_ELECTOR[region]) and context:character():faction():subculture() == "wh_main_sc_emp_empire"
-    end,
-    function(context)
-        local elector = EOM_GLOBAL_REGION_TO_ELECTOR[context:garrison_residence():region():name()]
-        if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):at_war_with(cm:get_faction(elector)) and eom:get_elector(elector):status() == "normal" or eom:get_elector(elector):status() == "open_rebellion" then
-            if eom:is_elector_valid(context:character():faction():name()) and eom:get_elector(elector):capital() == context:garrison_residence():region():name() then
-                eom:get_elector(elector):set_should_capitulate(true)
-            end
-        end
-    end,
-    true);
-core:add_listener(
-    "EOMSettlementOccupied",
-    "GarrisonOccupiedEvent", 
-    function(context)
-        local gar_res = context:garrison_residence() --:CA_GARRISON_RESIDENCE
-        local region =  gar_res:region():name()
-        return not not EOM_GLOBAL_REGION_TO_ELECTOR[region] and context:character():faction():subculture() == "wh_main_sc_emp_empire"
-    end,
-    function(context)
-        local elector = EOM_GLOBAL_REGION_TO_ELECTOR[context:garrison_residence():region():name()]
-        if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):at_war_with(cm:get_faction(elector)) and eom:get_elector(elector):status() == "normal" or eom:get_elector(elector):status() == "open_rebellion" then
-            if eom:is_elector_valid(context:character():faction():name()) and eom:get_elector(elector):capital() == context:garrison_residence():region():name() then
-                eom:get_elector(elector):set_should_capitulate(true)
-            end
-        end
-    end,
-    true);
-
 
 
 core:add_listener(
