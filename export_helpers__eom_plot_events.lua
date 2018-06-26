@@ -534,10 +534,13 @@ end
 
 
 function eom_plot_events()
-    reikland_rebellion_add()
-    marienburg_rebellion_add()
-    marienburg_invasion_add()
-    vampire_wars_add()
+    if cm:get_faction(eom:empire()):is_human() then
+        eom:log("Started", "export_helpers__plot_events")
+        reikland_rebellion_add()
+        marienburg_rebellion_add()
+        marienburg_invasion_add()
+        vampire_wars_add()
+    end
 end
 
 
