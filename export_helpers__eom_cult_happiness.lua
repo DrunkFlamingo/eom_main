@@ -60,6 +60,7 @@ local function eom_religion_bundles(context)
     local empire_region_list = empire:region_list()
     for i = 0, empire_region_list:num_items() - 1 do
         local current = empire_region_list:item_at(i)
+
         if current:owning_faction():name() == eom:empire() then
             if current:is_province_capital()  then
                 if eom_is_religious_settlement(eom:get_elector("wh_main_emp_cult_of_sigmar"):home_regions(), current:name()) then
