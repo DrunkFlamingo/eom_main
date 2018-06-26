@@ -581,7 +581,7 @@ function eom_model.save(self)
     EOMLOG("entered", "eom_model.save(self)")
     local savetable = {} 
     --electors
-    savetable._electors = {}--:map<string, ELECTOR_INFO>
+    savetable._electors = {}--:map<ELECTOR_NAME, ELECTOR_INFO>
     for k, v in pairs(self:electors()) do
         local info = v:save()
         savetable._electors[k] = info
@@ -606,7 +606,7 @@ function eom_model.load(self, savetable)
     --electors
     for k, v in pairs(savetable._electors) do
         self:add_elector(v)
-        EOMLOG("Loaded Elector ["..k.."]")
+        self:get_elector(k):echo_information()
     end
     --coredata
     self._coredata = savetable._coredata

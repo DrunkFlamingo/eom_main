@@ -335,6 +335,21 @@ function eom_elector.expedition_region(self)
 end
 
 --v function(self: EOM_ELECTOR)
+function eom_elector.echo_information(self)
+    EOMLOG("Loaded Elector ["..self:name().."] with loyalty ["..tostring(self:loyalty()).."], status ["..self:status().."], UI visibility: ["..tostring(self:is_hidden()).."] and capitulation flag ["..tostring(self:will_capitulate()).."] ")
+end
+
+
+
+
+
+
+
+
+
+
+
+--v function(self: EOM_ELECTOR)
 function eom_elector.trigger_coup(self)
     local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
     cm:create_force_with_general(
