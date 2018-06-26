@@ -210,14 +210,3 @@ core:add_listener(
     true)
 
 
-
-core:add_listener(
-    "EOMUnjustWar",
-    "NegativeDiplomaticEvent",
-    function(context)
-        return context:is_war() and context:proposer():name() == eom:empire() and eom:has_elector(context:recipient():name())
-    end,
-    function(context)
-        eom:check_unjust_war(context:recipient():name())
-    end,
-    false)
