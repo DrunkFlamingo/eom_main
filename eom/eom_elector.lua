@@ -252,16 +252,19 @@ end
 
 --v function(self: EOM_ELECTOR, subtype: string)
 function eom_elector.set_leader_subtype(self, subtype)
+    EOMLOG("Set leader subtype for ["..self:name().."] ")
     self._leaderSubtype = subtype
 end
 
 --v function(self: EOM_ELECTOR, forename: string)
 function eom_elector.set_leader_forename(self, forename)
+    EOMLOG("Set leader forename for ["..self:name().."] ")
     self._leaderForename = forename
 end
 
 --v function(self: EOM_ELECTOR, surname: string)
 function eom_elector.set_leader_surname(self, surname)
+    EOMLOG("Set leader surname for ["..self:name().."] ")
     self._leaderSurname = surname
 end
 
@@ -269,6 +272,7 @@ end
 
 --v function(self: EOM_ELECTOR, army_list: string)
 function eom_elector.set_army_list(self, army_list)
+    EOMLOG("Set the army list for ["..self:name().."] ")
     self._unitList = army_list
 end
 
@@ -314,6 +318,7 @@ end
 
 --v function(self: EOM_ELECTOR, can_revive: boolean)
 function eom_elector.set_can_revive(self, can_revive)
+    EOMLOG("Set Can Revive for Elector ["..self:name().."] to ["..tostring(can_revive).."] ")
     self._canRevive = can_revive
 end
 
@@ -334,9 +339,10 @@ function eom_elector.expedition_region(self)
     return self._expeditionRegion
 end
 
+--echos some information about the elector to the log.
 --v function(self: EOM_ELECTOR)
 function eom_elector.echo_information(self)
-    EOMLOG("Loaded Elector ["..self:name().."] with loyalty ["..tostring(self:loyalty()).."], status ["..self:status().."], UI visibility: ["..tostring(self:is_hidden()).."] and capitulation flag ["..tostring(self:will_capitulate()).."] ")
+    EOMLOG("Echoing Elector ["..self:name().."] with loyalty ["..tostring(self:loyalty()).."], status ["..self:status().."], UI visibility: ["..tostring(self:is_hidden()).."] and capitulation flag ["..tostring(self:will_capitulate()).."] ")
 end
 
 
@@ -351,6 +357,7 @@ end
 
 --v function(self: EOM_ELECTOR)
 function eom_elector.trigger_coup(self)
+    EOMLOG("triggering Coup D'etat spawn for elector ["..self:name().."] ")
     local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
     cm:create_force_with_general(
         self:name(),
@@ -389,6 +396,7 @@ end
 
 --v function(self: EOM_ELECTOR, transfer_no_region: boolean?)
 function eom_elector.respawn_at_capital(self, transfer_no_region)
+    EOMLOG("Respawning elector ["..self:name().."] at capital with transfer no region ["..tostring(transfer_no_region).."] ")
     cm:create_force_with_general(
         self:name(),
         self:get_army_list(),
@@ -415,6 +423,7 @@ end
 
 --v function(self: EOM_ELECTOR)
 function eom_elector.trigger_expedition(self)
+    EOMLOG("triggering expedition spawn for elector ["..self:name().."] ")
     local x, y = self:expedition_coordinates();
     local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
     cm:create_force_with_general(
@@ -450,6 +459,7 @@ end
 
 --v function(self: EOM_ELECTOR, callback: function(model: EOM_MODEL))
 function eom_elector.set_full_loyalty_callback(self, callback)
+    EOMLOG("Set a fully loyal callback for "..self:name().." ")
     self._fullLoyaltyCallback = callback
 end
 
@@ -457,6 +467,7 @@ end
 
 --v function(self: EOM_ELECTOR, model: EOM_MODEL)
 function eom_elector.set_fully_loyal(self, model)
+    EOMLOG("Setting elector ["..self:name().."] fully loyal! ")
     self:set_status("loyal")
     self:make_fully_loyal()
     self._fullLoyaltyCallback(model)
