@@ -88,6 +88,8 @@ function eom_model.init()
 
     self._coredata = {} --:map<string, EOM_CORE_DATA>
     self._view = nil --:EOM_VIEW
+
+    self._log = EOMLOG
     return self
 end
 --v function(self: EOM_MODEL) --> string
@@ -95,6 +97,10 @@ function eom_model.empire(self)
     return "wh_main_emp_empire"
 end
 
+--v function(self: EOM_MODEL, text: string, ftext: string?)
+function eom_model.log(self, text, ftext)
+    EOMLOG(text, ftext)
+end
 
 --core data
 --v function(self: EOM_MODEL) --> map<string, EOM_CORE_DATA>
