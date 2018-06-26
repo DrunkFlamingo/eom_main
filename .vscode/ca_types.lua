@@ -276,6 +276,7 @@
 --# assume CA_CHAR.has_military_force: method() --> boolean
 --# assume CA_CHAR.is_faction_leader: method() --> boolean
 --# assume CA_CHAR.family_member: method() --> CA_CHAR
+--# assume CA_CHAR.is_null_interface: method() --> boolean
 
 -- CHARACTER LIST
 --# assume CA_CHAR_LIST.num_items: method() --> number

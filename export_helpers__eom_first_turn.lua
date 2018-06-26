@@ -62,35 +62,35 @@ local function eom_starting_settings()
 
         --set marienburg's status to seceded
         cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "wh_main_emp_marienburg")
-        --kill off vlad
-        --[[
-        local vlad_list = cm:get_faction("wh_main_vmp_schwartzhafen"):character_list()
-        for i = 0, vlad_list:num_items() - 1 do
-            local current = vlad_list:item_at(i):cqi()
-            cm:kill_character(current, true, true)
-        end
-        ]]
-        local provinces_to_transfer_to_mannfred = {
-            "wh_main_eastern_sylvania_eschen",
-            "wh_main_eastern_sylvania_waldenhof",
-            "wh_main_western_sylvania_schwartzhafen",
-            "wh_main_western_sylvania_castle_templehof"
-        } --:vector<string>
-        
-        --give sylvania to mannfred
-        
-        for i = 1, #provinces_to_transfer_to_mannfred do
-            cm:callback( function()
-            cm:transfer_region_to_faction(provinces_to_transfer_to_mannfred[i], "wh_main_vmp_vampire_counts");
-            end, (i/10));
-        end
-        --force marienburg and bretonnia to peace
-        cm:force_make_peace("wh_main_brt_bretonnia", "wh_main_emp_marienburg");
-        cm:force_declare_war("wh_main_brt_bretonnia", "wh_dlc05_vmp_mousillon", true, true);
 
-        --prevent mannfredd from declaring war on the empire until we want him to
-        cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war", false, false, true)
 
+        if not cm:get_faction("wh_main_vmp_schwartzhafen"):is_human() then
+            cm:kill_all_armies_for_faction(cm:get_faction("wh_main_vmp_schwartzhafen"))
+    
+            local provinces_to_transfer_to_mannfred = {
+                "wh_main_eastern_sylvania_eschen",
+                "wh_main_eastern_sylvania_waldenhof",
+                "wh_main_western_sylvania_schwartzhafen",
+                "wh_main_western_sylvania_castle_templehof"
+            } --:vector<string>
+            
+            --give sylvania to mannfred
+            
+            for i = 1, #provinces_to_transfer_to_mannfred do
+                cm:callback( function()
+                cm:transfer_region_to_faction(provinces_to_transfer_to_mannfred[i], "wh_main_vmp_vampire_counts");
+                end, (i/10));
+            end
+
+            --prevent mannfredd from declaring war on the empire until we want him to
+            cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war", false, false, true)
+
+        end
+            --force marienburg and bretonnia to peace
+            cm:force_make_peace("wh_main_brt_bretonnia", "wh_main_emp_marienburg");
+            cm:force_declare_war("wh_main_brt_bretonnia", "wh_dlc05_vmp_mousillon", true, true);
+
+      
 
         --anti beastmen forces
         cm:callback( function() 

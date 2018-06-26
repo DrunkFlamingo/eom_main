@@ -2,6 +2,36 @@ cm = get_cm(); events = get_events(); eom = _G.eom;
 if not eom then 
     script_error("EOM IS NOT FOUND!")
 end
+--event triggers;
+
+
+core:add_listener(
+    "EOMBattlesCompleted",
+    "CharacterCompletedBattle",
+    function(context)
+        local character = context:character() --:CA_CHAR
+        return character:faction():name() == eom:empire() 
+    end,
+    function(context)
+        local character = context:character() --:CA_CHAR
+        local enemies = cm:pending_battle_cache_get_enemies_of_char(character)
+        for i = 1, #enemies do
+            local enemy = enemies[i]
+            local enemy_sub = enemy:faction():subculture()
+            if character:won_battle() then 
+                eom:log("Triggering event VictoryAgainstSubcultureKey_"..enemy_sub, "EOMBattlesCompleted")
+                core:trigger_event("VictoryAgainstSubcultureKey_"..enemy_sub)
+            else
+                core:trigger_event("DefeatAgainstSubcultureKey_"..enemy_sub)
+                eom:log("Triggering event DeafeatAgainstSubcultureKey_"..enemy_sub, "EOMBattlesCompleted")
+            end
+        end
+    end, 
+    true)
+
+
+
+
 core:add_listener(
     "EOMVampiresDefeated",
     "VictoryAgainstSubcultureKey_wh_main_sc_vmp_vampire_counts",

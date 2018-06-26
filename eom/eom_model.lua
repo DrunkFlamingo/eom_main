@@ -88,6 +88,8 @@ function eom_model.init()
 
     self._coredata = {} --:map<string, EOM_CORE_DATA>
     self._view = nil --:EOM_VIEW
+
+    self._log = EOMLOG
     return self
 end
 --v function(self: EOM_MODEL) --> string
@@ -95,6 +97,15 @@ function eom_model.empire(self)
     return "wh_main_emp_empire"
 end
 
+--v function(self: EOM_MODEL, text: string, ftext: string?)
+function eom_model.log(self, text, ftext)
+    EOMLOG(text, ftext)
+end
+
+--v function(self: EOM_MODEL, turn: number)
+function eom_model.set_log_turn(self, turn)
+    EOM_LOG_TURN = tostring(turn)
+end
 
 --core data
 --v function(self: EOM_MODEL) --> map<string, EOM_CORE_DATA>
@@ -342,7 +353,7 @@ function eom_model.elector_fallen(self, name, show_message_event)
     self:change_all_loyalties(-10)
     --NOTE: trigger elector fallen event.
     elector:set_status("fallen")
-    elector:set_visible(false)
+    elector:set_hidden(true)
     if show_message_event then
         cm:show_message_event(
             self:empire(),
@@ -417,13 +428,15 @@ function eom_model.check_unjust_war(self, name)
             EOMLOG("triggering unjust war")
             self:change_all_loyalties(-10)
             self:set_core_data("last_unjust_war", cm:model():turn_number())
-            cm:show_message_event(
-                self:empire(),
-                "event_feed_strings_text_unjust_war_title",
-                "event_feed_strings_text_unjust_war_subtitle",
-                "event_feed_strings_text_unjust_war_detail",
-                true,
-                591)
+            if cm:get_faction(self:empire()):is_human() then
+                cm:show_message_event(
+                    self:empire(),
+                    "event_feed_strings_text_unjust_war_title",
+                    "event_feed_strings_text_unjust_war_subtitle",
+                    "event_feed_strings_text_unjust_war_detail",
+                    true,
+                    591)
+            end
         else
             EOMLOG("Unjust war already triggered this turn!")
         end
@@ -456,210 +469,8 @@ function eom_model.offer_capitulation(self, name)
     )
 end
 
----EBS
-
---@name: event_and_plot_check
---@description: causes all events on a prioritized basis.
---v function(self: EOM_MODEL)
-function eom_model.event_and_plot_check(self)
-    EOMLOG("Entered", "eom_model.event_and_plot_check(self)")
-    --capitulation
-    EOMLOG("Checking for Electors willing to capitulate")
-    for name, elector in pairs(self:electors()) do
-        if elector:will_capitulate() and (not elector:is_cult()) then
-            self:offer_capitulation(name)
-            elector:set_should_capitulate(false)
-            return
-        end
-    end
-    --full loyalty
-    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
-        EOMLOG("Checking for fully loyal electors")
-        for name, elector in pairs(self:electors()) do
-            if elector:loyalty() > 99 and elector:status() == "normal" then
-                elector:set_fully_loyal(self)
-            end
-        end
-    end
-    --plot check
-    EOMLOG("Core event and plot check function checking story events")
-    for key, story in pairs(self:get_story()) do
-       if story:check_advancement() == true then
-            story:advance()
-            return
-       end
-    end
-    --open rebellions
-    if not self:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
-        EOMLOG("Core event and plot check function checking open rebellion opportunities")
-        for name, elector in pairs(self:electors()) do
-            if (elector:loyalty() == 0) and elector:status() == "normal" then
-                
-                EOMLOG("Elector ["..name.."] can rebel!")
-                self:elector_rebellion_start(name)
-            end
-        end
-    end
 
 
-    --player restore opportunity.
-    EOMLOG("Core event and plot check function checking player restoration opportunities")
-    for name, elector in pairs(self:electors()) do
-        if not elector:is_cult() then
-            if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
-                if elector:status() == "normal" or elector:status() == "open_rebellion" then
-                    self:trigger_restoration_dilemma(name)
-                end
-            end
-        end
-    end
-
-    --events
-    local next_event = self:get_core_data_with_key("next_event_turn") --# assume next_event: number
-    if cm:model():turn_number() >= next_event and (not self:get_core_data_with_key("block_events_for_plot") == true) then
-        EOMLOG("Core event and plot check function checking political events")
-        for key, event in pairs(self:events()) do
-            EOMLOG("Checking Event: ["..key.."] ")
-            if not event:already_occured() then
-                if event:allowed() then
-                    EOMLOG("Event ["..key.."] is allowed!")
-                    event:act()
-                    self:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
-                    return
-              
-                end
-            else
-                EOMLOG("event ["..key.."] already occured ")
-            end
-        end
-    else
-        EOMLOG("No event this turn")
-    end
-
-    --revival events.
-    EOMLOG("Core event and plot check function checking revivification events")
-    for name, elector in pairs(self:electors()) do
-        if self:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() and (not elector:is_cult()) then
-        if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
-            elector:trigger_coup()
-            return
-        else
-            elector:trigger_expedition() 
-            return
-        end
-        end
-    end
-    --elector falls
-    EOMLOG("Core event and plot check function checking elector fallen events.")
-    for name, elector in pairs(self:electors()) do
-        if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
-            self:elector_fallen(name, true)
-        end
-    end
-end
-
-
-
---v function(self: EOM_MODEL)
-function eom_model.elector_diplomacy(self)
-    local suffix_list = {"_critical", "_good", "_indifferent", "_low", "_loyal", "_very_good", "_very_low"} --:vector<string>
-    EOMLOG("entered", "function eom_model.elector_diplomacy(self)");
-    local loyalty_level = "_loyal"
-    for key, current_elector in pairs(self:electors()) do
-        local current_loyalty = current_elector:loyalty()
-        if current_loyalty > 80 then
-            loyalty_level = "_loyal"
-        elseif current_loyalty > 65 then
-            loyalty_level = "_very_good"
-        elseif current_loyalty > 50 then
-            loyalty_level = "_good"
-        elseif current_loyalty > 40 then
-            loyalty_level = "_indifferent"
-        elseif current_loyalty > 30 then
-            loyalty_level = "_low"
-        elseif current_loyalty > 15 then
-            loyalty_level = "_very_low"
-        else
-            loyalty_level = "_critical"
-        end
-
-        if not cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):has_effect_bundle("eom_"..current_elector:name()..loyalty_level) then
-            EOMLOG("The bundle does not currently match for ["..current_elector:name().."]")
-            for i = 1, #suffix_list do
-                if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):has_effect_bundle("eom_"..current_elector:name()..suffix_list[i]) then
-                    cm:remove_effect_bundle("eom_"..current_elector:name()..suffix_list[i], EOM_GLOBAL_EMPIRE_FACTION)
-                    break
-                end
-            end
-            EOMLOG("Set the diplomacy effect bundle to [eom_"..current_elector:name()..loyalty_level.."] for elector ["..current_elector:name().."]")
-            cm:apply_effect_bundle("eom_"..current_elector:name()..loyalty_level, EOM_GLOBAL_EMPIRE_FACTION, 0)
-        end
-    end
-end
-
---v function(self: EOM_MODEL)
-function eom_model.elector_personalities(self)
-    EOMLOG("Entered", "eom_model.elector_personalities(self)")
-    for name, elector in pairs(self:electors()) do
-        if elector:status() == "normal" then
-            cm:force_change_cai_faction_personality(name, "eom_normal_elector")
-        elseif elector:status() == "civil_war_enemy" or elector:status() == "open_rebellion" then
-            cm:force_change_cai_faction_personality(name, "eom_disloyal_elector")
-        elseif elector:status() == "civil_war_emperor" then
-            cm:force_change_cai_faction_personality(name, "eom_pretender")
-        end
-    end
-end
-
---v function (name:ELECTOR_NAME)
-local function remove_taxation_bundles(name)
-    
-    local empire = cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION)
-    for i = 1, 4 do 
-        if empire:has_effect_bundle("eom_"..name.."_taxation_"..i) then
-            cm:remove_effect_bundle(tostring("eom_"..name.."_taxation_"..i), EOM_GLOBAL_EMPIRE_FACTION)
-        end
-    end
-    EOMLOG("Removing all tax bundles for ["..name.."] ")
-end
-
-
---v function(self: EOM_MODEL)
-function eom_model.elector_taxation(self)
-    EOMLOG("Entered", "eom_model.elector_taxation(self)")
-    local empire = cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION)
-    for name, elector in pairs(self:electors()) do
-        if (not elector:is_cult()) and self:is_elector_valid_for_taxes(name) then
-            if elector:loyalty() <= 25 then
-                if not empire:has_effect_bundle("eom_"..name.."_taxation_1") then
-                    remove_taxation_bundles(name)
-                    cm:apply_effect_bundle("eom_"..name.."_taxation_1", EOM_GLOBAL_EMPIRE_FACTION, 0)
-                    EOMLOG("Assigning tax level 1 to ["..name.."] ")
-                end
-            elseif elector:loyalty() > 25 and elector:loyalty() <= 50 then
-                if not empire:has_effect_bundle("eom_"..name.."_taxation_2") then
-                    remove_taxation_bundles(name)
-                    cm:apply_effect_bundle("eom_"..name.."_taxation_2", EOM_GLOBAL_EMPIRE_FACTION, 0)
-                    EOMLOG("Assigning tax level 2 to ["..name.."] ")
-                end
-            elseif elector:loyalty() > 50 and elector:loyalty() <= 75 then
-                if not empire:has_effect_bundle("eom_"..name.."_taxation_3") then
-                    remove_taxation_bundles(name)
-                    cm:apply_effect_bundle("eom_"..name.."_taxation_3", EOM_GLOBAL_EMPIRE_FACTION, 0)
-                    EOMLOG("Assigning tax level 3 to ["..name.."] ")
-                end
-            else
-                if not empire:has_effect_bundle("eom_"..name.."_taxation_4") then
-                    remove_taxation_bundles(name)
-                    cm:apply_effect_bundle("eom_"..name.."_taxation_4", EOM_GLOBAL_EMPIRE_FACTION, 0)
-                    EOMLOG("Assigning tax level 4 to ["..name.."] ")
-                end
-            end
-        elseif (not elector:is_cult()) then
-            remove_taxation_bundles(name)
-        end
-    end
-end
 
 
 
@@ -671,7 +482,7 @@ function eom_model.save(self)
     EOMLOG("entered", "eom_model.save(self)")
     local savetable = {} 
     --electors
-    savetable._electors = {}--:map<string, ELECTOR_INFO>
+    savetable._electors = {}--:map<ELECTOR_NAME, ELECTOR_INFO>
     for k, v in pairs(self:electors()) do
         local info = v:save()
         savetable._electors[k] = info
@@ -696,11 +507,13 @@ function eom_model.load(self, savetable)
     --electors
     for k, v in pairs(savetable._electors) do
         self:add_elector(v)
-        EOMLOG("Loaded Elector ["..k.."]")
+        self:get_elector(k):echo_information()
     end
     --coredata
     self._coredata = savetable._coredata
     EOMLOG("Loaded core data!")
+
+    self:set_log_turn(cm:model():turn_number())
 end
 
 --ui
@@ -727,11 +540,7 @@ eom = eom_model.init()
 _G.eom = eom
 --link the model to the view and vice versa
 core:add_ui_created_callback(function()
-    eom:add_view(eom_view.new())
-    eom:view():add_model(eom)
-    eom:view():set_button_parent()
-    local button = eom:view():get_button()
-    button:SetVisible(true)
+    core:trigger_event("EomUiCreated")
 end);
 
 cm:add_saving_game_callback(
@@ -756,7 +565,6 @@ cm:add_loading_game_callback(
             for key, data in pairs(core_data_to_load) do
                 eom:set_core_data(key, data)
             end
-            --randomize which plot events happen when
         else
             eom:load(savetable)
         end

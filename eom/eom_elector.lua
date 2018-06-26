@@ -123,7 +123,7 @@ end
 --v function(self: EOM_ELECTOR, status: ELECTOR_STATUS)
 function eom_elector.set_status(self, status)
     EOMLOG("entered for ["..self:name().."] ", "eom_elector.set_status(self)")
-    if self:is_loyal() then
+    if self:is_loyal() and status ~= "loyal" then
         EOMLOG("this elector is fully loyal, aborting")
         return
     end
@@ -134,14 +134,15 @@ end
 
 --loyalty
 
+--return the loyalty of an elector
 --v function(self: EOM_ELECTOR) --> number
 function eom_elector.loyalty(self)
     return self._loyalty;
 end
 
+--change the loyalty of an elector by a value
 --v function(self: EOM_ELECTOR, changevalue: number)
 function eom_elector.change_loyalty(self, changevalue)
-    EOMLOG("entered", "eom_elector.change_loyalty(self, changevalue)")
     if self:is_loyal() then
         EOMLOG("Not applying any loyalty change  to ["..self:name().."] because the elector is fully loyal!")
         return
@@ -161,9 +162,10 @@ function eom_elector.change_loyalty(self, changevalue)
     end
 end
 
+
+--set the loyalty of an elector to a value.
 --v function(self: EOM_ELECTOR, setvalue: number)
 function eom_elector.set_loyalty(self, setvalue)
-    EOMLOG("entered", "eom_elector.change_loyalty(self, changevalue)")
     if self:is_loyal() then
         EOMLOG("WARNING: setting the loyalty of a fully loyal elector!!!")
     end
@@ -172,7 +174,7 @@ function eom_elector.set_loyalty(self, setvalue)
 end
 
 --power
-
+--consider these to be legacy commands, they are unused.
 --v function(self: EOM_ELECTOR) --> number
 function eom_elector.power(self)
     return self._power
@@ -192,6 +194,7 @@ end
 
 --v function(self: EOM_ELECTOR, should_capitulate: boolean)
 function eom_elector.set_should_capitulate(self, should_capitulate)
+    EOMLOG("Set the Elector ["..self:name().."] to capitulation status ["..tostring(should_capitulate).."] !")
     self._willCapitulate = should_capitulate
 end
 
@@ -222,7 +225,8 @@ function eom_elector.ui_name(self)
 end
 
 --v function(self: EOM_ELECTOR, visible: boolean)
-function eom_elector.set_visible(self, visible)
+function eom_elector.set_hidden(self, visible)
+    EOMLOG("Set Elector ["..self:name().."] UI visibility to ["..tostring(visible).."] ")
     self._hideFromUi = visible
 end
 
@@ -248,16 +252,19 @@ end
 
 --v function(self: EOM_ELECTOR, subtype: string)
 function eom_elector.set_leader_subtype(self, subtype)
+    EOMLOG("Set leader subtype for ["..self:name().."] ")
     self._leaderSubtype = subtype
 end
 
 --v function(self: EOM_ELECTOR, forename: string)
 function eom_elector.set_leader_forename(self, forename)
+    EOMLOG("Set leader forename for ["..self:name().."] ")
     self._leaderForename = forename
 end
 
 --v function(self: EOM_ELECTOR, surname: string)
 function eom_elector.set_leader_surname(self, surname)
+    EOMLOG("Set leader surname for ["..self:name().."] ")
     self._leaderSurname = surname
 end
 
@@ -265,6 +272,7 @@ end
 
 --v function(self: EOM_ELECTOR, army_list: string)
 function eom_elector.set_army_list(self, army_list)
+    EOMLOG("Set the army list for ["..self:name().."] ")
     self._unitList = army_list
 end
 
@@ -278,15 +286,14 @@ end
 --base regions
 
 --v function(self: EOM_ELECTOR) --> number
-function eom_elector.base_region_count(self)
+function eom_elector.base_regions(self)
     return self._baseRegions
 end
 
 --v function(self: EOM_ELECTOR, count: number)
 function eom_elector.set_base_regions(self, count)
-    EOMLOG("Entered", "eom_elector.set_base_regions(self, count)")
     self._baseRegions = count
-    EOMLOG("Set base regions for ["..self:name().."] to ["..tostring(self:base_region_count()).."]")
+    EOMLOG("Set base regions for ["..self:name().."] to ["..tostring(self:base_regions()).."]")
 end
 
 --v function(self: EOM_ELECTOR) --> vector<string>
@@ -310,6 +317,7 @@ end
 
 --v function(self: EOM_ELECTOR, can_revive: boolean)
 function eom_elector.set_can_revive(self, can_revive)
+    EOMLOG("Set Can Revive for Elector ["..self:name().."] to ["..tostring(can_revive).."] ")
     self._canRevive = can_revive
 end
 
@@ -330,8 +338,25 @@ function eom_elector.expedition_region(self)
     return self._expeditionRegion
 end
 
+--echos some information about the elector to the log.
+--v function(self: EOM_ELECTOR)
+function eom_elector.echo_information(self)
+    EOMLOG("Echoing Elector ["..self:name().."] with loyalty ["..tostring(self:loyalty()).."], status ["..self:status().."], UI visibility: ["..tostring(self:is_hidden()).."] and capitulation flag ["..tostring(self:will_capitulate()).."] ")
+end
+
+
+
+
+
+
+
+
+
+
+
 --v function(self: EOM_ELECTOR)
 function eom_elector.trigger_coup(self)
+    EOMLOG("triggering Coup D'etat spawn for elector ["..self:name().."] ")
     local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
     cm:create_force_with_general(
         self:name(),
@@ -370,6 +395,7 @@ end
 
 --v function(self: EOM_ELECTOR, transfer_no_region: boolean?)
 function eom_elector.respawn_at_capital(self, transfer_no_region)
+    EOMLOG("Respawning elector ["..self:name().."] at capital with transfer no region ["..tostring(transfer_no_region).."] ")
     cm:create_force_with_general(
         self:name(),
         self:get_army_list(),
@@ -396,6 +422,7 @@ end
 
 --v function(self: EOM_ELECTOR)
 function eom_elector.trigger_expedition(self)
+    EOMLOG("triggering expedition spawn for elector ["..self:name().."] ")
     local x, y = self:expedition_coordinates();
     local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
     cm:create_force_with_general(
@@ -431,6 +458,7 @@ end
 
 --v function(self: EOM_ELECTOR, callback: function(model: EOM_MODEL))
 function eom_elector.set_full_loyalty_callback(self, callback)
+    EOMLOG("Set a fully loyal callback for "..self:name().." ")
     self._fullLoyaltyCallback = callback
 end
 
@@ -438,6 +466,7 @@ end
 
 --v function(self: EOM_ELECTOR, model: EOM_MODEL)
 function eom_elector.set_fully_loyal(self, model)
+    EOMLOG("Setting elector ["..self:name().."] fully loyal! ")
     self:set_status("loyal")
     self:make_fully_loyal()
     self._fullLoyaltyCallback(model)

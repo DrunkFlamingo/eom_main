@@ -16,11 +16,19 @@ local function eom_is_religious_settlement(list, findable_item)
     return false
 end
 --v function(region_name: string, religion_name: ELECTOR_NAME)
-local function eom_remove_religious_bundles_from_region(region_name, religion_name)
+local function eom_remove_religious_bundles_from_major_region(region_name, religion_name)
     cm:remove_effect_bundle_from_region("eom_" .. religion_name .. "_happiness_level_1", region_name)
     cm:remove_effect_bundle_from_region("eom_" .. religion_name .. "_happiness_level_2", region_name)
     cm:remove_effect_bundle_from_region("eom_" .. religion_name .. "_happiness_level_3", region_name)
     cm:remove_effect_bundle_from_region("eom_" .. religion_name .. "_happiness_level_4", region_name)
+end
+
+--v function(region_name: string, religion_name: ELECTOR_NAME)
+local function eom_remove_religious_bundles_from_minor_region(region_name, religion_name)
+    cm:remove_effect_bundle_from_region("eom_" .. religion_name .. "_happiness_level_1_minor", region_name)
+    cm:remove_effect_bundle_from_region("eom_" .. religion_name .. "_happiness_level_2_minor", region_name)
+    cm:remove_effect_bundle_from_region("eom_" .. religion_name .. "_happiness_level_3_minor", region_name)
+    cm:remove_effect_bundle_from_region("eom_" .. religion_name .. "_happiness_level_4_minor", region_name)
 end
 
 --v function(context: WHATEVER)
@@ -54,11 +62,19 @@ local function eom_religion_bundles(context)
         local current = empire_region_list:item_at(i)
         if current:is_province_capital() and current:owning_faction():name() == eom:empire() then
             if eom_is_religious_settlement(eom:get_elector("wh_main_emp_cult_of_sigmar"):home_regions(), current:name()) then
-                eom_remove_religious_bundles_from_region(current:name(), "wh_main_emp_cult_of_sigmar")
+                eom_remove_religious_bundles_from_major_region(current:name(), "wh_main_emp_cult_of_sigmar")
                 cm:apply_effect_bundle_to_region(current_sigmar_bundle, current:name(), 0)
             elseif eom_is_religious_settlement(eom:get_elector("wh_main_emp_cult_of_ulric"):home_regions(), current:name()) then
-                eom_remove_religious_bundles_from_region(current:name(), "wh_main_emp_cult_of_ulric")
+                eom_remove_religious_bundles_from_major_region(current:name(), "wh_main_emp_cult_of_ulric")
                 cm:apply_effect_bundle_to_region(current_ulric_bundle, current:name(), 0)
+            end
+        elseif current:owning_faction():name() == eom:empire() then
+            if eom_is_religious_settlement(eom:get_elector("wh_main_emp_cult_of_sigmar"):home_regions(), current:name()) then
+                eom_remove_religious_bundles_from_minor_region(current:name(), "wh_main_emp_cult_of_sigmar")
+                cm:apply_effect_bundle_to_region(current_sigmar_bundle.."_minor", current:name(), 0)
+            elseif eom_is_religious_settlement(eom:get_elector("wh_main_emp_cult_of_ulric"):home_regions(), current:name()) then
+                eom_remove_religious_bundles_from_minor_region(current:name(), "wh_main_emp_cult_of_ulric")
+                cm:apply_effect_bundle_to_region(current_ulric_bundle.."_minor", current:name(), 0)
             end
         end
     end
