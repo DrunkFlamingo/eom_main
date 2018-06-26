@@ -596,7 +596,7 @@ end
 --v function() --> ELECTOR_INFO
 function marienburg_start_pos()
     local sp = {}
-    sp._loyalty = 0--:number
+    sp._loyalty = 25--:number
     sp._fullyLoyal = false
     sp._hideFromUi = false
     sp._power = 35--:number
