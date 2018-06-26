@@ -7,6 +7,13 @@ end
 
 local function eom_starting_settings()
     if cm:is_new_game() then
+        if cm:random_number(10) > 6 then
+            eom:set_core_data("vampire_war_turn", 30)
+            eom:set_core_data("marienburg_plot_turn", 55)
+        else
+            eom:set_core_data("vampire_war_turn", 55)
+            eom:set_core_data("marienburg_plot_turn", 30)
+        end
         out("EOM STARTING CHANGES RUNNING")
         local karl = "wh_main_emp_empire"
         local elector_diplo_list = {
@@ -32,7 +39,7 @@ local function eom_starting_settings()
             for j = 1, #elector_diplo_list do
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "defensive alliance", false, false, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "peace", true, true, false);
-                cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "war", false, false, false);
+                cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "war, join war", false, false, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "form confederation", false, false, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "military alliance", false, false, false);
             end
@@ -62,35 +69,40 @@ local function eom_starting_settings()
 
         --set marienburg's status to seceded
         cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "wh_main_emp_marienburg")
-        --kill off vlad
-        --[[
-        local vlad_list = cm:get_faction("wh_main_vmp_schwartzhafen"):character_list()
-        for i = 0, vlad_list:num_items() - 1 do
-            local current = vlad_list:item_at(i):cqi()
-            cm:kill_character(current, true, true)
-        end
-        ]]
-        local provinces_to_transfer_to_mannfred = {
-            "wh_main_eastern_sylvania_eschen",
-            "wh_main_eastern_sylvania_waldenhof",
-            "wh_main_western_sylvania_schwartzhafen",
-            "wh_main_western_sylvania_castle_templehof"
-        } --:vector<string>
-        
-        --give sylvania to mannfred
-        
-        for i = 1, #provinces_to_transfer_to_mannfred do
-            cm:callback( function()
-            cm:transfer_region_to_faction(provinces_to_transfer_to_mannfred[i], "wh_main_vmp_vampire_counts");
-            end, (i/10));
-        end
-        --force marienburg and bretonnia to peace
-        cm:force_make_peace("wh_main_brt_bretonnia", "wh_main_emp_marienburg");
-        cm:force_declare_war("wh_main_brt_bretonnia", "wh_dlc05_vmp_mousillon", true, true);
 
-        --prevent mannfredd from declaring war on the empire until we want him to
-        cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war", false, false, true)
 
+            local vlad_armies = cm:get_faction("wh_main_vmp_schwartzhafen"):character_list()
+            for i = 0, vlad_armies:num_items() -1 do
+                cm:callback(function()
+                    cm:kill_character(vlad_armies:item_at(i):cqi(), true, true)
+                end, i+1/10)
+            end
+    
+            local provinces_to_transfer_to_mannfred = {
+                "wh_main_eastern_sylvania_eschen",
+                "wh_main_eastern_sylvania_waldenhof",
+                "wh_main_western_sylvania_schwartzhafen",
+                "wh_main_western_sylvania_castle_templehof"
+            } --:vector<string>
+            
+            --give sylvania to mannfred
+            
+            for i = 1, #provinces_to_transfer_to_mannfred do
+                cm:callback( function()
+                cm:transfer_region_to_faction(provinces_to_transfer_to_mannfred[i], "wh_main_vmp_vampire_counts");
+                end, (i/10));
+            end
+
+            --prevent mannfredd from declaring war on the empire until we want him to
+            cm:force_diplomacy("all", "faction:wh_main_vmp_vampire_counts", "war, join war", false, false, false)
+            cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war, join war", false, false, false)
+            cm:force_diplomacy("faction:"..karl, "faction:wh_main_vmp_vampire_counts", "war", true, false, false)
+
+            --force marienburg and bretonnia to peace
+            cm:force_make_peace("wh_main_brt_bretonnia", "wh_main_emp_marienburg");
+            cm:force_declare_war("wh_main_brt_bretonnia", "wh_dlc05_vmp_mousillon", true, true);
+            cm:force_diplomacy("faction:wh_main_emp_marienburg", "faction:wh_main_brt_bretonnia", "war, join war", false, false, false)
+      
 
         --anti beastmen forces
         cm:callback( function() 
@@ -103,13 +115,6 @@ local function eom_starting_settings()
 
         --randomize which plot events happen when
 
-        if cm:random_number(10) > 6 then
-            eom:set_core_data("vampire_war_turn", 30)
-            eom:set_core_data("marienburg_plot_turn", 55)
-        else
-            eom:set_core_data("vampire_war_turn", 55)
-            eom:set_core_data("marienburg_plot_turn", 30)
-        end
 
         out("EOM STARTING CHANGES FINISHED")
     end

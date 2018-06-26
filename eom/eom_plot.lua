@@ -6,7 +6,7 @@ local self = {}
 setmetatable(self, {
     __index = eom_plot
 }) --# assume self: EOM_PLOT
-
+EOMLOG("Creating plot line ["..name.."] ")
 self._name = name
 self._model = model 
 if cm:get_saved_value("plot_line_stage"..name) then

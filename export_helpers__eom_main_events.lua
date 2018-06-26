@@ -3,7 +3,7 @@ if not eom then
     script_error("EOM IS NOT FOUND!")
 end
 
-
+local function eom_empire_main_events()
 
 local eom_main_events_table = {
     {
@@ -547,6 +547,7 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
             cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "eom_marienburg_appeased")
             model:set_core_data("friend_of_marienburg", true)
+            model:get_elector("wh_main_emp_marienburg"):set_loyalty(80)
         end,
             [2] = function(model --:EOM_MODEL
             ) 
@@ -555,6 +556,7 @@ local eom_main_events_table = {
             cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "eom_marienburg_angry")
             cm:force_diplomacy("faction:wh_main_emp_empire", "faction:wh_main_emp_marienburg", "trade", false, false, true)
             model:set_core_data("friend_of_marienburg", false)
+            model:get_elector("wh_main_emp_marienburg"):set_loyalty(5)
         end
         }
 
@@ -1071,11 +1073,16 @@ local eom_main_events_table = {
         }
     }, 
 }--:vector<EOM_EVENT>
-    
-for i = 1, #eom_main_events_table do 
-    local current_event = eom_main_events_table[i];
-    eom:add_event(current_event)
+if cm:get_faction(eom:empire()):is_human() then
+    eom:log("Adding Main Events", "export_helpers__eom_main_events")
+    for i = 1, #eom_main_events_table do 
+        local current_event = eom_main_events_table[i];
+        eom:add_event(current_event)
+    end
 end
+end
+
+events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() eom_empire_main_events() end;
 
 --eom_dilemma_ostermark_3
 
