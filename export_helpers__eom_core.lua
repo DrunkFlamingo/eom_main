@@ -64,9 +64,9 @@ EOM_GLOBAL_REGION_TO_ELECTOR = {
 }
 
 local function empire_plot_and_events_check()
-    EOMLOG("Entered", "eom_model.event_and_plot_check(self)")
+    eom:log("Entered", "eom_model.event_and_plot_check(self)")
     --capitulation
-    EOMLOG("Checking for Electors willing to capitulate")
+    eom:log("Checking for Electors willing to capitulate")
     for name, elector in pairs(eom:electors()) do
         if elector:will_capitulate() and (not elector:is_cult()) then
             eom:offer_capitulation(name)
@@ -76,7 +76,7 @@ local function empire_plot_and_events_check()
     end
     --full loyalty
     if not eom:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
-        EOMLOG("Checking for fully loyal electors")
+        eom:log("Checking for fully loyal electors")
         for name, elector in pairs(eom:electors()) do
             if elector:loyalty() > 99 and elector:status() == "normal" then
                 elector:set_fully_loyal(eom)
@@ -84,7 +84,7 @@ local function empire_plot_and_events_check()
         end
     end
     --plot check
-    EOMLOG("Core event and plot check function checking story events")
+    eom:log("Core event and plot check function checking story events")
     for key, story in pairs(eom:get_story()) do
        if story:check_advancement() == true then
             story:advance()
@@ -93,11 +93,11 @@ local function empire_plot_and_events_check()
     end
     --open rebellions
     if not eom:get_core_data_with_key("tweaker_no_full_loyalty_events") == true then
-        EOMLOG("Core event and plot check function checking open rebellion opportunities")
+        eom:log("Core event and plot check function checking open rebellion opportunities")
         for name, elector in pairs(eom:electors()) do
             if (elector:loyalty() == 0) and elector:status() == "normal" then
                 
-                EOMLOG("Elector ["..name.."] can rebel!")
+                eom:log("Elector ["..name.."] can rebel!")
                 eom:elector_rebellion_start(name)
             end
         end
@@ -105,7 +105,7 @@ local function empire_plot_and_events_check()
 
 
     --player restore opportunity.
-    EOMLOG("Core event and plot check function checking player restoration opportunities")
+    eom:log("Core event and plot check function checking player restoration opportunities")
     for name, elector in pairs(eom:electors()) do
         if not elector:is_cult() then
             if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
@@ -119,27 +119,27 @@ local function empire_plot_and_events_check()
     --events
     local next_event = eom:get_core_data_with_key("next_event_turn") --# assume next_event: number
     if cm:model():turn_number() >= next_event and (not eom:get_core_data_with_key("block_events_for_plot") == true) then
-        EOMLOG("Core event and plot check function checking political events")
+        eom:log("Core event and plot check function checking political events")
         for key, event in pairs(eom:events()) do
-            EOMLOG("Checking Event: ["..key.."] ")
+            eom:log("Checking Event: ["..key.."] ")
             if not event:already_occured() then
                 if event:allowed() then
-                    EOMLOG("Event ["..key.."] is allowed!")
+                    eom:log("Event ["..key.."] is allowed!")
                     event:act()
                     eom:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
                     return
               
                 end
             else
-                EOMLOG("event ["..key.."] already occured ")
+                eom:log("event ["..key.."] already occured ")
             end
         end
     else
-        EOMLOG("No event this turn")
+        eom:log("No event this turn")
     end
 
     --revival events.
-    EOMLOG("Core event and plot check function checking revivification events")
+    eom:log("Core event and plot check function checking revivification events")
     for name, elector in pairs(eom:electors()) do
         if eom:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() and (not elector:is_cult()) then
         if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
@@ -152,7 +152,7 @@ local function empire_plot_and_events_check()
         end
     end
     --elector falls
-    EOMLOG("Core event and plot check function checking elector fallen events.")
+    eom:log("Core event and plot check function checking elector fallen events.")
     for name, elector in pairs(eom:electors()) do
         if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
             eom:elector_fallen(name, true)
@@ -195,11 +195,11 @@ core:add_listener(
             local enemy = enemies[i]
             local enemy_sub = enemy:faction():subculture()
             if character:won_battle() then 
-                EOMLOG("Triggering event VictoryAgainstSubcultureKey_"..enemy_sub, "EOMBattlesCompleted")
+                eom:log("Triggering event VictoryAgainstSubcultureKey_"..enemy_sub, "EOMBattlesCompleted")
                 core:trigger_event("VictoryAgainstSubcultureKey_"..enemy_sub)
             else
                 core:trigger_event("DefeatAgainstSubcultureKey_"..enemy_sub)
-                EOMLOG("Triggering event DeafeatAgainstSubcultureKey_"..enemy_sub, "EOMBattlesCompleted")
+                eom:log("Triggering event DeafeatAgainstSubcultureKey_"..enemy_sub, "EOMBattlesCompleted")
             end
         end
     end, 
