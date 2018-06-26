@@ -639,11 +639,7 @@ eom = eom_model.init()
 _G.eom = eom
 --link the model to the view and vice versa
 core:add_ui_created_callback(function()
-    eom:add_view(eom_view.new())
-    eom:view():add_model(eom)
-    eom:view():set_button_parent()
-    local button = eom:view():get_button()
-    button:SetVisible(true)
+    core:trigger_event("EomUiCreated")
 end);
 
 cm:add_saving_game_callback(
