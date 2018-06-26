@@ -1,4 +1,9 @@
-
+cm = get_cm()
+events = get_events()
+eom = _G.eom
+if not eom then
+    script_error("EOM IS NOT FOUND!")
+end
 local function eom_elector_diplomacy()
     local suffix_list = {"_critical", "_good", "_indifferent", "_low", "_loyal", "_very_good", "_very_low"} --:vector<string>
     eom:log("entered", "function eom_model.elector_diplomacy(self)");
