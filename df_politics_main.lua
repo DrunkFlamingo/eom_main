@@ -1,3 +1,6 @@
+EOM_SHOULD_LOG = true --:boolean
+EOM_LAST_CONTEXT = "no context set" --:string
+EOM_LOG_TURN = "Preload" --:string
 
 --[[
 --v function(text: string)
@@ -161,9 +164,6 @@ core.add_listener = myAddListener;
 --]]
 
 
-EOM_SHOULD_LOG = true --:boolean
-EOM_LAST_CONTEXT = "no context set" --:string
-EOM_LOG_TURN = "Preload" --:string
 
 --v function(text: string, ftext: string?)
 function EOMLOG(text, ftext)
