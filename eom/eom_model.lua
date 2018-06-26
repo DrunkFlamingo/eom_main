@@ -102,6 +102,11 @@ function eom_model.log(self, text, ftext)
     EOMLOG(text, ftext)
 end
 
+--v function(self: EOM_MODEL, turn: number)
+function eom_model.set_log_turn(self, turn)
+    EOM_LOG_TURN = tostring(turn)
+end
+
 --core data
 --v function(self: EOM_MODEL) --> map<string, EOM_CORE_DATA>
 function eom_model.coredata(self)
@@ -606,6 +611,8 @@ function eom_model.load(self, savetable)
     --coredata
     self._coredata = savetable._coredata
     EOMLOG("Loaded core data!")
+
+    self:set_log_turn(cm:model():turn_number())
 end
 
 --ui
@@ -661,7 +668,6 @@ cm:add_loading_game_callback(
             for key, data in pairs(core_data_to_load) do
                 eom:set_core_data(key, data)
             end
-            --randomize which plot events happen when
         else
             eom:load(savetable)
         end

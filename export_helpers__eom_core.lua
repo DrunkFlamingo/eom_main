@@ -171,6 +171,7 @@ core:add_listener(
         return faction:name() == "wh_main_emp_empire"
     end,
     function(context)
+        eom:set_log_turn(cm:model():turn_number())
         empire_plot_and_events_check()
         eom:elector_diplomacy()
         eom:elector_personalities()

@@ -163,6 +163,7 @@ core.add_listener = myAddListener;
 
 EOM_SHOULD_LOG = true --:boolean
 EOM_LAST_CONTEXT = "no context set" --:string
+EOM_LOG_TURN = "Preload" --:string
 
 --v function(text: string, ftext: string?)
 function EOMLOG(text, ftext)
@@ -182,15 +183,19 @@ function EOMLOG(text, ftext)
     local logTimeStamp = os.date("%d, %m %Y %X")
     local popLog = io.open("EOMLOG.txt","a")
     --# assume logTimeStamp: string
-    popLog :write("WEC:  "..logText .. "    : [" .. logContext .. "] : [".. logTimeStamp .. "]\n")
+    popLog :write("WEC:  "..logText .. "    : CONTEXT: [" .. logContext .. "] TIMESTAMP : [".. logTimeStamp .. "] TURN : ["..EOM_LOG_TURN.."] \n")
     popLog :flush()
     popLog :close()
 end
 
 function EOMNEWLOG()
-    if EOM_SHOULD_LOG == false or cm:get_saved_value("eom_new_log") == true then
+    if EOM_SHOULD_LOG == false then
         return;
     end
+    if cm:get_saved_value("EOMLOG") == true then
+        return;
+    end
+    cm:set_saved_value("EOMLOG", true)
 
     local logTimeStamp = os.date("%d, %m %Y %X")
     --# assume logTimeStamp: string
