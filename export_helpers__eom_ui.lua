@@ -3,18 +3,11 @@ if not eom then
     script_error("EOM IS NOT FOUND!")
 end
 
-core:add_listener(
-    "EOM_UI_CREATION",
-    "EomUiCreated",
-    true,
-    function(context)
-        eom:add_view(eom_view.new())
-        eom:view():add_model(eom)
-        eom:view():set_button_parent()
-        local button = eom:view():get_button()
-        button:SetVisible(true)
-    end,
-false)
+if not Util then
+    script_error("UIMF IS MISSING")
+end
+
+out("EOM UI IS ACTIVE")
 
 core:add_listener(
     "UI_FACTION_TURN_START",
@@ -22,9 +15,11 @@ core:add_listener(
     true,
     function(context)
         if context:faction():name() == eom:empire() and context:faction():is_human() then
-            eom:view():set_button_visible(true)
-        elseif faction:is_human() then
-            eom:view():set_button_visible(false)
+            local button = eom:view():get_button()
+            button:SetVisible(true)
+        elseif context:faction():is_human() then
+            local button = eom:view():get_button()
+            button:SetVisible(false)
         end
     end,
     true)
