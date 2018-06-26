@@ -122,9 +122,10 @@ local function empire_plot_and_events_check()
         eom:log("Core event and plot check function checking political events")
         for key, event in pairs(eom:events()) do
             eom:log("Checking Event: ["..key.."] ")
-            if not event:already_occured() then
+            if eom:get_core_data_with_key(key.."_occured") ~= true then
                 if event:allowed() then
                     eom:log("Event ["..key.."] is allowed!")
+                    eom:set_core_data(key.."_occured", true)
                     event:act()
                     eom:set_core_data("next_event_turn", cm:model():turn_number() + 5) 
                     return
