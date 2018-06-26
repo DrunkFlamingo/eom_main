@@ -1825,18 +1825,22 @@ end
 --war systems
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.grant_casus_belli(self, name)
-    if cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli") then
-        self:log("The Emperor already has a casus belli against ["..name.."]")
-        return
-    end
+    
     self:log("granting casus belli against ["..name.."] ")
     cm:apply_effect_bundle("eom_"..name.."_casus_belli", EOM_GLOBAL_EMPIRE_FACTION, 8)
 end
 
+--v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
+function eom_model.has_casus_belli_against(self, name)
+    return cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli")
+end
+
+
+
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.check_unjust_war(self, name)
     EOMLOG("Entered", "eom_model.check_unjust_war(self, name)")
-    if cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli") then
+    if self:has_casus_belli_against(name) then
         EOMLOG("Casus Belli possessed, doing nothing!")
     else
         EOMLOG("Checking unjust war!")
