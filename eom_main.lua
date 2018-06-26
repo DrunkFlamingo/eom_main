@@ -1825,6 +1825,11 @@ end
 --war systems
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.grant_casus_belli(self, name)
+    if cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli") then
+        self:log("The Emperor already has a casus belli against ["..name.."]")
+        return
+    end
+    self:log("granting casus belli against ["..name.."] ")
     cm:apply_effect_bundle("eom_"..name.."_casus_belli", EOM_GLOBAL_EMPIRE_FACTION, 8)
 end
 

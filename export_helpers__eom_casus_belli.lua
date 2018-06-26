@@ -22,15 +22,16 @@ core:add_listener(
         return context:faction():name() == eom:empire()
     end,
     function(context)
+        eom:log("Entered")
         for name, elector in pairs(eom:electors()) do
             if cm:get_faction(name):region_list():num_items() > (elector:base_regions() + 1) then
                 eom:grant_casus_belli(name)
                 if cm:get_faction(eom:empire()):is_human() then
                     cm:show_message_event(
                         eom:empire(),
-                        "casus_belli_earned_title",
-                        "casus_belli_unjust_occupation",
-                        "casus_belli_"..name.."_earned_detail",
+                        "event_feed_strings_text_casus_belli_earned_title",
+                        "event_feed_strings_text_unjust_occupation",
+                        "event_feed_strings_text_casus_belli_"..name.."_earned_detail",
                         true,
                         591)
                 end
