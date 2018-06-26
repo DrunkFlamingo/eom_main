@@ -13,7 +13,7 @@ function eom_action.new(key, conditional, choices, eom)
     self._condition = conditional
     self._choices = choices
     self._eom = eom
-
+    EOMLOG("Created a new Action with key ["..key.."]")
     return self
 end
 
@@ -35,7 +35,7 @@ end
 
 --v function(self: EOM_ACTION, choice: number)
 function eom_action.do_choice(self, choice)
-    EOMLOG("Doing choice callback ["..tostring(choice).."] for event ["..self:key().."] ")
+    EOMLOG("Doing choice callback ["..tostring(choice).."] for event ["..self:key().."]")
     local choice_callback = self._choices[choice]
     choice_callback(self:model())
 end
@@ -43,6 +43,7 @@ end
 
 --v function(self: EOM_ACTION)
 function eom_action.act(self)
+    EOMLOG("Preforming action ["..self:key().."] ")
     cm:trigger_dilemma(EOM_GLOBAL_EMPIRE_FACTION, self:key(), true)
     core:add_listener(
         self:key(),
