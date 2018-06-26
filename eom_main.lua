@@ -1588,7 +1588,7 @@ function eom_model.is_elector_valid(self, name)
         living = true 
         capital_owned = true
     end
-    local first_dilemma_triggered =  cm:get_saved_value("eom_action_eom_dilemma_nordland_2_occured") or false
+    local first_dilemma_triggered =  self:get_core_data_with_key("eom_dilemma_nordland_2_occured") --# assume first_dilemma_triggered:boolean
     EOMLOG("is Elector Valid returning ["..tostring(elector_active and capital_owned and living and first_dilemma_triggered).."] ")
     return elector_active and capital_owned and living and first_dilemma_triggered
 end
