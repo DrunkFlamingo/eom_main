@@ -990,7 +990,7 @@ end
 --v  [NO_CHECK] function(self: EOM_ACTION)
 function eom_action.act(self)
     cm:trigger_dilemma(EOM_GLOBAL_EMPIRE_FACTION, self:key(), true)
-    self:model():set_core_data(self:key().."_occured")
+    self:model():set_core_data(self:key().."_occured", true)
     core:add_listener(
         self:key(),
         "DilemmaChoiceMadeEvent",
