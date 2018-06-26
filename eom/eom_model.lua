@@ -428,13 +428,15 @@ function eom_model.check_unjust_war(self, name)
             EOMLOG("triggering unjust war")
             self:change_all_loyalties(-10)
             self:set_core_data("last_unjust_war", cm:model():turn_number())
-            cm:show_message_event(
-                self:empire(),
-                "event_feed_strings_text_unjust_war_title",
-                "event_feed_strings_text_unjust_war_subtitle",
-                "event_feed_strings_text_unjust_war_detail",
-                true,
-                591)
+            if cm:get_faction(self:empire()):is_human() then
+                cm:show_message_event(
+                    self:empire(),
+                    "event_feed_strings_text_unjust_war_title",
+                    "event_feed_strings_text_unjust_war_subtitle",
+                    "event_feed_strings_text_unjust_war_detail",
+                    true,
+                    591)
+            end
         else
             EOMLOG("Unjust war already triggered this turn!")
         end

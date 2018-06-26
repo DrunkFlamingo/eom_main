@@ -168,11 +168,13 @@ core:add_listener(
     "FactionTurnStart",
     function(context)
         local faction = context:faction()
-        return faction:name() == "wh_main_emp_empire"
+        return faction:name() == eom:empire()
     end,
     function(context)
         eom:set_log_turn(cm:model():turn_number())
-        empire_plot_and_events_check()
+        if cm:get_faction(eom:empire()):is_human() then
+            empire_plot_and_events_check()
+        end
         eom:elector_diplomacy()
         eom:elector_personalities()
         eom:elector_taxation()
