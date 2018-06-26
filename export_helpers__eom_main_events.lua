@@ -547,7 +547,7 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_ostermark"):change_loyalty(5)
             cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "eom_marienburg_appeased")
             model:set_core_data("friend_of_marienburg", true)
-            model:get_elector("wh_main_emp_marienburg"):set_loyalty(51)
+            model:get_elector("wh_main_emp_marienburg"):set_loyalty(80)
         end,
             [2] = function(model --:EOM_MODEL
             ) 
