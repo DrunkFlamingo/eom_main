@@ -123,7 +123,7 @@ end
 --v function(self: EOM_ELECTOR, status: ELECTOR_STATUS)
 function eom_elector.set_status(self, status)
     EOMLOG("entered for ["..self:name().."] ", "eom_elector.set_status(self)")
-    if self:is_loyal() then
+    if self:is_loyal() and status ~= "loyal" then
         EOMLOG("this elector is fully loyal, aborting")
         return
     end
@@ -134,14 +134,15 @@ end
 
 --loyalty
 
+--return the loyalty of an elector
 --v function(self: EOM_ELECTOR) --> number
 function eom_elector.loyalty(self)
     return self._loyalty;
 end
 
+--change the loyalty of an elector by a value
 --v function(self: EOM_ELECTOR, changevalue: number)
 function eom_elector.change_loyalty(self, changevalue)
-    EOMLOG("entered", "eom_elector.change_loyalty(self, changevalue)")
     if self:is_loyal() then
         EOMLOG("Not applying any loyalty change  to ["..self:name().."] because the elector is fully loyal!")
         return
@@ -161,9 +162,10 @@ function eom_elector.change_loyalty(self, changevalue)
     end
 end
 
+
+--set the loyalty of an elector to a value.
 --v function(self: EOM_ELECTOR, setvalue: number)
 function eom_elector.set_loyalty(self, setvalue)
-    EOMLOG("entered", "eom_elector.change_loyalty(self, changevalue)")
     if self:is_loyal() then
         EOMLOG("WARNING: setting the loyalty of a fully loyal elector!!!")
     end
@@ -172,7 +174,7 @@ function eom_elector.set_loyalty(self, setvalue)
 end
 
 --power
-
+--consider these to be legacy commands, they are unused.
 --v function(self: EOM_ELECTOR) --> number
 function eom_elector.power(self)
     return self._power
@@ -192,6 +194,7 @@ end
 
 --v function(self: EOM_ELECTOR, should_capitulate: boolean)
 function eom_elector.set_should_capitulate(self, should_capitulate)
+    EOMLOG("Set the Elector ["..self:name().."] to capitulation status ["..tostring(should_capitulate).."] !")
     self._willCapitulate = should_capitulate
 end
 
@@ -222,7 +225,8 @@ function eom_elector.ui_name(self)
 end
 
 --v function(self: EOM_ELECTOR, visible: boolean)
-function eom_elector.set_visible(self, visible)
+function eom_elector.set_hidden(self, visible)
+    EOMLOG("Set Elector ["..self:name().."] UI visibility to ["..tostring(visible).."] ")
     self._hideFromUi = visible
 end
 

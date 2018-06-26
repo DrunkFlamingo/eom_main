@@ -353,7 +353,7 @@ function eom_model.elector_fallen(self, name, show_message_event)
     self:change_all_loyalties(-10)
     --NOTE: trigger elector fallen event.
     elector:set_status("fallen")
-    elector:set_visible(false)
+    elector:set_hidden(true)
     if show_message_event then
         cm:show_message_event(
             self:empire(),
