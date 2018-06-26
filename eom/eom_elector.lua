@@ -286,15 +286,14 @@ end
 --base regions
 
 --v function(self: EOM_ELECTOR) --> number
-function eom_elector.base_region_count(self)
+function eom_elector.base_regions(self)
     return self._baseRegions
 end
 
 --v function(self: EOM_ELECTOR, count: number)
 function eom_elector.set_base_regions(self, count)
-    EOMLOG("Entered", "eom_elector.set_base_regions(self, count)")
     self._baseRegions = count
-    EOMLOG("Set base regions for ["..self:name().."] to ["..tostring(self:base_region_count()).."]")
+    EOMLOG("Set base regions for ["..self:name().."] to ["..tostring(self:base_regions()).."]")
 end
 
 --v function(self: EOM_ELECTOR) --> vector<string>
