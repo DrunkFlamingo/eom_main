@@ -52,7 +52,7 @@ local function eom_religion_bundles(context)
     local empire_region_list = empire:region_list()
     for i = 0, empire_region_list:num_items() - 1 do
         local current = empire_region_list:item_at(i)
-        if current:is_province_capital() then
+        if current:is_province_capital() and current:owning_faction():name() == eom:empire() then
             if eom_is_religious_settlement(eom:get_elector("wh_main_emp_cult_of_sigmar"):home_regions(), current:name()) then
                 eom_remove_religious_bundles_from_region(current:name(), "wh_main_emp_cult_of_sigmar")
                 cm:apply_effect_bundle_to_region(current_sigmar_bundle, current:name(), 0)
