@@ -59,6 +59,6 @@
 
 
 --# type global EOM_MODEL_SAVETABLE = {
---# _electors: map<string, ELECTOR_INFO>,
+--# _electors: map<ELECTOR_NAME, ELECTOR_INFO>,
 --# _coredata: map<string, EOM_CORE_DATA>
 --# }

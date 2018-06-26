@@ -378,7 +378,7 @@ if cm:get_faction("wh_main_vmp_schwartzhafen"):is_dead() then
                     end
                 end
             else
-                model:get_elector("wh_main_emp_sylvania"):set_visible(true)
+                model:get_elector("wh_main_emp_sylvania"):set_hidden(false)
                 model:get_elector("wh_main_emp_sylvania"):set_loyalty(50)
                 model:get_elector("wh_main_emp_sylvania"):set_status("normal")
                 local sylvania_regions = {
@@ -417,7 +417,7 @@ if model:get_core_data_with_key("allied_vlad") == true then
                 model:get_elector("wh_main_emp_averland"):change_loyalty(-10)
                 cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "subculture:wh_main_sc_emp_empire", "war", false, false, true);
                 model:get_elector("wh_main_vmp_schwartzhafen"):set_loyalty(45)
-                model:get_elector("wh_main_vmp_schwartzhafen"):set_visible(true)
+                model:get_elector("wh_main_vmp_schwartzhafen"):set_hidden(false)
                 model:get_elector("wh_main_vmp_schwartzhafen"):set_status("normal")
                 local sylvania_regions = {
                     "wh_main_western_sylvania_fort_oberstyre",
@@ -504,7 +504,7 @@ model:get_story_chain("vampire_wars"):finish()
                     end
                 end
             else --choice 2
-                model:get_elector("wh_main_emp_sylvania"):set_visible(true)
+                model:get_elector("wh_main_emp_sylvania"):set_hidden(false)
                 model:get_elector("wh_main_emp_sylvania"):set_loyalty(50)
                 model:get_elector("wh_main_emp_sylvania"):set_status("normal")
                 local sylvania_regions = {
@@ -534,10 +534,13 @@ end
 
 
 function eom_plot_events()
-    reikland_rebellion_add()
-    marienburg_rebellion_add()
-    marienburg_invasion_add()
-    vampire_wars_add()
+    if cm:get_faction(eom:empire()):is_human() then
+        eom:log("Started", "export_helpers__plot_events")
+        reikland_rebellion_add()
+        marienburg_rebellion_add()
+        marienburg_invasion_add()
+        vampire_wars_add()
+    end
 end
 
 
