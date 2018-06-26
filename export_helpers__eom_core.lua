@@ -123,3 +123,4 @@ core:add_listener(
 
 
 
+events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() eom:set_log_turn(cm:model():turn_number()) end;  

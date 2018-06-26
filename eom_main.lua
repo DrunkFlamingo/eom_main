@@ -1925,8 +1925,6 @@ function eom_model.load(self, savetable)
     --coredata
     self._coredata = savetable._coredata
     EOMLOG("Loaded core data!")
-
-    self:set_log_turn(cm:model():turn_number())
 end
 
 --ui

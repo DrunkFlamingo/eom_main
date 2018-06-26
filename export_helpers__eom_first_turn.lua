@@ -7,6 +7,13 @@ end
 
 local function eom_starting_settings()
     if cm:is_new_game() then
+        if cm:random_number(10) > 6 then
+            eom:set_core_data("vampire_war_turn", 30)
+            eom:set_core_data("marienburg_plot_turn", 55)
+        else
+            eom:set_core_data("vampire_war_turn", 55)
+            eom:set_core_data("marienburg_plot_turn", 30)
+        end
         out("EOM STARTING CHANGES RUNNING")
         local karl = "wh_main_emp_empire"
         local elector_diplo_list = {
@@ -64,8 +71,12 @@ local function eom_starting_settings()
         cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "wh_main_emp_marienburg")
 
 
-        if not cm:get_faction("wh_main_vmp_schwartzhafen"):is_human() then
-            cm:kill_all_armies_for_faction(cm:get_faction("wh_main_vmp_schwartzhafen"))
+            local vlad_armies = cm:get_faction("wh_main_vmp_schwartzhafen"):character_list()
+            for i = 0, vlad_armies:num_items() -1 do
+                cm:callback(function()
+                    cm:kill_character(vlad_armies:item_at(i):cqi(), true, true)
+                end, i+1/10)
+            end
     
             local provinces_to_transfer_to_mannfred = {
                 "wh_main_eastern_sylvania_eschen",
@@ -83,9 +94,10 @@ local function eom_starting_settings()
             end
 
             --prevent mannfredd from declaring war on the empire until we want him to
+            cm:force_diplomacy("all", "faction:wh_main_vmp_vampire_counts", "war", false, false, true)
             cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war", false, false, true)
+            cm:force_diplomacy("faction:"..karl, "faction:wh_main_vmp_vampire_counts", "war", true, false, true)
 
-        end
             --force marienburg and bretonnia to peace
             cm:force_make_peace("wh_main_brt_bretonnia", "wh_main_emp_marienburg");
             cm:force_declare_war("wh_main_brt_bretonnia", "wh_dlc05_vmp_mousillon", true, true);
@@ -103,13 +115,6 @@ local function eom_starting_settings()
 
         --randomize which plot events happen when
 
-        if cm:random_number(10) > 6 then
-            eom:set_core_data("vampire_war_turn", 30)
-            eom:set_core_data("marienburg_plot_turn", 55)
-        else
-            eom:set_core_data("vampire_war_turn", 55)
-            eom:set_core_data("marienburg_plot_turn", 30)
-        end
 
         out("EOM STARTING CHANGES FINISHED")
     end
