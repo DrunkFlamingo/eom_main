@@ -17,12 +17,12 @@ core:add_listener(
         if not eom:get_core_data_with_key("chaos_defeated") == true then
             local midgame_turn = eom:get_core_data_with_key("midgame_chaos_trigger_turn") --# assume midgame_turn: number
             local lategame_turn = eom:get_core_data_with_key("lategame_chaos_trigger_turn") --# assume lategame_turn: number
-            if midgame_turn >= cm:model():turn_number() then 
+            if midgame_turn <= cm:model():turn_number() then 
                 eom:advance_chaos_to_mid_game()
                 eom:set_core_data("midgame_chaos_trigger_turn", 999) 
                 return
             end
-            if lategame_turn >= cm:model():turn_number() then 
+            if lategame_turn <= cm:model():turn_number() then 
                 eom:advance_chaos_to_late_game()
                 eom:set_core_data("lategame_chaos_trigger_turn", 999) 
                 return
