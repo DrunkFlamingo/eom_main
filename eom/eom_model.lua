@@ -494,7 +494,7 @@ function eom_model.advance_chaos_to_mid_game(self)
     self:set_core_data("chaos_midgame_advanced", true)
 end
 --v function(self: EOM_MODEL)
-function eom_model.advance_chaos_to_mid_game(self)
+function eom_model.advance_chaos_to_late_game(self)
     if self:get_core_data_with_key("chaos_lategame_advanced") == true then
         self:log("not advancing chaos to midgame because it has already been advanced!")
         return
