@@ -93,23 +93,10 @@ local function empire_plot_and_events_check_human()
         eom:log("No event this turn")
     end
 
-    --revival events.
-    eom:log("Core event and plot check function checking revivification events")
-    for name, elector in pairs(eom:electors()) do
-        if eom:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() and (not elector:is_cult()) then
-        if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
-            elector:trigger_coup()
-            return
-        else
-            elector:trigger_expedition() 
-            return
-        end
-        end
-    end
     --elector falls
     eom:log("Core event and plot check function checking elector fallen events.")
     for name, elector in pairs(eom:electors()) do
-        if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
+        if (elector:turns_dead() > 20) and (elector:can_revive() == false) and (not elector:is_cult()) and cm:get_faction(name):is_dead() then
             eom:elector_fallen(name, true)
         end
     end
@@ -193,27 +180,11 @@ local function empire_plot_and_events_check_ai()
             end
         end
 
-        --revival events
-        eom:log("Core event and plot check function checking revivification events")
-        for name, elector in pairs(eom:electors()) do
-            if eom:get_elector_faction(name):is_dead() and elector:turns_dead() > 4 and elector:can_revive() and (not elector:is_cult()) then
-                if cm:get_region(elector:capital()):owning_faction():subculture() == "wh_main_sc_emp_empire" then
-                    elector:trigger_coup(true)
-                    return
-                else
-                    elector:trigger_expedition(true) 
-                    return
-                end
-            end
-        end
-
-
-
 
         --elector fallen events
         eom:log("Core event and plot check function checking elector fallen events.")
         for name, elector in pairs(eom:electors()) do
-            if elector:turns_dead() > 20 and elector:can_revive() == false and (not elector:is_cult()) then
+            if (elector:turns_dead() > 20) and (elector:can_revive() == false) and (not elector:is_cult()) and cm:get_faction(name):is_dead() then
                 eom:elector_fallen(name, false)
             end
         end

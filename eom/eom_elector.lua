@@ -354,46 +354,6 @@ end
 
 
 
---v function(self: EOM_ELECTOR, show_no_event: boolean?)
-function eom_elector.trigger_coup(self, show_no_event)
-    EOMLOG("triggering Coup D'etat spawn for elector ["..self:name().."] ")
-    local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
-    cm:create_force_with_general(
-        self:name(),
-        self:get_army_list(),
-        self:capital(),
-        cm:get_region(self:capital()):settlement():logical_position_x() + 1,
-        cm:get_region(self:capital()):settlement():logical_position_y() + 1,
-        "general",
-        self:leader_subtype(),
-        self:leader_forename(),
-        "",
-        self:leader_surname(), 
-        "",
-        true,
-        function(cqi)
-            local dx = cm:get_character_by_cqi(cqi):display_position_x()
-            local dy = cm:get_character_by_cqi(cqi):display_position_y()
-            if not show_no_event then
-                cm:show_message_event_located(
-                    EOM_GLOBAL_EMPIRE_FACTION,
-                    "event_feed_strings_text_coup_detat_title",
-                    "event_feed_strings_text_coup_detat_"..self:name().."_subtitle",
-                    "event_feed_strings_text_coup_detat_"..self:name().."_detail",
-                    dx,
-                    dy,
-                    true,
-                    591)
-            end
-        end)
-    cm:callback( function()
-        cm:transfer_region_to_faction(self:capital(), self:name())
-        cm:force_declare_war(self:name(), old_owner, false, false)
-        cm:treasury_mod(self:name(), 5000)
-
-    end, 0.2)
-    self:set_can_revive(false)
-end
 
 --v function(self: EOM_ELECTOR, transfer_no_region: boolean?)
 function eom_elector.respawn_at_capital(self, transfer_no_region)
@@ -422,43 +382,6 @@ function eom_elector.respawn_at_capital(self, transfer_no_region)
     end
 end
 
---v function(self: EOM_ELECTOR, show_no_event: boolean?)
-function eom_elector.trigger_expedition(self, show_no_event)
-    EOMLOG("triggering expedition spawn for elector ["..self:name().."] ")
-    local x, y = self:expedition_coordinates();
-    local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
-    cm:create_force_with_general(
-        self:name(),
-        self:get_army_list(),
-        self:expedition_region(),
-        x,
-        y,
-        "general",
-        self:leader_subtype(),
-        self:leader_forename(),
-        "",
-        self:leader_surname(), 
-        "",
-        true,
-        function(cqi)
-            if not show_no_event then
-                local dx = cm:get_character_by_cqi(cqi):display_position_x()
-                local dy = cm:get_character_by_cqi(cqi):display_position_y()
-                cm:show_message_event_located(
-                    EOM_GLOBAL_EMPIRE_FACTION,
-                    "event_feed_strings_text_expedition_title",
-                    "event_feed_strings_text_expedition_"..self:name().."_subtitle",
-                    "event_feed_strings_text_expedition_"..self:name().."_detail",
-                    dx,
-                    dy,
-                    true,
-                    591)
-            end
-        end)
-    cm:treasury_mod(self:name(), 10000)
-    cm:force_declare_war(self:name(), old_owner, false, false)
-    self:set_can_revive(false)
-end
 
 --v function(self: EOM_ELECTOR, callback: function(model: EOM_MODEL))
 function eom_elector.set_full_loyalty_callback(self, callback)
