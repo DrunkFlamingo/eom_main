@@ -102,7 +102,7 @@ local function eom_sigmar_civil_war()
     local civil_war_sigmar = eom:new_story_chain("civil_war_sigmar")
     civil_war_sigmar:add_stage_trigger(1, function(model--:EOM_MODEL
     )
-        return cm:model():turn_number() > 50 and model:get_elector("wh_main_emp_cult_of_sigmar"):loyalty() == 0 and model:get_elector("wh_main_emp_cult_of_sigmar"):status() == "normal"
+        return cm:model():turn_number() > 60 and model:get_elector("wh_main_emp_cult_of_sigmar"):loyalty() == 0 and model:get_elector("wh_main_emp_cult_of_sigmar"):status() == "normal"
     end)
     civil_war_sigmar:add_stage_callback(1, function(model--:EOM_MODEL
     )
@@ -292,7 +292,46 @@ end
 
 
 
+local function eom_talabecland_civil_war()
+    local civil_war_talabecland = eom:new_story_chain("civil_war_talabecland")
+    civil_war_talabecland:add_stage_trigger(1, function(model--:EOM_MODEL
+    )
+    local loyalty_cnd =  eom:get_elector("wh_main_emp_talabecland"):loyalty() == 0
+    local talabec_alive = not cm:get_faction("wh_main_emp_talabecland"):is_dead()
+    local civil_war_turn = cm:model():turn_number() > 60
+    return loyalty_cnd and talabec_alive and civil_war_turn
+    end)
+    civil_war_talabecland:add_stage_callback(1, function(model--:EOM_MODEL
+    )
+        if cm:get_faction("wh_main_emp_hochland"):is_dead() then
+            return
+        end
+        if cm:get_faction(model:empire()):is_human() then
+            cm:trigger_incident(model:empire(), "eom_main_civil_war_talabecland_1", true)
+        end
+        eom:grant_casus_belli("wh_main_emp_talabecland")
+        cm:treasury_mod("wh_main_emp_talabecland", 20000)
+        cm:force_declare_war("wh_main_emp_talabecland", "wh_main_emp_hochland", false, false)
+    end)
+    civil_war_talabecland:add_stage_trigger(1, function(model--:EOM_MODEL
+    )
 
+    return cm:get_faction("wh_main_emp_hochland"):is_dead() or cm:get_faction(eom:empire()):at_war_with(cm:get_faction("wh_main_emp_talabecland"))
+    end)
+
+
+end
+
+
+local function eom_hochland_civil_war()
+
+
+end
+
+local function eom_stirland_civil_war()
+
+
+end
 
 
 
@@ -303,6 +342,9 @@ local function eom_empire_add_civil_wars()
     eom_vlad_civil_war()
     eom_sigmar_civil_war()
     eom_ulric_civil_war()
+    eom_talabecland_civil_war()
+    eom_hochland_civil_war()
+    eom_stirland_civil_war()
 end
 
 
