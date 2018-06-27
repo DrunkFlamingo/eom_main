@@ -36,7 +36,7 @@ local function eom_vlad_civil_war()
     local civil_war_vlad = eom:new_story_chain("civil_war_vlad")
     civil_war_vlad:add_stage_trigger(1, function(model--:EOM_MODEL
     )
-        local chaos_invasion_over = true --NOTE: figure out a way to know this.
+        local chaos_invasion_over = eom:get_core_data_with_key("chaos_defeated") --# assume chaos_invasion_over: boolean
         local vlad_will_rebel = model:get_core_data_with_key("vlad_civil_war") --# assume vlad_will_rebel: boolean
         local after_chaos_condition = (chaos_invasion_over and vlad_will_rebel and model:get_elector("wh_main_vmp_schwartzhafen"):status() == "normal")
         local before_chaos_condition = (model:get_elector("wh_main_vmp_schwartzhafen"):loyalty() == 0) and (model:get_elector("wh_main_vmp_schwartzhafen"):status() == "normal")
