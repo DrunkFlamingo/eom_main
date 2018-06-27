@@ -777,11 +777,18 @@ end
 --v function() --> map<string, EOM_CORE_DATA>
 function return_starting_core_data()
     local cd = {} --:map<string, EOM_CORE_DATA>
+    
+
     cd.next_event_turn = 2
     cd.block_events_for_plot = true
     cd.current_plot = "reikland_rebellion"
     cd.last_unjust_war = 0
-
+    cd["vampire_war_turn"] = 30
+    cd["marienburg_plot_turn"] = 55
+    cd["chaos_end_game_has_started"] = false
+    cd["chaos_defeated"] = false
+    cd["midgame_chaos_trigger_turn"] = 999
+    cd["lategame_chaos_trigger_turn"] = 999
     return cd
 end
 
@@ -1891,6 +1898,29 @@ function eom_model.offer_capitulation(self, name)
     )
 end
 
+
+--tunnel to CI
+--# assume ci_pre_late_game_start: function(reason: string)
+--# assume ci_mid_game_start: function(reason: string)
+
+--v function(self: EOM_MODEL)
+function eom_model.advance_chaos_to_mid_game(self)
+    if self:get_core_data_with_key("chaos_midgame_advanced") == true then
+        self:log("not advancing chaos to midgame because it has already been advanced!")
+        return
+    end
+    ci_mid_game_start("Empire Of Man: Drunk Flamingo")
+    self:set_core_data("chaos_midgame_advanced", true)
+end
+--v function(self: EOM_MODEL)
+function eom_model.advance_chaos_to_late_game(self)
+    if self:get_core_data_with_key("chaos_lategame_advanced") == true then
+        self:log("not advancing chaos to midgame because it has already been advanced!")
+        return
+    end
+    ci_pre_late_game_start("Empire Of Man: Drunk Flamingo")
+    self:set_core_data("chaos_lategame_advanced", true)
+end
 
 
 

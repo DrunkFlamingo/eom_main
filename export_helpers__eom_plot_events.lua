@@ -540,6 +540,10 @@ function eom_plot_events()
         marienburg_rebellion_add()
         marienburg_invasion_add()
         vampire_wars_add()
+        if cm:random_number(10) > 4 then
+            eom:set_core_data("vampire_war_turn", 55)
+            eom:set_core_data("marienburg_plot_turn", 30)
+        end
     end
 end
 

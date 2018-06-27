@@ -14,6 +14,12 @@ local function eom_starting_settings()
             eom:set_core_data("vampire_war_turn", 55)
             eom:set_core_data("marienburg_plot_turn", 30)
         end
+        eom:set_core_data("chaos_end_game_has_started", false)
+        eom:set_core_data("chaos_defeated", false)
+        eom:set_core_data("midgame_chaos_trigger_turn", 999)
+        eom:set_core_data("lategame_chaos_trigger_turn", 999)
+
+
         out("EOM STARTING CHANGES RUNNING")
         local karl = "wh_main_emp_empire"
         local elector_diplo_list = {
@@ -39,7 +45,7 @@ local function eom_starting_settings()
             for j = 1, #elector_diplo_list do
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "defensive alliance", false, false, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "peace", true, true, false);
-                cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "war, join war", false, false, false);
+                cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "war,join war", false, false, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "form confederation", false, false, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "military alliance", false, false, false);
             end
@@ -94,14 +100,14 @@ local function eom_starting_settings()
             end
 
             --prevent mannfredd from declaring war on the empire until we want him to
-            cm:force_diplomacy("all", "faction:wh_main_vmp_vampire_counts", "war, join war", false, false, false)
-            cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war, join war", false, false, false)
+            cm:force_diplomacy("all", "faction:wh_main_vmp_vampire_counts", "war,join war", false, false, false)
+            cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war,join war", false, false, false)
             cm:force_diplomacy("faction:"..karl, "faction:wh_main_vmp_vampire_counts", "war", true, false, false)
 
             --force marienburg and bretonnia to peace
             cm:force_make_peace("wh_main_brt_bretonnia", "wh_main_emp_marienburg");
             cm:force_declare_war("wh_main_brt_bretonnia", "wh_dlc05_vmp_mousillon", true, true);
-            cm:force_diplomacy("faction:wh_main_emp_marienburg", "faction:wh_main_brt_bretonnia", "war, join war", false, false, false)
+            cm:force_diplomacy("faction:wh_main_emp_marienburg", "faction:wh_main_brt_bretonnia", "war,join war", false, false, false)
       
 
         --anti beastmen forces
