@@ -14,6 +14,12 @@ local function eom_starting_settings()
             eom:set_core_data("vampire_war_turn", 55)
             eom:set_core_data("marienburg_plot_turn", 30)
         end
+        eom:set_core_data("chaos_end_game_has_started", false)
+        eom:set_core_data("chaos_defeated", false)
+        eom:set_core_data("midgame_chaos_trigger_turn", 999)
+        eom:set_core_data("lategame_chaos_trigger_turn", 999)
+
+
         out("EOM STARTING CHANGES RUNNING")
         local karl = "wh_main_emp_empire"
         local elector_diplo_list = {

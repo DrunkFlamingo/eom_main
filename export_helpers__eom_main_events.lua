@@ -397,6 +397,7 @@ local eom_main_events_table = {
         end,
             [2] = function(model --:EOM_MODEL
             ) 
+            model:set_core_data("vlad_civil_war", true)
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-20)
             model:change_sigmarite_loyalties(-10)
             model:get_elector("wh_main_emp_averland"):change_loyalty(-10)
@@ -781,6 +782,7 @@ local eom_main_events_table = {
         end,
             [2] = function(model --:EOM_MODEL
             ) 
+            model:set_core_data("vlad_civil_war", true)
             model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(-20)
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
             model:change_sigmarite_loyalties(10)
@@ -1068,6 +1070,7 @@ local eom_main_events_table = {
         end,
             [2] = function(model --:EOM_MODEL
             ) 
+            model:set_core_data("vlad_civil_war", true)
             model:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(-25)
         end
         }
