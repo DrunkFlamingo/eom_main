@@ -783,13 +783,8 @@ function return_starting_core_data()
     cd.block_events_for_plot = true
     cd.current_plot = "reikland_rebellion"
     cd.last_unjust_war = 0
-    if cm:random_number(10) > 6 then
-        cd["vampire_war_turn"] = 30
-        cd["marienburg_plot_turn"] = 55
-    else
-        cd["vampire_war_turn"] = 55
-        cd["marienburg_plot_turn"] = 30
-    end
+    cd["vampire_war_turn"] = 30
+    cd["marienburg_plot_turn"] = 55
     cd["chaos_end_game_has_started"] = false
     cd["chaos_defeated"] = false
     cd["midgame_chaos_trigger_turn"] = 999

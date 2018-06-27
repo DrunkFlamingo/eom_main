@@ -4,7 +4,7 @@ eom = _G.eom
 if not eom then
     script_error("EOM IS NOT FOUND!")
 end
-
+local function eom_ci_listeners()
 
 core:add_listener(
     "EOMTurnStart",
@@ -53,3 +53,11 @@ core:add_listener(
             end,
             false);
     end
+
+
+end
+
+
+
+
+    events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() eom_ci_listeners() end;
