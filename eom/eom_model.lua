@@ -481,8 +481,8 @@ function eom_model.offer_capitulation(self, name)
 end
 
 --tunnel to CI
---# assume ci_pre_late_game_start: function(reason)
---# assume ci_mid_game_start: function(reason)
+--# assume ci_pre_late_game_start: function(reason: string)
+--# assume ci_mid_game_start: function(reason: string)
 
 --v function(self: EOM_MODEL)
 function eom_model.advance_chaos_to_mid_game(self)

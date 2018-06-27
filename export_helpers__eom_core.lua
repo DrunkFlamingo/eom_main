@@ -7,6 +7,17 @@ end
 
 local function empire_plot_and_events_check()
     eom:log("Entered", "eom_model.event_and_plot_check(self)")
+
+    if cm:get_saved_value("ci_trigger_mid_game_event_on_turn_start") == true then
+        eom:log("aborting for the chaos invasion")
+        return
+    end
+    if cm:get_saved_value("ci_trigger_late_game_event_on_turn_start") == true then
+        eom:log("aborting for the chaos invasion")
+        return
+    end
+
+
     --capitulation
     eom:log("Checking for Electors willing to capitulate")
     for name, elector in pairs(eom:electors()) do
