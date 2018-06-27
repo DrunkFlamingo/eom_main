@@ -478,7 +478,12 @@
 --# assume MISSION_MANAGER.set_should_cancel_before_issuing: method(boolean?)
 --# assume MISSION_MANAGER.trigger: method(dismiss_callback: function?, delay: number?)
 
+-- LL UNLOCK OBJECT
+--# assume global class LL_UNLOCK
 
+
+--# assume LL_UNLOCK.new: method(faction_key: string, startpos_id: string, forename_key: string, event: string, condition: (function(context: WHATEVER) --> boolean)) --> LL_UNLOCK
+--# assume LL_UNLOCK.start: method()
 
 
 
@@ -492,3 +497,4 @@
 --# assume global __write_output_to_logfile: boolean
 --# assume global mission_manager: MISSION_MANAGER
 --# assume global rite_unlock: RITE_UNLOCK
+--# assume global ll_unlock: LL_UNLOCK
