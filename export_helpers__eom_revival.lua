@@ -11,8 +11,9 @@ local function is_elector_valid_for_revive(elector)
     local can_revive = elector:can_revive()
     local is_not_cult = not elector:is_cult()
     local status_normal = (elector:status() == "normal")
+    local is_dead_turns = elector:turns_dead() > 3
 
-    return is_dead and can_revive and is_not_cult and status_normal
+    return is_dead and can_revive and is_not_cult and status_normal and is_dead_turns
 end
 
 
@@ -117,7 +118,9 @@ end
 local function eom_expedition_check(is_ai)
     for name, elector in pairs(eom:electors()) do
         if (cm:get_region(elector:capital()):is_abandoned()) or (  cm:get_region(elector:capital()):owning_faction():subculture() ~= "wh_main_sc_emp_empire" ) then
-            trigger_expedition_for_elector(elector, is_ai)
+            if is_elector_valid_for_revive(elector) then
+                trigger_expedition_for_elector(elector, is_ai)
+            end
         end
     end
 end
