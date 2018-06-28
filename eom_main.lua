@@ -206,7 +206,7 @@ function EOMNEWLOG()
     popLog :close()
     cm:set_saved_value("eom_new_log", true)
 end
-EOMNEWLOG()
+--EOMNEWLOG()
 
 --v function(msg: string)
 function EOM_ERROR(msg)
