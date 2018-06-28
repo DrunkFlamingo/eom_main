@@ -386,7 +386,7 @@ function sigmar_start_pos()
     sp._expeditionY = 443--:number
     sp._knights = false;
     sp._canRevive = false;
-    sp._unitList = get_default_start_army()
+    sp._unitList = "wh_dlc04_emp_inf_flagellants_0,wh_dlc04_emp_inf_flagellants_0,wh_dlc04_emp_inf_flagellants_0,wh_dlc04_emp_inf_flagellants_0,wh_dlc04_emp_inf_flagellants_0,wh_dlc04_emp_inf_free_company_militia_0,wh_dlc04_emp_inf_free_company_militia_0,wh_dlc04_emp_inf_free_company_militia_0,wh_dlc04_emp_inf_free_company_militia_0,wh_main_emp_art_great_cannon,wh_main_emp_art_great_cannon,wh_main_emp_cav_empire_knights,wh_main_emp_cav_empire_knights,wh_main_emp_inf_halberdiers,wh_main_emp_inf_halberdiers,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_veh_luminark_of_hysh_0"
     sp._expeditionRegion = "wh_main_stirland_wurtbad"
     sp._turnsDead = 0--:number
     sp._isCult = true;
