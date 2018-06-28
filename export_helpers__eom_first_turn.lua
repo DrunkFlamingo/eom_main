@@ -7,17 +7,8 @@ end
 
 local function eom_starting_settings()
     if cm:is_new_game() then
-        if cm:random_number(10) > 6 then
-            eom:set_core_data("vampire_war_turn", 30)
-            eom:set_core_data("marienburg_plot_turn", 55)
-        else
-            eom:set_core_data("vampire_war_turn", 55)
-            eom:set_core_data("marienburg_plot_turn", 30)
-        end
-        eom:set_core_data("chaos_end_game_has_started", false)
-        eom:set_core_data("chaos_defeated", false)
-        eom:set_core_data("midgame_chaos_trigger_turn", 999)
-        eom:set_core_data("lategame_chaos_trigger_turn", 999)
+
+
 
 
         out("EOM STARTING CHANGES RUNNING")
@@ -102,6 +93,7 @@ local function eom_starting_settings()
             --prevent mannfredd from declaring war on the empire until we want him to
             cm:force_diplomacy("all", "faction:wh_main_vmp_vampire_counts", "war,join war", false, false, false)
             cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war,join war", false, false, false)
+            cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "subculture:wh_main_sc_emp_empire", "peace", false, false, false)
             cm:force_diplomacy("faction:"..karl, "faction:wh_main_vmp_vampire_counts", "war", true, false, false)
 
             --force marienburg and bretonnia to peace
