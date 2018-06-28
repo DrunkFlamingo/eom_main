@@ -950,7 +950,6 @@ function eom_plot.save(self)
     cm:set_saved_value("plot_line_stage"..self:name(), self:current_stage())
 end
 
-
 local eom_action = {} --# assume eom_action: EOM_ACTION
 
 --v function(key: string, conditional: function(eom: EOM_MODEL) --> boolean, choices: map<number, function(eom: EOM_MODEL)>, eom: EOM_MODEL) --> EOM_ACTION
@@ -992,6 +991,20 @@ function eom_action.do_choice(self, choice)
     local choice_callback = self._choices[choice]
     choice_callback(self:model())
 end
+
+--v function(self: EOM_ACTION)
+function eom_action.act_ai(self)
+    EOMLOG("Preforming action ["..self:key().."] for an AI emperor")
+    if self._choices[3] ~= nil and self._choices[4] ~= nil then
+        local choice = cm:random_number(4)
+        local choice_callback = self._choices[choice]
+        choice_callback(self:model())
+    else   
+        local choice = cm:random_number(2)
+        local choice_callback = self._choices[choice]
+        choice_callback(self:model())
+    end
+end
     
 
 --v function(self: EOM_ACTION)
@@ -1010,6 +1023,7 @@ function eom_action.act(self)
         false)
 end
     
+
 local eom_elector = {} --# assume eom_elector: EOM_ELECTOR
 
 --v function(info: ELECTOR_INFO) --> EOM_ELECTOR
@@ -1366,44 +1380,6 @@ end
 
 
 
---v function(self: EOM_ELECTOR)
-function eom_elector.trigger_coup(self)
-    EOMLOG("triggering Coup D'etat spawn for elector ["..self:name().."] ")
-    local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
-    cm:create_force_with_general(
-        self:name(),
-        self:get_army_list(),
-        self:capital(),
-        cm:get_region(self:capital()):settlement():logical_position_x() + 1,
-        cm:get_region(self:capital()):settlement():logical_position_y() + 1,
-        "general",
-        self:leader_subtype(),
-        self:leader_forename(),
-        "",
-        self:leader_surname(), 
-        "",
-        true,
-        function(cqi)
-            local dx = cm:get_character_by_cqi(cqi):display_position_x()
-            local dy = cm:get_character_by_cqi(cqi):display_position_y()
-            cm:show_message_event_located(
-                EOM_GLOBAL_EMPIRE_FACTION,
-                "event_feed_strings_text_coup_detat_title",
-                "event_feed_strings_text_coup_detat_"..self:name().."_subtitle",
-                "event_feed_strings_text_coup_detat_"..self:name().."_detail",
-                dx,
-                dy,
-                true,
-                591)
-        end)
-    cm:callback( function()
-        cm:transfer_region_to_faction(self:capital(), self:name())
-        cm:force_declare_war(self:name(), old_owner, false, false)
-        cm:treasury_mod(self:name(), 5000)
-
-    end, 0.2)
-    self:set_can_revive(false)
-end
 
 --v function(self: EOM_ELECTOR, transfer_no_region: boolean?)
 function eom_elector.respawn_at_capital(self, transfer_no_region)
@@ -1432,41 +1408,6 @@ function eom_elector.respawn_at_capital(self, transfer_no_region)
     end
 end
 
---v function(self: EOM_ELECTOR)
-function eom_elector.trigger_expedition(self)
-    EOMLOG("triggering expedition spawn for elector ["..self:name().."] ")
-    local x, y = self:expedition_coordinates();
-    local old_owner = tostring(cm:get_region(self:capital()):owning_faction():name());
-    cm:create_force_with_general(
-        self:name(),
-        self:get_army_list(),
-        self:expedition_region(),
-        x,
-        y,
-        "general",
-        self:leader_subtype(),
-        self:leader_forename(),
-        "",
-        self:leader_surname(), 
-        "",
-        true,
-        function(cqi)
-            local dx = cm:get_character_by_cqi(cqi):display_position_x()
-            local dy = cm:get_character_by_cqi(cqi):display_position_y()
-            cm:show_message_event_located(
-                EOM_GLOBAL_EMPIRE_FACTION,
-                "event_feed_strings_text_expedition_title",
-                "event_feed_strings_text_expedition_"..self:name().."_subtitle",
-                "event_feed_strings_text_expedition_"..self:name().."_detail",
-                dx,
-                dy,
-                true,
-                591)
-        end)
-    cm:treasury_mod(self:name(), 10000)
-    cm:force_declare_war(self:name(), old_owner, false, false)
-    self:set_can_revive(false)
-end
 
 --v function(self: EOM_ELECTOR, callback: function(model: EOM_MODEL))
 function eom_elector.set_full_loyalty_callback(self, callback)
@@ -1482,9 +1423,12 @@ function eom_elector.set_fully_loyal(self, model)
     self:set_status("loyal")
     self:make_fully_loyal()
     self._fullLoyaltyCallback(model)
-    cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_full_loyalty_"..self:name(), true)
+    if cm:get_faction(EOM_GLOBAL_EMPIRE_FACTION):is_human() then
+        cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_full_loyalty_"..self:name(), true)
+    end
     cm:force_confederation(EOM_GLOBAL_EMPIRE_FACTION, self:name())
 end
+
 
 
 local eom_model = {} --# assume eom_model: EOM_MODEL
@@ -1599,6 +1543,7 @@ function eom_model.is_elector_valid(self, name)
     EOMLOG("is Elector Valid returning ["..tostring(elector_active and capital_owned and living and first_dilemma_triggered).."] ")
     return elector_active and capital_owned and living and first_dilemma_triggered
 end
+    
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
 function eom_model.is_elector_valid_for_taxes(self, name)
@@ -1738,7 +1683,9 @@ function eom_model.elector_rebellion_start(self, name)
     EOMLOG("triggering rebellion for ["..name.."] ")
     local elector = self:get_elector(name)
     elector:set_status("open_rebellion")
-    cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_"..name.."_open_rebellion", true)
+    if cm:get_faction("EOM_GLOBAL_EMPIRE_FACTION"):is_human() then
+        cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_"..name.."_open_rebellion", true)
+    end
     if elector:is_cult() then
         local x, y = elector:expedition_coordinates()
         cm:create_force(name, elector:get_army_list(), elector:expedition_region(), x, y, true, true)
@@ -1830,6 +1777,7 @@ function eom_model.trigger_restoration_dilemma(self, name)
 end
 
 --war systems
+
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.grant_casus_belli(self, name)
     
@@ -1841,7 +1789,7 @@ end
 function eom_model.has_casus_belli_against(self, name)
     return cm:get_faction(self:empire()):has_effect_bundle("eom_"..name.."_casus_belli")
 end
-
+    
 
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
@@ -1898,10 +1846,10 @@ function eom_model.offer_capitulation(self, name)
     )
 end
 
-
 --tunnel to CI
 --# assume ci_pre_late_game_start: function(reason: string)
 --# assume ci_mid_game_start: function(reason: string)
+--# assume ci_get_archaon: function() --> CA_CHAR
 
 --v function(self: EOM_MODEL)
 function eom_model.advance_chaos_to_mid_game(self)
@@ -1909,22 +1857,44 @@ function eom_model.advance_chaos_to_mid_game(self)
         self:log("not advancing chaos to midgame because it has already been advanced!")
         return
     end
+    if self:get_core_data_with_key("chaos_defeated") == true then
+        self:log("not advacing chaos to midgame because it was already defeated")
+        return
+    end
+
+    if self:get_core_data_with_key("chaos_end_game_has_started") == true then
+        self:log("not advancing chaos to midgame because it is already in lategame!")
+        return
+    end
+
     ci_mid_game_start("Empire Of Man: Drunk Flamingo")
     self:set_core_data("chaos_midgame_advanced", true)
 end
 --v function(self: EOM_MODEL)
 function eom_model.advance_chaos_to_late_game(self)
     if self:get_core_data_with_key("chaos_lategame_advanced") == true then
-        self:log("not advancing chaos to midgame because it has already been advanced!")
+        self:log("not advancing chaos to lategame because it has already been advanced!")
         return
     end
+    if self:get_core_data_with_key("chaos_defeated") == true then
+        self:log("not advacing chaos to lategame because it was already defeated")
+        return
+    end
+
+    if self:get_core_data_with_key("chaos_end_game_has_started") == true then
+        self:log("not advancing chaos to lategame because it is already in lategame!")
+        return
+    end
+
+
     ci_pre_late_game_start("Empire Of Man: Drunk Flamingo")
     self:set_core_data("chaos_lategame_advanced", true)
 end
 
-
-
-
+--v function(self: EOM_MODEL) --> CA_CHAR
+function eom_model.get_archeon(self)
+    return ci_get_archaon()
+end
 
 
 
@@ -2256,7 +2226,6 @@ end
 
 
 
-
 --CORE
 eom = eom_model.init()
 _G.eom = eom
@@ -2268,6 +2237,7 @@ core:add_ui_created_callback(function()
     local button = eom:view():get_button()
     button:SetVisible(true)
 end);
+
 
 cm:add_saving_game_callback(
     function(context)
@@ -2296,5 +2266,4 @@ cm:add_loading_game_callback(
         end
     end
 )
-
 
