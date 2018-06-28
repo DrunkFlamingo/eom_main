@@ -314,6 +314,7 @@
 --# assume CA_REGION.slot_list: method() --> CA_SLOT_LIST
 --# assume CA_REGION.is_province_capital: method() --> boolean
 --# assume CA_REGION.building_exists: method(building: string) --> boolean
+--# assume CA_REGION.province_name: method() --> string
 
 -- SETTLEMENT
 --# assume CA_SETTLEMENT.logical_position_x: method() --> number
@@ -478,7 +479,12 @@
 --# assume MISSION_MANAGER.set_should_cancel_before_issuing: method(boolean?)
 --# assume MISSION_MANAGER.trigger: method(dismiss_callback: function?, delay: number?)
 
+-- LL UNLOCK OBJECT
+--# assume global class LL_UNLOCK
 
+
+--# assume LL_UNLOCK.new: method(faction_key: string, startpos_id: string, forename_key: string, event: string, condition: (function(context: WHATEVER) --> boolean)) --> LL_UNLOCK
+--# assume LL_UNLOCK.start: method()
 
 
 
@@ -492,3 +498,4 @@
 --# assume global __write_output_to_logfile: boolean
 --# assume global mission_manager: MISSION_MANAGER
 --# assume global rite_unlock: RITE_UNLOCK
+--# assume global ll_unlock: LL_UNLOCK

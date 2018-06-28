@@ -1076,13 +1076,11 @@ local eom_main_events_table = {
         }
     }, 
 }--:vector<EOM_EVENT>
-if cm:get_faction(eom:empire()):is_human() then
     eom:log("Adding Main Events", "export_helpers__eom_main_events")
     for i = 1, #eom_main_events_table do 
         local current_event = eom_main_events_table[i];
         eom:add_event(current_event)
     end
-end
 end
 
 events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() eom_empire_main_events() end;

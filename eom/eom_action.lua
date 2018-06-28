@@ -39,6 +39,20 @@ function eom_action.do_choice(self, choice)
     local choice_callback = self._choices[choice]
     choice_callback(self:model())
 end
+
+--v function(self: EOM_ACTION)
+function eom_action.act_ai(self)
+    EOMLOG("Preforming action ["..self:key().."] for an AI emperor")
+    if self._choices[3] ~= nil and self._choices[4] ~= nil then
+        local choice = cm:random_number(4)
+        local choice_callback = self._choices[choice]
+        choice_callback(self:model())
+    else   
+        local choice = cm:random_number(2)
+        local choice_callback = self._choices[choice]
+        choice_callback(self:model())
+    end
+end
     
 
 --v function(self: EOM_ACTION)
