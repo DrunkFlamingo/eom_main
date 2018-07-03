@@ -61,7 +61,7 @@ function marienburg_rebellion_add()
         marienburg_add_remove_bundle_listener()
         cm:callback(function()
             cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_empire", false, false)
-            cm:treasury_mod("wh_main_emp_marienburg", 10000)
+            cm:treasury_mod("wh_main_emp_marienburg", 5000)
         end, 0.1)
 
 
@@ -88,8 +88,9 @@ function marienburg_rebellion_add()
                 if context:choice() == 0 then 
                     cm:force_make_peace("wh_main_emp_marienburg", "wh_main_emp_empire")
                     model:get_elector("wh_main_emp_marienburg"):set_status("normal")
-                    model:get_elector("wh_main_emp_marienburg"):set_loyalty(45)
+                    model:get_elector("wh_main_emp_marienburg"):set_loyalty(65)
                     model:get_elector("wh_main_emp_marienburg"):set_can_revive(true)
+                    cm:apply_effect_bundle("eom_wh_main_emp_marienburg_taxation_3", eom:empire(), 0)
                 else
                     cm:force_declare_war("wh_main_brt_bretonnia", "wh_main_emp_empire", false, false)
                     cm:treasury_mod("wh_main_brt_bretonnia", 5000)
