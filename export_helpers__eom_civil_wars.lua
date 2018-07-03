@@ -645,8 +645,8 @@ local function eom_empire_add_civil_wars()
     eom_sigmar_civil_war()
     eom_ulric_civil_war()
     eom_talabecland_civil_war()
- --   eom_hochland_civil_war()
-  --  eom_stirland_civil_war()
+    eom_hochland_civil_war()
+    eom_stirland_civil_war()
 end
 
 
