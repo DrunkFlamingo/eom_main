@@ -200,9 +200,7 @@ local eom_main_events_table = {
         key = "eom_dilemma_wissenland_1",
         conditional = function(model --:EOM_MODEL
         )
-            return false
-            --NOT IN BETA1
-            --return model:is_elector_valid("wh_main_emp_wissenland") and (not cm:get_faction("wh_main_brt_parravon"):is_dead())
+            return model:is_elector_valid("wh_main_emp_wissenland") and (not cm:get_faction("wh_main_brt_parravon"):is_dead()) and cm:get_faction(eom:empire()):treasury() > 2500
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -304,9 +302,7 @@ local eom_main_events_table = {
         key = "eom_dilemma_cult_of_sigmar_1",
         conditional = function(model --:EOM_MODEL
         )
-            --BETA1
-            return false
-            --return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_wissenland") and model:is_elector_valid("wh_main_emp_middenland")
+            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_wissenland") and model:is_elector_valid("wh_main_emp_middenland")
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -314,21 +310,17 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
             model:get_elector("wh_main_emp_wissenland"):change_loyalty(-10)
             model:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
-            --NOTE: Increased Skaven Corruption Payload
         end,
             [2] = function(model --:EOM_MODEL
             ) 
-            --NOTE: Panic Payload
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-25) 
             model:change_loyalty_for_all_except({"wh_main_emp_cult_of_sigmar", "wh_main_emp_cult_of_ulric"}, 10)
-
         end,
             [3] = function(model --: EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(5)
             model:get_elector("wh_main_emp_wissenland"):change_loyalty(5)
             model:get_elector("wh_main_emp_middenland"):change_loyalty(5)
-            --NOTE: Reduced Tax Income Payload
         end,
             [4] = function(model --: EOM_MODEL
             ) 
@@ -342,20 +334,16 @@ local eom_main_events_table = {
         key = "eom_dilemma_marienburg_1",
         conditional = function(model --:EOM_MODEL
         )
-            return false
-            --not in beta1
-            --return (not cm:get_faction("wh2_main_hef_eataine")) and model:is_elector_valid("wh_main_emp_marienburg") and cm:get_faction("wh_main_emp_empire"):treasury() > 5000
+            return (not cm:get_faction("wh2_main_hef_eataine")) and model:is_elector_valid("wh_main_emp_marienburg") and cm:get_faction("wh_main_emp_empire"):treasury() > 5000
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_marienburg"):change_loyalty(-15)
-            --NOTE: Negative relations with Lothern payload.
         end,
             [2] = function(model --:EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_marienburg"):change_loyalty(10)
-            --NOTE: Treasury Cost Payload
         end
         }
     },
@@ -363,21 +351,17 @@ local eom_main_events_table = {
         key = "eom_dilemma_sylvania_1",
         conditional = function(model --:EOM_MODEL
         )
-            --note: not in beta 1
-            return false
-            --return model:is_elector_valid("wh_main_emp_sylvania") and cm:get_faction("wh_main_emp_empire"):treasury() > 6000
+            return model:is_elector_valid("wh_main_emp_sylvania") and cm:get_faction("wh_main_emp_empire"):treasury() > 6000
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_sylvania"):change_loyalty(-10)
-           -- cm:apply_effect_bundle_to_region("NEEDTOMAKE", "CASTLEDRAKENHOF")
-           -- Create bundle to apply corruption to drakenhof
+           cm:apply_effect_bundle_to_region("eom_dilemma_sylvania_1_corruption", "wh_main_eastern_sylvania_castle_drakenhof", 10)
         end,
             [2] = function(model --:EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_sylvania"):change_loyalty(20)
-            --NOTE: Treasury Cost Payload
         end
         }
     },
@@ -505,9 +489,7 @@ local eom_main_events_table = {
         key = "eom_dilemma_middenland_2",
         conditional = function(model --:EOM_MODEL
         )
-            return false
-            --not in beta 1
-            --return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_middenland") and model:is_elector_valid("wh_main_emp_cult_of_ulric")
+            return model:is_elector_valid("wh_main_emp_cult_of_sigmar") and model:is_elector_valid("wh_main_emp_middenland") and model:is_elector_valid("wh_main_emp_cult_of_ulric")
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -531,7 +513,7 @@ local eom_main_events_table = {
             [4] = function(model --: EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
-            --NOTE: add reduced income payload
+
         end
         }
     },
@@ -565,9 +547,8 @@ local eom_main_events_table = {
     {
         key = "eom_dilemma_ostland_2",
         conditional = function(model --:EOM_MODEL
-        )   return false
-            --not in beta 1
-            --return model:is_elector_valid("wh_main_emp_ostland") and model:is_elector_valid("wh_main_emp_hochland") and (not model:get_core_data_with_key("hochland_ostland_allied") == true)
+        )  
+            return model:is_elector_valid("wh_main_emp_ostland") and model:is_elector_valid("wh_main_emp_hochland") and (not model:get_core_data_with_key("hochland_ostland_allied") == true)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -578,7 +559,6 @@ local eom_main_events_table = {
             [2] = function(model --:EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_ostland"):change_loyalty(10)
-            --NOTE Add Increased building cost debuff payload
         end,
             [3] = function(model --: EOM_MODEL
             ) 
@@ -713,8 +693,7 @@ local eom_main_events_table = {
         key = "eom_dilemma_marienburg_2",
         conditional = function(model --:EOM_MODEL
         )
-            return false
-            --return model:is_elector_valid("wh_main_emp_marienburg") and model:is_elector_valid("wh_main_emp_middenland") and (cm:get_faction("wh_main_emp_empire"):treasury() > 7000)
+            return model:is_elector_valid("wh_main_emp_marienburg") and model:is_elector_valid("wh_main_emp_middenland") and (cm:get_faction("wh_main_emp_empire"):treasury() > 7000)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
@@ -723,15 +702,46 @@ local eom_main_events_table = {
             model:get_elector("wh_main_emp_middenland"):change_loyalty(15)
             cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_middenland", false, false)
             model:grant_casus_belli("wh_main_emp_marienburg")
-            --@ sam there are effects for casus belli's in the effects table.
-            --ADD COMMANDS FOR CARROBURG INVOLVEMENT
+            local carroburg_region = cm:get_region("wh_main_middenland_carroburg")
+
+            cm:create_force("wh_main_emp_carroburg",
+            "wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_halberdiers,wh_main_emp_inf_halberdiers,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_handgunners,wh_main_emp_inf_handgunners,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen",
+            "wh_main_middenland_carroburg",
+            carroburg_region:settlement():logical_position_x() + 1,
+            carroburg_region:settlement():logical_position_y() + 2,
+            true,
+            true,
+            function(cqi)
+
+            end)
+            cm:callback(function()
+                cm:transfer_region_to_faction("wh_main_middenland_carroburg", "wh_main_emp_carroburg")
+                cm:treasury_mod("wh_main_emp_carroburg", 3000)
+                cm:force_make_vassal("wh_main_emp_marienburg", "wh_main_emp_carroburg")
+            end, 0.5)
             
         end,
             [2] = function(model --:EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_marienburg"):change_loyalty(15)
             model:get_elector("wh_main_emp_middenland"):change_loyalty(-25)
-            --ADD COMMANDS FOR CARROBURG INVOLVEMENT
+            local carroburg_region = cm:get_region("wh_main_middenland_carroburg")
+
+            cm:create_force("wh_main_emp_carroburg",
+            "wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_halberdiers,wh_main_emp_inf_halberdiers,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_handgunners,wh_main_emp_inf_handgunners,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen",
+            "wh_main_middenland_carroburg",
+            carroburg_region:settlement():logical_position_x() + 1,
+            carroburg_region:settlement():logical_position_y() + 2,
+            true,
+            true,
+            function(cqi)
+
+            end)
+            cm:callback(function()
+                cm:transfer_region_to_faction("wh_main_middenland_carroburg", "wh_main_emp_carroburg")
+                cm:treasury_mod("wh_main_emp_carroburg", 3000)
+                cm:force_make_vassal("wh_main_emp_marienburg", "wh_main_emp_carroburg")
+            end, 0.5)
         end,
             [3] = function(model --: EOM_MODEL
             ) 
@@ -743,6 +753,23 @@ local eom_main_events_table = {
             ) 
             model:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
             cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_middenland", false, false)
+            local carroburg_region = cm:get_region("wh_main_middenland_carroburg")
+
+            cm:create_force("wh_main_emp_carroburg",
+            "wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_halberdiers,wh_main_emp_inf_halberdiers,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_handgunners,wh_main_emp_inf_handgunners,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen",
+            "wh_main_middenland_carroburg",
+            carroburg_region:settlement():logical_position_x() + 1,
+            carroburg_region:settlement():logical_position_y() + 2,
+            true,
+            true,
+            function(cqi)
+
+            end)
+            cm:callback(function()
+                cm:transfer_region_to_faction("wh_main_middenland_carroburg", "wh_main_emp_carroburg")
+                cm:treasury_mod("wh_main_emp_carroburg", 3000)
+                cm:force_make_vassal("wh_main_emp_marienburg", "wh_main_emp_carroburg")
+            end, 0.5)
         end
         }
     },
@@ -812,16 +839,14 @@ local eom_main_events_table = {
     {
         key = "eom_dilemma_hochland_3",
         conditional = function(model --:EOM_MODEL
-        )   return false
-            --not in beta 1
-            --return model:is_elector_valid("wh_main_emp_hochland") and (model:get_elector("wh_main_emp_hochland"):loyalty() < 20) and (cm:model():turn_number() > 50)
+        )   
+            return model:is_elector_valid("wh_main_emp_hochland") and (model:get_elector("wh_main_emp_hochland"):loyalty() < 20) and (cm:model():turn_number() > 50)
         end,
         choices = {
             [1] = function(model --: EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_hochland"):change_loyalty(15)
             model:change_loyalty_for_all_except({"wh_main_emp_hochland", "wh_main_emp_cult_of_sigmar", "wh_main_emp_cult_of_ulric"}, -15)
-            --NOTE: add construction cost and trade income malus's
         end,
             [2] = function(model --:EOM_MODEL
             ) 
