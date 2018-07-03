@@ -82,7 +82,7 @@ function marienburg_rebellion_add()
             "eom_marienburg_invaded_1",
             "DilemmaChoiceMadeEvent",
             function(context)
-               return context:dilemma() ==  "eom_marienburg_invaded_1"
+               return context:dilemma() ==  "eom_marienburg_rebellion_2"
             end,
             function(context)
                 if context:choice() == 0 then 
@@ -181,6 +181,7 @@ function marienburg_invasion_add()
     marienburg_invasion:add_stage_trigger(2, function(model--:EOM_MODEL
     )
         local plot_turn = model:get_core_data_with_key("marienburg_plot_turn") --# assume plot_turn: number
+        add_marienburg_retaken_listener()
         return cm:get_faction("wh_main_brt_bretonnia"):faction_leader():is_wounded() and plot_turn <= cm:model():turn_number()
     end)
 
