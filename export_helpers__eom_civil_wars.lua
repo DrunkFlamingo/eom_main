@@ -401,7 +401,7 @@ local function eom_hochland_civil_war()
     owns_brass_keep = cm:get_region("wh_main_hochland_brass_keep"):owning_faction():name() == "wh_main_emp_hochland"
     return is_alive and is_mad and owns_brass_keep
     end)
-    civil_war_hochland:add_stage_callback(2, function(model--:EOM_MODEL
+    civil_war_hochland:add_stage_callback(1, function(model--:EOM_MODEL
     )
     if cm:get_faction(model:empire()):is_human() then
         cm:trigger_incident(model:empire(), "eom_main_civil_war_hochland_1", true)
@@ -419,11 +419,12 @@ local function eom_hochland_civil_war()
         "wh_main_chs_chaos",
         ci_get_army_string("chaos", 2),
         "wh_main_hochland_brass_keep",
-        cm:get_region("wh_main_hochland_brass_keep"):settlement():logical_position_x() + 1,
-        cm:get_region("wh_main_hochland_brass_keep"):settlement():logical_position_y() - 1,
+        cm:get_region("wh_main_hochland_brass_keep"):settlement():logical_position_x() + 4,
+        cm:get_region("wh_main_hochland_brass_keep"):settlement():logical_position_y() - 3,
         true,
         true)
-
+    cm:set_region_abandoned("wh_main_hochland_brass_keep")
+    cm:force_declare_war("wh_main_chs_chaos", "wh_main_emp_hochland", true, true)
 
     end)
     civil_war_hochland:add_stage_trigger(2, function(model--:EOM_MODEL
@@ -575,7 +576,7 @@ local function eom_stirland_civil_war()
 
     civil_war_stirland:add_stage_trigger(3, function(model--:EOM_MODEL
     )
-        if model:get_core_data_with_key("civil_war_stirland_rebel") == "wh_main_cult_of_ulric" then
+        if model:get_core_data_with_key("civil_war_stirland_rebel") == "wh_main_emp_cult_of_ulric" then
             local nuln_owner = cm:get_region("wh_main_middenland_middenheim"):owning_faction():name()
             local nuln_held = (nuln_owner == model:empire()) or (nuln_owner == "wh_main_emp_middenland" and model:get_elector("wh_main_emp_middenland"):status() ~= "civil_war_enemy")
             return cm:get_faction("wh_main_emp_cult_of_ulric"):is_dead() and nuln_held
@@ -591,11 +592,10 @@ local function eom_stirland_civil_war()
         model:get_story_chain("civil_war_stirland"):finish()
         model:set_core_data("block_events_for_plot", false)
         model:grant_casus_belli("wh_main_emp_stirland")
-        if model:get_core_data_with_key("civil_war_stirland_rebel") == "wh_main_cult_of_ulric" then
+        if model:get_core_data_with_key("civil_war_stirland_rebel") == "wh_main_emp_cult_of_ulric" then
             if cm:get_faction(model:empire()):is_human() then
                 cm:trigger_incident(model:empire(), "eom_main_civil_war_stirland_3a", true)
             end
-            model:get_story_chain("civil_war_ulric"):finish() 
             if (not cm:get_faction("wh_main_emp_middenland"):is_dead()) and model:get_elector("wh_main_emp_middenland"):status() == "civil_war_enemy" then
                 cm:force_confederation(model:empire(), "wh_main_emp_middenland")
                 model:elector_fallen("wh_main_emp_middenland", false)
@@ -614,7 +614,6 @@ local function eom_stirland_civil_war()
             if cm:get_faction(model:empire()):is_human() then
                 cm:trigger_incident(model:empire(), "eom_main_civil_war_stirland_3b", true)
             end
-            model:get_story_chain("civil_war_sigmar"):finish() 
             if (not cm:get_faction("wh_main_emp_wissenland"):is_dead()) and model:get_elector("wh_main_emp_wissenland"):status() == "civil_war_enemy" then
                 cm:force_confederation(model:empire(), "wh_main_emp_wissenland")
                 model:elector_fallen("wh_main_emp_wissenland", false)
