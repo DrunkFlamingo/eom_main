@@ -2102,9 +2102,9 @@ function eom_view.populate_frame(self)
         cultTitleContainer:AddGap(fX/2 - ctX)
         cultTitleContainer:AddComponent(cultsTitle)
         frameContainer:AddComponent(cultTitleContainer)
-       -- local firstDivider = Image.new(self.list_name_electors.."divider", self.frame, "ui/skins/default/candidate_divider.png")
-       -- firstDivider:Resize(fX*(2/3), 3)
-      --  frameContainer:AddComponent(firstDivider)
+        -- local firstDivider = Image.new(self.list_name_electors.."divider", self.frame, "ui/skins/default/candidate_divider.png")
+        -- firstDivider:Resize(fX*(2/3), 3)
+        --  frameContainer:AddComponent(firstDivider)
         local cultContainer = Container.new(FlowLayout.HORIZONTAL)
         cultContainer:AddGap(fX/2 - 352)
 
@@ -2124,7 +2124,7 @@ function eom_view.populate_frame(self)
             end
         end
         frameContainer:AddComponent(cultContainer)
-       -- local SecondDivider = Image.new(self.list_name_electors.."divider2", self.frame, "ui/skins/default/candidate_divider.png")
+        -- local SecondDivider = Image.new(self.list_name_electors.."divider2", self.frame, "ui/skins/default/candidate_divider.png")
         --SecondDivider:Resize(fX*(2/3), 3)
         --frameContainer:AddComponent(SecondDivider)
         local electorTitleContainer = Container.new(FlowLayout.HORIZONTAL)
@@ -2162,17 +2162,27 @@ function eom_view.populate_frame(self)
 
     else
         for k, v in pairs(self.game_model:electors()) do
-            local dy_loyalty = Util.getComponentWithName(k.."_dy_loyalty")
-            --# assume dy_loyalty: TEXT
-            dy_loyalty:SetText("[[col:dark_g]]"..tostring(v:loyalty()).."[[/col]]")
-            if v:status() == "seceded" then 
-                dy_loyalty:SetText("[[col:red]]Seceded[[/col]]")
+            if not v:is_hidden() then
+                local dy_loyalty = Util.getComponentWithName(k.."_dy_loyalty")
+                --# assume dy_loyalty: TEXT
+                dy_loyalty:SetText("[[col:dark_g]]"..tostring(v:loyalty()).."[[/col]]")
+                if v:status() == "seceded" then 
+                    dy_loyalty:SetText("[[col:red]]Seceded[[/col]]")
+                end
+            else
+                local dy_loyalty = Util.getComponentWithName(k.."_dy_loyalty") --# assume dy_loyalty: CA_UIC
+                local electorButton = Util.getComponentWithName(k.."elector_button")--# assume electorButton: CA_UIC
+                if dy_loyalty and electorButton then
+                    dy_loyalty:SetVisible(false)
+                    electorButton:SetVisible(false)
+                end
             end
         end
         EOMLOG("Updated Loyalties", "UI")
     end
     EOMLOG("Populate frame completed with no errors")
 end
+    
 
 --controller methods (assumed)
 
