@@ -154,20 +154,6 @@ local function Empire_FactionTurn(context)
 		cm:remove_effect_bundle("wh_twh_emp_integrity_bad_5", EMPIRE_KEY);
 		cm:remove_effect_bundle("wh_twh_emp_integrity_bad_6", EMPIRE_KEY);
 
-		--empire of man addition
-		local state_to_loyalty = {
-			[6] = -20,
-			[5] = -10,
-			[4] = 0,
-			[3] = 10,
-			[2] = 15,
-			[1] = 10,
-			[0] = 5
-		}--:map<number, number>
-		local last_state = cm:get_saved_value("last_empire_state")
-		local last_state_loyalty_value = state_to_loyalty[last_state]
-		eom:change_all_loyalties(-(last_state_loyalty_value))
-
 
 
 
@@ -206,11 +192,21 @@ local function Empire_FactionTurn(context)
 			empire_state = 0;
 		end;
 
-		--eom additions
-		eom:change_all_loyalties(state_to_loyalty[empire_state])
 
 
 		if empire_state < cm:get_saved_value("last_empire_state") then
+			----empire of man addition
+			local state_to_loyalty = {
+				[5] = 10,
+				[4] = 10,
+				[3] = 10,
+				[2] = 5,
+				[1] = -5,
+				[0] = -5
+			}--:map<number, number>
+			local new_state_loyalty = state_to_loyalty[empire_state]
+			eom:change_all_loyalties(new_state_loyalty)
+			--
 			
 			cm:show_message_event_located(
 				EMPIRE_KEY,
@@ -223,8 +219,21 @@ local function Empire_FactionTurn(context)
 				110
 			);
 
+
 		elseif empire_state > cm:get_saved_value("last_empire_state") then
-			
+			--empire of man addition
+			local state_to_loyalty = {
+				[6] = -10,
+				[5] = -10,
+				[4] = -10,
+				[3] = -5,
+				[2] = 5,
+				[1] = 5,
+			}--:map<number, number>
+			local new_state_loyalty = state_to_loyalty[empire_state]
+			eom:change_all_loyalties(new_state_loyalty)
+			--
+
 			cm:show_message_event_located(
 				EMPIRE_KEY,
 				"event_feed_strings_text_wh_event_feed_string_faction_state_deteriorated_primary_detail",
