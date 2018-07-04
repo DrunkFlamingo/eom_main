@@ -49,7 +49,9 @@ core:add_listener(
             "FactionTurnStart",
             function(context) return context:faction():is_human() and cm:model():turn_number() > 5 and (not cm:get_faction("wh_main_chs_chaos"):is_dead()) end,
             function()
-                eom:set_core_data("chaos_end_game_has_started", true)
+                if eom:get_archeon() then
+                    eom:set_core_data("chaos_end_game_has_started", true)
+                end
             end,
             false);
     end

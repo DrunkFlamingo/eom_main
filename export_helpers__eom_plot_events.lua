@@ -61,7 +61,7 @@ function marienburg_rebellion_add()
         marienburg_add_remove_bundle_listener()
         cm:callback(function()
             cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_empire", false, false)
-            cm:treasury_mod("wh_main_emp_marienburg", 10000)
+            cm:treasury_mod("wh_main_emp_marienburg", 5000)
         end, 0.1)
 
 
@@ -82,14 +82,15 @@ function marienburg_rebellion_add()
             "eom_marienburg_invaded_1",
             "DilemmaChoiceMadeEvent",
             function(context)
-               return context:dilemma() ==  "eom_marienburg_invaded_1"
+               return context:dilemma() ==  "eom_marienburg_rebellion_2"
             end,
             function(context)
                 if context:choice() == 0 then 
                     cm:force_make_peace("wh_main_emp_marienburg", "wh_main_emp_empire")
                     model:get_elector("wh_main_emp_marienburg"):set_status("normal")
-                    model:get_elector("wh_main_emp_marienburg"):set_loyalty(45)
+                    model:get_elector("wh_main_emp_marienburg"):set_loyalty(65)
                     model:get_elector("wh_main_emp_marienburg"):set_can_revive(true)
+                    cm:apply_effect_bundle("eom_wh_main_emp_marienburg_taxation_3", eom:empire(), 0)
                 else
                     cm:force_declare_war("wh_main_brt_bretonnia", "wh_main_emp_empire", false, false)
                     cm:treasury_mod("wh_main_brt_bretonnia", 5000)
@@ -181,6 +182,7 @@ function marienburg_invasion_add()
     marienburg_invasion:add_stage_trigger(2, function(model--:EOM_MODEL
     )
         local plot_turn = model:get_core_data_with_key("marienburg_plot_turn") --# assume plot_turn: number
+        add_marienburg_retaken_listener()
         return cm:get_faction("wh_main_brt_bretonnia"):faction_leader():is_wounded() and plot_turn <= cm:model():turn_number()
     end)
 
@@ -282,14 +284,14 @@ vampire_wars:add_stage_callback(2, function(model --:EOM_MODEL
             "",
             "names_name_2147343895",		-- Von Carstein
             "",
-            true,
+            false,
             function(cqi)
             end
         );
 
     cm:callback(function()
         cm:make_diplomacy_available("wh_main_vmp_schwartzhafen", "wh_main_emp_empire")
-        cm:treasury_mod("wh_main_vmp_schwartzhafen", 10000);
+        cm:treasury_mod("wh_main_vmp_schwartzhafen", 20000);
         cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_vmp_schwartzhafen", false, false);
         cm:transfer_region_to_faction("wh_main_eastern_sylvania_waldenhof", "wh_main_vmp_schwartzhafen");
         cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "faction:wh_main_vmp_vampire_counts", "peace", false, false, false);
@@ -459,7 +461,7 @@ vampire_wars:add_stage_trigger(5, function(model--: EOM_MODEL
 end)
 vampire_wars:add_stage_callback(5, function(model
 )
-model:get_story_chain("vampire_wars"):finish()
+    model:get_story_chain("vampire_wars"):finish()
     model:set_core_data("block_events_for_plot", false)
     --sylvania dilemma now
     cm:trigger_dilemma(model:empire(), "eom_vampire_war_5", true)

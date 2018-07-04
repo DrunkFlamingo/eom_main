@@ -220,6 +220,7 @@
 
 --# assume CM.force_change_cai_faction_personality: method(key: string, personality: string)
 --# assume CM.transfer_region_to_faction: method(region: string, faction:string)
+--# assume CM.set_region_abandoned: method(region: string)
 --# assume CM.award_experience_level: method(char_lookup_str: string, level: int)
 --# assume CM.kill_character: method(lookup: CA_CQI, kill_army: boolean, throughcq: boolean)
 --# assume CM.set_character_immortality: method(lookup: string, immortal: boolean)
@@ -243,7 +244,7 @@
 --# assume CM.force_add_skill: method(lookup: string, skill_key: string)
 --# assume CM.scroll_camera_from_current: WHATEVER
 --# assume CM.treasury_mod: method(faction_key: string, quantity: number)
-
+--# assume CM.unlock_starting_general_recruitment: method(startpos: string, faction: string)
 
 -- CAMPAIGN UI MANAGER
 --# assume CUIM.get_char_selected: method() --> string
@@ -314,6 +315,7 @@
 --# assume CA_REGION.slot_list: method() --> CA_SLOT_LIST
 --# assume CA_REGION.is_province_capital: method() --> boolean
 --# assume CA_REGION.building_exists: method(building: string) --> boolean
+--# assume CA_REGION.province_name: method() --> string
 
 -- SETTLEMENT
 --# assume CA_SETTLEMENT.logical_position_x: method() --> number
@@ -478,7 +480,12 @@
 --# assume MISSION_MANAGER.set_should_cancel_before_issuing: method(boolean?)
 --# assume MISSION_MANAGER.trigger: method(dismiss_callback: function?, delay: number?)
 
+-- LL UNLOCK OBJECT
+--# assume global class LL_UNLOCK
 
+
+--# assume LL_UNLOCK.new: method(faction_key: string, startpos_id: string, forename_key: string, event: string, condition: (function(context: WHATEVER) --> boolean)) --> LL_UNLOCK
+--# assume LL_UNLOCK.start: method()
 
 
 
@@ -492,3 +499,4 @@
 --# assume global __write_output_to_logfile: boolean
 --# assume global mission_manager: MISSION_MANAGER
 --# assume global rite_unlock: RITE_UNLOCK
+--# assume global ll_unlock: LL_UNLOCK

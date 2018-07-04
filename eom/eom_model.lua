@@ -319,7 +319,9 @@ function eom_model.elector_rebellion_start(self, name)
     EOMLOG("triggering rebellion for ["..name.."] ")
     local elector = self:get_elector(name)
     elector:set_status("open_rebellion")
-    cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_"..name.."_open_rebellion", true)
+    if cm:get_faction("EOM_GLOBAL_EMPIRE_FACTION"):is_human() then
+        cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_"..name.."_open_rebellion", true)
+    end
     if elector:is_cult() then
         local x, y = elector:expedition_coordinates()
         cm:create_force(name, elector:get_army_list(), elector:expedition_region(), x, y, true, true)
@@ -483,6 +485,7 @@ end
 --tunnel to CI
 --# assume ci_pre_late_game_start: function(reason: string)
 --# assume ci_mid_game_start: function(reason: string)
+--# assume ci_get_archaon: function() --> CA_CHAR
 
 --v function(self: EOM_MODEL)
 function eom_model.advance_chaos_to_mid_game(self)
@@ -490,21 +493,44 @@ function eom_model.advance_chaos_to_mid_game(self)
         self:log("not advancing chaos to midgame because it has already been advanced!")
         return
     end
+    if self:get_core_data_with_key("chaos_defeated") == true then
+        self:log("not advacing chaos to midgame because it was already defeated")
+        return
+    end
+
+    if self:get_core_data_with_key("chaos_end_game_has_started") == true then
+        self:log("not advancing chaos to midgame because it is already in lategame!")
+        return
+    end
+
     ci_mid_game_start("Empire Of Man: Drunk Flamingo")
     self:set_core_data("chaos_midgame_advanced", true)
 end
 --v function(self: EOM_MODEL)
 function eom_model.advance_chaos_to_late_game(self)
     if self:get_core_data_with_key("chaos_lategame_advanced") == true then
-        self:log("not advancing chaos to midgame because it has already been advanced!")
+        self:log("not advancing chaos to lategame because it has already been advanced!")
         return
     end
+    if self:get_core_data_with_key("chaos_defeated") == true then
+        self:log("not advacing chaos to lategame because it was already defeated")
+        return
+    end
+
+    if self:get_core_data_with_key("chaos_end_game_has_started") == true then
+        self:log("not advancing chaos to lategame because it is already in lategame!")
+        return
+    end
+
+
     ci_pre_late_game_start("Empire Of Man: Drunk Flamingo")
     self:set_core_data("chaos_lategame_advanced", true)
 end
 
-
-
+--v function(self: EOM_MODEL) --> CA_CHAR
+function eom_model.get_archeon(self)
+    return ci_get_archaon()
+end
 
 
 
