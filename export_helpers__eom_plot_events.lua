@@ -55,7 +55,6 @@ function marienburg_rebellion_add()
     marienburg_rebellion:add_stage_callback(1, function(model--:EOM_MODEL
     )
         cm:trigger_incident(model:empire(), "eom_marienburg_rebellion_1", true)
-        model:set_core_data("block_events_for_plot", true)
         cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 405, 478, true, true, function(cqi) end)
         cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 403, 480, true, true, function(cqi) end)
         cm:apply_effect_bundle_to_region("eom_marienburg_rebellion_1_region", "wh_main_the_wasteland_marienburg", 8)
@@ -103,8 +102,6 @@ function marienburg_rebellion_add()
             end,
             false)
         model:get_story_chain("marienburg_rebellion"):finish()
-        model:set_core_data("block_events_for_plot", false)
-
 
     end)
 
@@ -157,7 +154,6 @@ function marienburg_invasion_add()
         function(context)
             if context:choice() == 0 then
                 cm:force_declare_war("wh_main_brt_bretonnia", "wh_main_emp_empire", true, true)
-                model:set_core_data("block_events_for_plot", true)
                 model:set_core_data("marienburg_plot_turn", (cm:model():turn_number() + 7))
                 add_marienburg_retaken_listener()
             else
@@ -204,13 +200,23 @@ function marienburg_invasion_add()
                 model:get_elector("wh_main_emp_marienburg"):set_can_revive(true)
             end
             model:get_story_chain("eom_marienburg_invaded_1"):finish()
-            model:set_core_data("block_events_for_plot", false)
         end,
         false)
     cm:force_make_peace("wh_main_emp_empire", "wh_main_brt_bretonnia")
     end)
 
 end
+--v function() --> boolean
+local function vampires_contained()
+    local region_list = cm:get_faction("wh_main_vmp_vampire_counts"):region_list()
+    for i = 0, region_list:num_items() - 1 do
+        if region_list:item_at(i):province_name() ~= "wh_main_eastern_sylvania" and region_list:item_at(i):province_name() ~= "wh_main_western_sylvania" then
+            return true
+        end
+    end
+    return false
+end
+
 
 function vampire_wars_add()
 
@@ -223,9 +229,8 @@ end)
 
 vampire_wars:add_stage_callback(1, function(model --:EOM_MODEL
 )   
-    model:set_core_data("block_events_for_plot", true)
     cm:trigger_incident(model:empire(), "eom_vampire_war_1", true)
-    model:set_core_data("vampire_war_turn", cm:model():turn_number() + 8)
+    model:set_core_data("vampire_war_turn", cm:model():turn_number() + 10)
     cm:treasury_mod("wh_main_vmp_vampire_counts", 10000)
     cm:force_diplomacy("faction:wh_main_vmp_vampire_counts", "all", "war", true, true, true)
     cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_averland", false, false)
@@ -237,12 +242,14 @@ vampire_wars:add_stage_callback(1, function(model --:EOM_MODEL
         cm:treasury_mod("wh_main_emp_cult_of_sigmar", 5000)
         cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_cult_of_sigmar", false, false)
     end, 0.5)
+    cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_waldenhof", 687, 460, true, true)
+    cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_castle_drakenhof", cm:get_region("wh_main_eastern_sylvania_castle_drakenhof"):settlement():logical_position_x(), cm:get_region("wh_main_eastern_sylvania_castle_drakenhof"):settlement():logical_position_y(), true, true)
 
 end)
 vampire_wars:add_stage_trigger(2, function(model --:EOM_MODEL
 )
     local plot_turn = model:get_core_data_with_key("vampire_war_turn") --# assume plot_turn: number
-    return cm:model():turn_number() >= plot_turn
+    return (cm:model():turn_number() >= plot_turn) and vampires_contained()
 end)
 
 vampire_wars:add_stage_callback(2, function(model --:EOM_MODEL
@@ -338,7 +345,6 @@ vampire_wars:add_stage_callback(4, function(model
 
 if cm:get_faction("wh_main_vmp_schwartzhafen"):is_dead() then
     model:get_story_chain("vampire_wars"):finish()
-    model:set_core_data("block_events_for_plot", false)
     --sylvania dilemma now
     cm:trigger_dilemma(model:empire(), "eom_empire_war_5", true)
     core:add_listener(
@@ -439,7 +445,6 @@ if model:get_core_data_with_key("allied_vlad") == true then
                     end
                 end
                 model:get_story_chain("vampire_wars"):finish()
-                model:set_core_data("block_events_for_plot", false)
             else
                 model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
                 model:change_sigmarite_loyalties(10)
@@ -464,7 +469,6 @@ end)
 vampire_wars:add_stage_callback(5, function(model
 )
     model:get_story_chain("vampire_wars"):finish()
-    model:set_core_data("block_events_for_plot", false)
     --sylvania dilemma now
     cm:trigger_dilemma(model:empire(), "eom_vampire_war_5", true)
     core:add_listener(
