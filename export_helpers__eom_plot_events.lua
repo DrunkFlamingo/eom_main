@@ -254,6 +254,7 @@ end)
 
 vampire_wars:add_stage_callback(2, function(model --:EOM_MODEL
 )
+    model:set_core_data("block_events_for_plot", true)
     cm:trigger_incident(model:empire(), "eom_vampire_war_2", true)
     vlad_x = 687
     vlad_y = 460
@@ -342,7 +343,7 @@ vampire_wars:add_stage_trigger(4, function(model--: EOM_MODEL
 end)
 vampire_wars:add_stage_callback(4, function(model
 )
-
+model:set_core_data("block_events_for_plot", false)
 if cm:get_faction("wh_main_vmp_schwartzhafen"):is_dead() then
     model:get_story_chain("vampire_wars"):finish()
     --sylvania dilemma now
