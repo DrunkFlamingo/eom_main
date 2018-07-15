@@ -469,16 +469,42 @@
 
 -- MISSION MANAGER OBJECT
 
+-- MISSION MANAGER OBJECT
+
 --# assume global class MISSION_MANAGER
 --# type global CA_MISSION_OBJECTIVE =
---# "CAPTURE_REGIONS"
+--# "CAPTURE_REGIONS" | "SCRIPTED"
 
+--creation
 --# assume MISSION_MANAGER.new: method(faction_key: string, mission_key: string, success_callback: function?, failure_callback: function?, cancellation_callback: function?) --> MISSION_MANAGER
+
+--basic
 --# assume MISSION_MANAGER.add_new_objective: method(objective_type: CA_MISSION_OBJECTIVE)
 --# assume MISSION_MANAGER.add_condition: method(condition_string: string)
 --# assume MISSION_MANAGER.add_payload: method(payload_string: string)
---# assume MISSION_MANAGER.set_should_cancel_before_issuing: method(boolean?)
+--# assume MISSION_MANAGER.set_turn_limit: method(turns: number)
+--# assume MISSION_MANAGER.set_chapter: method(turns: integer)
+--# assume MISSION_MANAGER.set_mission_issuer: method(issuer: string)
+--localisation
+--# assume MISSION_MANAGER.add_heading: method(heading_loc_key: string)
+--# assume MISSION_MANAGER.add_description: method(description_loc_key: string)
+--scripted objectives
+------Here, string key can be ommited when creating an objective. This will generate it randomly. The script key can only be ommitted from other functions if there is only one scripted objective.
+--# assume MISSION_MANAGER.add_new_scripted_objective: method(objective_loc_key: string, event: string, condition: function(context: WHATEVER) --> boolean, script_key: string?)
+--# assume MISSION_MANAGER.add_scripted_objective_success_condition: method(event: string, condition: function(context: WHATEVER) --> boolean, script_key: string?)
+--# assume MISSION_MANAGER.add_scripted_objective_failure_condition: method(event: string, condition: function(context: WHATEVER) --> boolean, script_key: string?)
+--# assume MISSION_MANAGER.force_scripted_objective_success: method(script_key: string?)
+--# assume MISSION_MANAGER.force_scripted_objective_failure: method(script_key: string?)
+--# assume MISSION_MANAGER.update_scripted_objective_text: method(override_text_loc: string, script_key: string?)
+
+--# assume MISSION_MANAGER.set_should_cancel_before_issuing: method(boolean)
+--# assume MISSION_MANAGER.set_should_should_whitelist: method(boolean)
+
+--# assume MISSION_MANAGER.set_first_time_startup_callback: method(callback: function())
+--# assume MISSION_MANAGER.set_each_time_startup_callback: method(callback: function())
+
 --# assume MISSION_MANAGER.trigger: method(dismiss_callback: function?, delay: number?)
+--# assume CM.get_mission_manager: method(mission_key: string) --> MISSION_MANAGER
 
 -- LL UNLOCK OBJECT
 --# assume global class LL_UNLOCK
