@@ -109,51 +109,6 @@ local function eom_vlad_civil_war()
 
 
 end
---v function(elector: EOM_ELECTOR)
-local function start_civil_war(elector)
-    local success_callback = function()
-
-    end
-
-    local mm = mission_manager:new(eom:empire(), "eom_"..elector:name().."_civil_war_mission")
-
-
-end
-
-
-
-
-local function eom_generic_civil_wars()
-    local civil_war_standard = eom:new_story_chain("civil_war_standard")
-    civil_war_standard:add_stage_trigger(1, function(model --: EOM_MODEL
-    )
-    local turn = cm:model():turn_number()
-    if turn > 50 then
-        for name, elector in pairs(eom:electors()) do
-            if name ~= "wh_main_vmp_schwartzhafen" and not elector:is_cult() then
-                if elector:loyalty() == 0 then
-                    elector:set_status("civil_war_emperor")
-                    return true
-                end
-            end
-        end
-        return false
-    else 
-        return false
-    end
-    end)
-    civil_war_standard:add_stage_callback(1, function(model--:EOM_MODEL
-    )
-    for name, elector in pairs(eom:electors()) do
-        if elector:status() == "normal" then
-
-
-        end
-    end
-
-    end)
-
-end
 
 
 
@@ -163,7 +118,6 @@ end
 local function eom_empire_add_civil_wars()
     eom:log("Starting", "export_helpers__eom_civil_wars")
     eom_vlad_civil_war()
-    eom_generic_civil_wars()
 end
 
 
