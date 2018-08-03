@@ -66,7 +66,7 @@ local function eom_vlad_civil_war()
         model:set_core_data("block_events_for_plot", true)
         model:get_elector("wh_main_vmp_schwartzhafen"):set_hidden(true)
         model:get_elector("wh_main_vmp_schwartzhafen"):set_loyalty(0)
-        model:get_elector("wh_main_vmp_schwartzhafen"):set_status("civil_war_emperor")
+        model:get_elector("wh_main_vmp_schwartzhafen"):set_status("fallen")
         model:set_core_data("civil_war_vlad_timer", cm:model():turn_number() + 10)
         cm:treasury_mod("wh_main_vmp_schwartzhafen", 20000)
     end)
@@ -85,9 +85,8 @@ local function eom_vlad_civil_war()
     end
     model:advance_chaos_to_mid_game()
     model:set_core_data("midgame_chaos_trigger_turn", cm:model():turn_number() + 11)
-    local i = 1
     for name, elector in pairs(model:electors()) do
-        if elector:status() == "normal" and (elector:loyalty() > 39 or elector:is_cult()) then
+        if elector:status() == "normal" and (elector:loyalty() > 30 or elector:is_cult()) then
             if elector:is_cult() and cm:get_faction(name):is_dead() then 
                 elector:respawn_at_capital(true)
             end

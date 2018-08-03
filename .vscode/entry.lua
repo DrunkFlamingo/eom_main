@@ -22,6 +22,7 @@ require("export_helpers__eom_ui")
 require("export_helpers__eom_chaos_invasion")
 require("export_helpers__eom_revival")
 require("export_helpers__eom_volkmar_unlock")
+require("export_helpers__eom_civil_war_system")
 
 
 require("compat_scripts/export_helpers__eom_zarkis_compat")
