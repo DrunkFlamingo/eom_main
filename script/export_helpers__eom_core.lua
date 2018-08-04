@@ -2,7 +2,10 @@ cm = get_cm(); events = get_events(); eom = _G.eom;
 if not eom then 
     script_error("EOM IS NOT FOUND!")
 end
-
+if not cm:get_saved_value("eom_bug_fix_1") then
+    cm:set_saved_value("eom_bug_fix_1", true)
+    eom:get_elector("wh_main_vmp_schwartzhafen"):set_army_list("wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_1,wh_main_vmp_inf_grave_guard_1,wh_main_vmp_cav_black_knights_3,wh_main_vmp_cav_black_knights_3,wh_main_vmp_mon_terrorgheist,wh_main_vmp_veh_black_coach,wh_main_vmp_mon_varghulf,wh_main_vmp_inf_skeleton_warriors_1,wh_main_vmp_inf_skeleton_warriors_1,wh_dlc04_vmp_veh_mortis_engine_0")
+end
 
 
 local function empire_plot_and_events_check_human()

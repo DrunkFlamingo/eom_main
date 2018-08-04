@@ -678,7 +678,7 @@ function vampire_start_pos()
     sp._expeditionY = 460--:number
     sp._knights = false;
     sp._canRevive = false;
-    sp._unitList = get_default_start_army()
+    sp._unitList = "wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_1,wh_main_vmp_inf_grave_guard_1,wh_main_vmp_cav_black_knights_3,wh_main_vmp_cav_black_knights_3,wh_main_vmp_mon_terrorgheist,wh_main_vmp_veh_black_coach,wh_main_vmp_mon_varghulf,wh_main_vmp_inf_skeleton_warriors_1,wh_main_vmp_inf_skeleton_warriors_1,wh_dlc04_vmp_veh_mortis_engine_0"
     sp._expeditionRegion = "wh_main_eastern_sylvania_waldenhof"
     sp._turnsDead = 0--:number
     sp._isCult = false;
