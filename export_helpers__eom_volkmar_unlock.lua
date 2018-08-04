@@ -18,8 +18,6 @@ local function eom_volkmar_unlock()
         cm:set_saved_value("2140784136" .. "_unlocked", true);
     end
 
-eom:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(100)
-
 end
 
 
@@ -43,7 +41,7 @@ core:add_listener(
     "EOMVOLKMUSTARD",
     "CharacterCreated",
     function(context)
-        return context:character():subtype() == "dlc04_emp_volkmar"
+        return context:character():character_subtype_key() == "dlc04_emp_volkmar"
     end,
     function(context)
         if context:character():is_null_interface() == false then
