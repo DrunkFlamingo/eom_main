@@ -20,15 +20,14 @@ end
 
 --v function(elector: ELECTOR_NAME, civil_war_emperor: string)
 local function apply_loyalist_bundles(elector, civil_war_emperor)
-    cm:apply_effect_bundle("eom_civil_war_"..civil_war_emperor.."_loyalist", elector, 0)
-    cm:apply_effect_bundle("eom_civil_war_loyalist", elector, 0)
+    eom:log(" elector ["..elector.."] joining the civil war on the side of karl franz!  ")
+    cm:apply_effect_bundle("eom_civil_war_"..elector.."_loyalist", eom:empire(), 0)
 end
-
 
 --v function(elector: ELECTOR_NAME, civil_war_emperor: string)
 local function apply_rebel_bundles(elector, civil_war_emperor)
-    cm:apply_effect_bundle("eom_civil_war_"..civil_war_emperor.."_rebel", elector, 0)
-    cm:apply_effect_bundle("eom_civil_war_rebel", elector, 0)
+    eom:log(" elector ["..elector.."] joining the civil war on teh side of the rebels! ")
+    cm:apply_effect_bundle("eom_civil_war_"..elector.."_rebel", eom:empire(), 0)
     eom:get_elector(elector):set_status("civil_war_enemy")
     eom:get_elector(elector):set_loyalty(0)
 end
@@ -36,23 +35,35 @@ end
 --v function()
 local function allow_wars()
     local elector_diplo_list = {
-        "faction:wh_main_emp_empire",
-        "faction:wh_main_emp_averland",
-        "faction:wh_main_emp_hochland",
-        "faction:wh_main_emp_ostermark",
-        "faction:wh_main_emp_stirland",
-        "faction:wh_main_emp_middenland",
-        "faction:wh_main_emp_nordland",
-        "faction:wh_main_emp_ostland",
-        "faction:wh_main_emp_wissenland",
-        "faction:wh_main_emp_talabecland",
-        "faction:wh_main_emp_sylvania",
-        "faction:wh_main_vmp_schwartzhafen",
-        "faction:wh_main_emp_marienburg"
-    }--: vector<string>
+
+        "wh_main_emp_averland",
+        "wh_main_emp_hochland",
+        "wh_main_emp_ostermark",
+        "wh_main_emp_stirland",
+        "wh_main_emp_middenland",
+        "wh_main_emp_nordland",
+        "wh_main_emp_ostland",
+        "wh_main_emp_wissenland",
+        "wh_main_emp_talabecland",
+        "wh_main_emp_sylvania",
+        "wh_main_vmp_schwartzhafen",
+        "wh_main_emp_marienburg"
+    }--: vector<ELECTOR_NAME>
+    for i = 1, #elector_diplo_list do
+        if eom:get_elector(elector_diplo_list[i]):status() == "civil_war_enemy" or eom:get_elector(elector_diplo_list[i]):status() == "civil_war_emperor" then
+            cm:force_diplomacy("faction:"..elector_diplo_list[i], "faction:wh_main_emp_empire", "war,join war", true, true, false);
+        end
+    end
+
     for i = 1, #elector_diplo_list do
         for j = 1, #elector_diplo_list do
-            cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "war,join war", true, true, false);
+            if (eom:get_elector(elector_diplo_list[i]):status() == "civil_war_enemy" and eom:get_elector(elector_diplo_list[j]):status() == "normal")
+                or (eom:get_elector(elector_diplo_list[i]):status() == "civil_war_emperor" and eom:get_elector(elector_diplo_list[j]):status() == "normal")
+                or (eom:get_elector(elector_diplo_list[i]):status() == "normal" and eom:get_elector(elector_diplo_list[j]):status() == "civil_war_enemy")
+                or (eom:get_elector(elector_diplo_list[i]):status() == "normal" and eom:get_elector(elector_diplo_list[j]):status() == "civil_war_emperor")
+            then
+                cm:force_diplomacy("faction:"..elector_diplo_list[i], "faction:"..elector_diplo_list[j], "war,join war", true, true, false);
+            end
         end
     end
 
@@ -156,10 +167,10 @@ local function eom_civil_war_start_ulric(eom)
     cm:create_force("wh_main_emp_cult_of_ulric", ulric:get_army_list(), ulric:expedition_region(), x, y, true, true, function(cqi) cm:treasury_mod("wh_main_emp_cult_of_sigmar", 20000) end)
     ulric:respawn_at_capital(true)
     cm:callback( function()
-        cm:apply_effect_bundle("eom_civil_war_rebel", "wh_main_emp_cult_of_ulric", 0)
-        cm:apply_effect_bundle("eom_civil_war_wh_main_emp_middenland_rebel", "wh_main_emp_cult_of_ulric", 0)
+        cm:apply_effect_bundle("eom_civil_war_wh_main_emp_cult_of_ulric_rebel", eom:empire(), 0)
+        cm:apply_effect_bundle("eom_civil_war_wh_main_emp_middenland_rebel", eom:empire(), 0)
     end, 0.1);
-    cm:apply_effect_bundle("eom_civil_war_rebel", "wh_main_emp_middenland", 0)
+
     cm:trigger_incident(eom:empire(), "eom_main_civil_war_middenland_2", true)
     
     local ulric_other_electors = {
@@ -232,10 +243,9 @@ local function eom_civil_war_start_sigmar(eom)
     cm:create_force("wh_main_emp_cult_of_sigmar", sigmar:get_army_list(), sigmar:expedition_region(), x, y, true, true, function(cqi) cm:treasury_mod("wh_main_emp_cult_of_sigmar", 20000) end)
     sigmar:respawn_at_capital(true)
     cm:callback( function()
-        cm:apply_effect_bundle("eom_civil_war_rebel", "wh_main_emp_cult_of_sigmar", 0)
-        cm:apply_effect_bundle("eom_civil_war_wh_main_emp_wissenland_rebel", "wh_main_emp_cult_of_sigmar", 0)
+        cm:apply_effect_bundle("eom_civil_war_wh_main_emp_cult_of_sigmar_rebel", eom:empire(), 0)
+        cm:apply_effect_bundle("eom_civil_war_wh_main_emp_wissenland_rebel", eom:empire(), 0)
     end, 0.1);
-    cm:apply_effect_bundle("eom_civil_war_rebel", "wh_main_emp_wissenland", 0)
 
 
     cm:trigger_incident(eom:empire(), "eom_main_civil_war_wissenland_2", true)
