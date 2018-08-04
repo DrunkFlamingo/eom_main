@@ -2,13 +2,12 @@ EOM_SHOULD_LOG = true --:boolean
 EOM_LAST_CONTEXT = "no context set" --:string
 EOM_LOG_TURN = "Preload" --:string
 
---[[
 --v function(text: string)
 function EOM_ERRORS(text)
     ftext = "debugger"
     --sometimes I use ftext as an arg of this function, but for simple mods like this one I don't need it.
 
-    if not EOM_SHOULD_LOG then
+    if not __write_output_to_logfile then
         return; --if our bool isn't set true, we don't want to spam the end user with logs. 
     end
 
@@ -21,9 +20,10 @@ function EOM_ERRORS(text)
     popLog :flush()
     popLog :close()
 end
-
---v [NO_CHECK] function(func: function) --> any
-function safeCall(func)
+--v [NO_CHECK] function()
+local function error_checker()
+    --v [NO_CHECK] function(func: function) --> any
+    function safeCall(func)
     --RCDEBUG("safeCall start");
     local status, result = pcall(func)
     if not status then
@@ -32,17 +32,17 @@ function safeCall(func)
     end
     --RCDEBUG("safeCall end");
     return result;
-end
+    end
 
---local oldTriggerEvent = core.trigger_event;
+    --local oldTriggerEvent = core.trigger_event;
 
---v [NO_CHECK] function(...: any)
-function pack2(...) return {n=select('#', ...), ...} end
---v [NO_CHECK] function(t: vector<WHATEVER>) --> vector<WHATEVER>
-function unpack2(t) return unpack(t, 1, t.n) end
+    --v [NO_CHECK] function(...: any)
+    function pack2(...) return {n=select('#', ...), ...} end
+    --v [NO_CHECK] function(t: vector<WHATEVER>) --> vector<WHATEVER>
+    function unpack2(t) return unpack(t, 1, t.n) end
 
---v [NO_CHECK] function(f: function(), argProcessor: function()) --> function()
-function wrapFunction(f, argProcessor)
+    --v [NO_CHECK] function(f: function(), argProcessor: function()) --> function()
+    function wrapFunction(f, argProcessor)
     return function(...)
         --RCDEBUG("start wrap ");
         local someArguments = pack2(...);
@@ -56,15 +56,15 @@ function wrapFunction(f, argProcessor)
         --RCDEBUG("end wrap ");
         return unpack2(result);
         end
-end
+    end
 
--- function myTriggerEvent(event, ...)
---     local someArguments = { ... }
---     safeCall(function() oldTriggerEvent(event, unpack( someArguments )) end);
--- end
+    -- function myTriggerEvent(event, ...)
+    --     local someArguments = { ... }
+    --     safeCall(function() oldTriggerEvent(event, unpack( someArguments )) end);
+    -- end
 
---v [NO_CHECK] function(fileName: string)
-function tryRequire(fileName)
+    --v [NO_CHECK] function(fileName: string)
+    function tryRequire(fileName)
     local loaded_file = loadfile(fileName);
     if not loaded_file then
         EOM_ERRORS("Failed to find mod file with name " .. fileName)
@@ -76,9 +76,9 @@ function tryRequire(fileName)
         loaded_file();
         EOM_ERRORS("Load end")
     end
-end
+    end
 
-core:add_listener(
+    core:add_listener(
     "LaunchRuntimeScript",
     "ShortcutTriggered",
     function(context) return context.string == "camera_bookmark_view1"; end, --default F10
@@ -86,18 +86,18 @@ core:add_listener(
         tryRequire("test");
     end,
     true
-);
+    );
 
---v [NO_CHECK] function(f: function(), name: string)
-function logFunctionCall(f, name)
+    --v [NO_CHECK] function(f: function(), name: string)
+    function logFunctionCall(f, name)
     return function(...)
         EOM_ERRORS("function called: " .. name);
         return f(...);
     end
-end
+    end
 
---v [NO_CHECK] function(object: any)
-function logAllObjectCalls(object)
+    --v [NO_CHECK] function(object: any)
+    function logAllObjectCalls(object)
     local metatable = getmetatable(object);
     for name,f in pairs(getmetatable(object)) do
         if is_function(f) then
@@ -118,13 +118,13 @@ function logAllObjectCalls(object)
             EOM_ERRORS("Index end");
         end
     end
-end
+    end
 
--- logAllObjectCalls(core);
--- logAllObjectCalls(cm);
--- logAllObjectCalls(game_interface);
+    -- logAllObjectCalls(core);
+    -- logAllObjectCalls(cm);
+    -- logAllObjectCalls(game_interface);
 
-core.trigger_event = wrapFunction(
+    core.trigger_event = wrapFunction(
     core.trigger_event,
     function(ab)
         --RCDEBUG("trigger_event")
@@ -133,9 +133,9 @@ core.trigger_event = wrapFunction(
         --end
         --RCDEBUG("Trigger event: " .. ab[1])
     end
-);
+    );
 
-cm.check_callbacks = wrapFunction(
+    cm.check_callbacks = wrapFunction(
     cm.check_callbacks,
     function(ab)
         --RCDEBUG("check_callbacks")
@@ -143,11 +143,11 @@ cm.check_callbacks = wrapFunction(
         --    RCDEBUG("i: " .. tostring(i) .. " v: " .. tostring(v))
         --end
     end
-)
+    )
 
-local currentAddListener = core.add_listener;
---v [NO_CHECK] function(core: any, listenerName: any, eventName: any, conditionFunc: any, listenerFunc: any, persistent: any)
-function myAddListener(core, listenerName, eventName, conditionFunc, listenerFunc, persistent)
+    local currentAddListener = core.add_listener;
+    --v [NO_CHECK] function(core: any, listenerName: any, eventName: any, conditionFunc: any, listenerFunc: any, persistent: any)
+    function myAddListener(core, listenerName, eventName, conditionFunc, listenerFunc, persistent)
     local wrappedCondition = nil;
     if is_function(conditionFunc) then
         --wrappedCondition =  wrapFunction(conditionFunc, function(arg) RCDEBUG("Callback condition called: " .. listenerName .. ", for event: " .. eventName); end);
@@ -159,17 +159,17 @@ function myAddListener(core, listenerName, eventName, conditionFunc, listenerFun
         core, listenerName, eventName, wrappedCondition, wrapFunction(listenerFunc), persistent
         --core, listenerName, eventName, wrappedCondition, wrapFunction(listenerFunc, function(arg) RCDEBUG("Callback called: " .. listenerName .. ", for event: " .. eventName); end), persistent
     )
+    end
+    core.add_listener = myAddListener;
 end
-core.add_listener = myAddListener;
---]]
-
+error_checker()
 
 
 --v function(text: string, ftext: string?)
 function EOMLOG(text, ftext)
     
 
-    if not EOM_SHOULD_LOG then
+    if not __write_output_to_logfile then
         return; --if our bool isn't set true, we don't want to spam the end user with logs. 
     end
     if not ftext then
@@ -189,7 +189,7 @@ function EOMLOG(text, ftext)
 end
 
 function EOMNEWLOG()
-    if EOM_SHOULD_LOG == false then
+    if __write_output_to_logfile == false then
         return;
     end
     if cm:get_saved_value("EOMLOG") == true then
@@ -879,7 +879,9 @@ function eom_plot.stage_callback(self, stage)
         return
     end
     local stage_callback = self._callbacks[stage]
-    stage_callback(self:model())
+    local result, err = pcall(stage_callback, self:model())
+    --# assume err: string
+    if not result then EOM_ERROR(err) end
 end
 
 
@@ -1534,6 +1536,9 @@ end
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
 function eom_model.is_elector_valid(self, name)
+    if not self:has_elector(name) then
+        return false
+    end
     local elector_active = (self:get_elector(name):status() == "normal")
     local capital_owned = (cm:get_region(self:get_elector(name):capital()):owning_faction():name() == name)
     local living = (not self:get_elector_faction(name):is_dead()) 
@@ -1549,6 +1554,9 @@ end
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME) --> boolean
 function eom_model.is_elector_valid_for_taxes(self, name)
+    if not self:has_elector(name) then
+        return false
+    end
     local elector_active = (self:get_elector(name):status() == "normal")
     local capital_owned = (cm:get_region(self:get_elector(name):capital()):owning_faction():name() == name)
     local living = (not self:get_elector_faction(name):is_dead()) 
