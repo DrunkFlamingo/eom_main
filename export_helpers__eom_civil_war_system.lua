@@ -326,11 +326,19 @@ local function eom_civil_war_ender(eom)
                 elector:set_status("fallen")
                 elector:set_hidden(true)
                 cm:force_confederation(eom:empire(), name)
+                if elector:name() == "wh_main_emp_wissenland" then
+                    cm:trigger_incident(eom:empire(), "eom_main_civil_war_wissenland_5", true)
+                elseif elector:name() == "wh_main_emp_middenland" then
+                    cm:trigger_incident(eom:empire(), "eom_main_civil_war_middenland_5", true)
+                end
+                eom:set_core_data("midgame_chaos_trigger_turn", cm:model():turn_number() + 5)
+                eom:set_core_data("lategame_chaos_trigger_turn", cm:model():turn_number() + 35)
             end
         end
     end
-
     eom:set_core_data("block_events_for_plot", false)
+    eom:set_core_data("civil_war_active", false)
+    eom:change_all_loyalties(30)
 end
 
 
@@ -347,43 +355,45 @@ local function eom_civil_war()
 
     civil_war_ulric:add_stage_trigger(1, function(model --:EOM_MODEL
     )
-        return eom_civil_war_start_check_ulric(eom)
+        return eom_civil_war_start_check_ulric(model)
     end)
 
     civil_war_ulric:add_stage_callback(1, function(model --:EOM_MODEL
     )
-        eom_civil_war_start_ulric(eom)
+        eom_civil_war_start_ulric(model)
     end)
 
     civil_war_ulric:add_stage_trigger(2, function(model --:EOM_MODEL
     )
-        return eom_civil_war_end_check(eom)
+        return eom_civil_war_end_check(model)
     end)
 
     civil_war_ulric:add_stage_callback(2, function(model --:EOM_MODEL
     )
-        eom_civil_war_ender(eom)
+        eom_civil_war_ender(model)
+        model:get_story_chain("civil_war_ulric"):finish()
     end)
     local civil_war_sigmar = eom:new_story_chain("civil_war_sigmar")
 
     civil_war_sigmar:add_stage_trigger(1, function(model --:EOM_MODEL
     )
-        return eom_civil_war_start_check_sigmar(eom)
+        return eom_civil_war_start_check_sigmar(model)
     end)
 
     civil_war_sigmar:add_stage_callback(1, function(model --:EOM_MODEL
     )
-        eom_civil_war_start_sigmar(eom)
+        eom_civil_war_start_sigmar(model)
     end)
 
     civil_war_sigmar:add_stage_trigger(2, function(model --:EOM_MODEL
     )
-        return eom_civil_war_end_check(eom)
+        return eom_civil_war_end_check(model)
     end)
 
     civil_war_sigmar:add_stage_callback(2, function(model --:EOM_MODEL
     )
-        eom_civil_war_ender(eom)
+        eom_civil_war_ender(model)
+        model:get_story_chain("civil_war_sigmar"):finish()
     end)
 
 end
