@@ -35,23 +35,3 @@ core:add_listener(
         end
     end,
     true);
-
-
-core:add_listener(
-    "EOMVOLKMUSTARD",
-    "CharacterCreated",
-    function(context)
-        return context:character():character_subtype_key() == "dlc04_emp_volkmar"
-    end,
-    function(context)
-        if context:character():is_null_interface() == false then
-            local cqi = context:character():cqi()
-            cm:add_agent_experience(cm:char_lookup_str(cqi), 8000)
-            for i = 1, 4 do
-            cm:callback( function()
-            cm:grant_unit_to_character(cm:char_lookup_str(cqi), "wh_dlc04_emp_inf_flagellants_0")
-            end, i/10)
-            end
-        end
-    end,
-    false)
