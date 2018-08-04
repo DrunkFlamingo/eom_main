@@ -59,33 +59,34 @@ core:add_listener(
                         remove_taxation_bundles(name)
                         cm:apply_effect_bundle("eom_"..name.."_taxation_1", eom:empire(), 0)
                         eom:log("Assigning tax level 1 to ["..name.."] ")
-                        local value_to_add = elector_tax_value[name][1]
-                        total_value = total_value + value_to_add
+                        
                     end
+                    local value_to_add = elector_tax_value[name][1]
+                    total_value = total_value + value_to_add
                 elseif elector:loyalty() > 25 and elector:loyalty() <= 50 then
                     if not empire:has_effect_bundle("eom_"..name.."_taxation_2") then
                         remove_taxation_bundles(name)
                         cm:apply_effect_bundle("eom_"..name.."_taxation_2", eom:empire(), 0)
                         eom:log("Assigning tax level 2 to ["..name.."] ")
-                        local value_to_add = elector_tax_value[name][2]
-                        total_value = total_value + value_to_add
                     end
+                    local value_to_add = elector_tax_value[name][2]
+                    total_value = total_value + value_to_add
                 elseif elector:loyalty() > 50 and elector:loyalty() <= 75 then
                     if not empire:has_effect_bundle("eom_"..name.."_taxation_3") then
                         remove_taxation_bundles(name)
                         cm:apply_effect_bundle("eom_"..name.."_taxation_3", eom:empire(), 0)
                         eom:log("Assigning tax level 3 to ["..name.."] ")
-                        local value_to_add = elector_tax_value[name][3]
-                        total_value = total_value + value_to_add
                     end
+                    local value_to_add = elector_tax_value[name][3]
+                    total_value = total_value + value_to_add
                 else
                     if not empire:has_effect_bundle("eom_"..name.."_taxation_4") then
                         remove_taxation_bundles(name)
                         cm:apply_effect_bundle("eom_"..name.."_taxation_4", eom:empire(), 0)
                         eom:log("Assigning tax level 4 to ["..name.."] ")
-                        local value_to_add = elector_tax_value[name][4]
-                        total_value = total_value + value_to_add
                     end
+                    local value_to_add = elector_tax_value[name][4]
+                    total_value = total_value + value_to_add
                 end
             elseif (not elector:is_cult()) then
                 remove_taxation_bundles(name)
