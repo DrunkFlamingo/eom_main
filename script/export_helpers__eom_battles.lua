@@ -63,6 +63,7 @@ core:add_listener(
     function(context)
         eom:get_elector("wh_main_emp_hochland"):change_loyalty(12)
         eom:get_elector("wh_main_emp_middenland"):change_loyalty(8)
+        eom:get_elector("wh_main_emp_talabecland"):change_loyalty(8)
     end,
     true);
 
@@ -73,6 +74,7 @@ core:add_listener(
     function(context)
         eom:get_elector("wh_main_emp_hochland"):change_loyalty(-15)
         eom:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
+        eom:get_elector("wh_main_emp_talabecland"):change_loyalty(-10)
     end,
     true)
     
@@ -173,6 +175,7 @@ core:add_listener(
         eom:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(8)
         eom:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(8)
         eom:get_elector("wh_main_emp_talabecland"):change_loyalty(8)
+        eom:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(8)
     end,
     true)
 
@@ -184,5 +187,6 @@ core:add_listener(
         eom:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
         eom:get_elector("wh_main_emp_cult_of_ulric"):change_loyalty(-10)
         eom:get_elector("wh_main_emp_talabecland"):change_loyalty(-10)
+        eom:get_elector("wh_main_vmp_schwartzhafen"):change_loyalty(10)
     end,
     true)
