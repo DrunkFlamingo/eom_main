@@ -11,7 +11,9 @@ core:add_listener(
         return context:is_war() and context:proposer():name() == eom:empire() and eom:has_elector(context:recipient():name())
     end,
     function(context)
-        eom:check_unjust_war(context:recipient():name())
+        if eom:get_elector(context:recipient():name()):status() == "normal" then
+            eom:check_unjust_war(context:recipient():name())
+        end
     end,
     true)
 

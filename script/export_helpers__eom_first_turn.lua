@@ -29,7 +29,9 @@ local function eom_starting_settings()
         }--: vector<string>
         local external_list = {
             "faction:wh_main_ksl_kislev",
-            "faction:wh_main_teb_border_princes"
+            "faction:wh_main_teb_border_princes",
+            "faction:wh_main_dwf_karak_kadrin",
+            "faction:wh_main_dwf_dwarfs"
         }--:vector< string>
 
         for i = 1, #elector_diplo_list do
