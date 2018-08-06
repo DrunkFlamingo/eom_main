@@ -23,6 +23,7 @@ local eom_main_events_table = {
             ) 
             model:get_elector("wh_main_emp_averland"):change_loyalty(15)
             model:get_elector("wh_main_emp_stirland"):change_loyalty(-10)
+            
             cm:force_declare_war("wh_main_emp_averland", "wh_main_emp_stirland", false, false)
         end
         }
@@ -507,7 +508,7 @@ local eom_main_events_table = {
             [3] = function(model --: EOM_MODEL
             ) 
             model:get_elector("wh_main_emp_middenland"):change_loyalty(-10)
-            cm:force_declare_war("wh_main_emp_empire", "wh_main_emp_middenland", false, false)
+            cm:force_declare_war("wh_main_emp_middenland", "wh_main_emp_empire", false, false)
             model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(15)
         end,
             [4] = function(model --: EOM_MODEL
