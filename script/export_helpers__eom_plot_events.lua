@@ -48,6 +48,12 @@ function marienburg_rebellion_add()
         local mburg_dead = cm:get_faction("wh_main_emp_marienburg"):is_dead()
         local mburg_owned = cm:get_region("wh_main_the_wasteland_marienburg"):owning_faction():name() == model:empire()
         local mburg_attacked = (model:get_core_data_with_key("friend_of_marienburg") == false)
+
+        if mburg_attacked and plot_progress then
+            if not (mburg_dead and mburg_owned) then
+                model:set_core_data("marienburg_plot_turn", cm:model():turn_number() + 15)
+            end
+        end 
         return plot_progress and plot_available and mburg_dead and mburg_owned and mburg_attacked
     end)
 
@@ -55,13 +61,13 @@ function marienburg_rebellion_add()
     marienburg_rebellion:add_stage_callback(1, function(model--:EOM_MODEL
     )
         cm:trigger_incident(model:empire(), "eom_marienburg_rebellion_1", true)
-        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 405, 478, true, true, function(cqi) end)
-        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 403, 480, true, true, function(cqi) end)
+        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 358, 509, true, true, function(cqi) end)
+        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 440, 545, true, true, function(cqi) end)
         cm:apply_effect_bundle_to_region("eom_marienburg_rebellion_1_region", "wh_main_the_wasteland_marienburg", 8)
         
         cm:callback(function()
             cm:force_declare_war("wh_main_emp_marienburg", "wh_main_emp_empire", false, false)
-            cm:treasury_mod("wh_main_emp_marienburg", 5000)
+            cm:treasury_mod("wh_main_emp_marienburg", 10000)
         end, 0.1)
 
 
