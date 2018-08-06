@@ -95,7 +95,7 @@ core:add_listener(
 
 core:add_listener(
     "EOMNorscaDefeatedYou",
-    "VictoryAgainstSubcultureKey_wh_main_sc_nor_norsca",
+    "DefeatAgainstSubcultureKey_wh_main_sc_nor_norsca",
     true,
     function(context)
         eom:get_elector("wh_main_emp_ostland"):change_loyalty(-10)
@@ -137,7 +137,7 @@ core:add_listener(
 
 core:add_listener(
     "EOMGreenSkinsDefeatedYou",
-    "VictoryAgainstSubcultureKey_wh_main_sc_grn_greenskins",
+    "DefeatAgainstSubcultureKey_wh_main_sc_grn_greenskins",
     true,
     function(context)
         eom:get_elector("wh_main_emp_averland"):change_loyalty(-10)
@@ -158,7 +158,7 @@ core:add_listener(
 
 core:add_listener(
     "EOMGreenSkinsDefeatedYou2",
-    "VictoryAgainstSubcultureKey_wh_main_sc_grn_savage_orcs",
+    "DefeatAgainstSubcultureKey_wh_main_sc_grn_savage_orcs",
     true,
     function(context)
         eom:get_elector("wh_main_emp_averland"):change_loyalty(-10)
@@ -181,7 +181,7 @@ core:add_listener(
 
 core:add_listener(
     "EOMChaosDefeatedYou",
-    "VictoryAgainstSubcultureKey_wh_main_sc_chs_chaos",
+    "DefeatAgainstSubcultureKey_wh_main_sc_chs_chaos",
     true,
     function(context)
         eom:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
