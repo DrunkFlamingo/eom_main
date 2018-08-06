@@ -27,6 +27,7 @@ core:add_listener(
 				for i = 1, # additions_list do
 					lem:add_faction_to_secondary(additions_list[i])
 				end
+				lem:add_faction_to_major("wh_dlc08_nor_norsca")
 			end
 		end
 	end,
