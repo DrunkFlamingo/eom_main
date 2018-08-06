@@ -126,6 +126,83 @@ local function eom_expedition_check(is_ai)
 end
 
 
+--v function()
+local function dwarf_province_refund_check()
+
+    local region_to_elector = {
+        ["wh_main_ostland_castle_von_rauken"] = "wh_main_emp_ostland",
+        ["wh_main_ostland_norden"] = "wh_main_emp_ostland",
+        ["wh_main_ostland_wolfenburg"] = "wh_main_emp_ostland",
+        ["wh_main_stirland_the_moot"] = "wh_main_emp_stirland",
+        ["wh_main_stirland_wurtbad"] = "wh_main_emp_stirland",
+        ["wh_main_talabecland_kemperbad"] = "wh_main_emp_talabecland",
+        ["wh_main_wissenland_nuln"] = "wh_main_emp_wissenland",
+        ["wh_main_wissenland_pfeildorf"] = "wh_main_emp_wissenland",
+        ["wh_main_wissenland_wissenburg"] = "wh_main_emp_wissenland",
+        ["wh_main_hochland_brass_keep"] = "wh_main_emp_hochland",
+        ["wh_main_hochland_hergig"] = "wh_main_emp_hochland",
+        ["wh_main_middenland_carroburg"] = "wh_main_emp_middenland",
+        ["wh_main_middenland_middenheim"] = "wh_main_emp_middenland",
+        ["wh_main_middenland_weismund"] = "wh_main_emp_middenland",
+        ["wh_main_nordland_dietershafen"] = "wh_main_emp_nordland",
+        ["wh_main_nordland_salzenmund"] = "wh_main_emp_nordland",
+        ["wh_main_talabecland_talabheim"] = "wh_main_emp_talabecland",
+        ["wh_main_averland_averheim"] = "wh_main_emp_averland",
+        ["wh_main_averland_grenzstadt"] = "wh_main_emp_averland",
+        ["wh_main_ostermark_bechafen"] = "wh_main_emp_ostermark",
+        ["wh_main_ostermark_essen"] = "wh_main_emp_ostermark",
+        ["wh_main_the_wasteland_gorssel"] = "wh_main_emp_marienburg",
+        ["wh_main_the_wasteland_marienburg"] = "wh_main_emp_marienburg"
+    }--:map<string, ELECTOR_NAME>
+    eom:log("Checking dwarf owned empire settlements!")
+    for region, faction in pairs(region_to_elector) do
+        if cm:get_region(region):owning_faction():subculture() == "wh_main_sc_dwf_dwarfs" and (not cm:get_region(region):owning_faction():is_human()) then
+            eom:log(" region ["..region.."] owned by the dwarfs!")
+            local elector = eom:get_elector(faction)
+            local owner = cm:get_region(region):owning_faction()
+            if cm:get_faction(faction):is_dead() and elector:status() == "normal" then
+                eom:log("The elector is dead, the dwarfs are reviving them!")
+                if not cm:get_saved_value("Spawned"..faction..cm:model():turn_number()) == true then
+                    cm:set_saved_value("Spawned"..faction..cm:model():turn_number(), true)
+                    cm:create_force_with_general(
+                        elector:name(),
+                        elector:get_army_list(),
+                        region,
+                        cm:get_region(region):settlement():logical_position_x() + 1,
+                        cm:get_region(region):settlement():logical_position_y() + 1,
+                        "general",
+                        elector:leader_subtype(),
+                        elector:leader_forename(),
+                        "",
+                        elector:leader_surname(), 
+                        "",
+                        true,
+                        function(cqi)
+                            
+                        end)
+                end
+                cm:callback( function()
+                    cm:transfer_region_to_faction(region, elector:name())
+                    cm:treasury_mod(elector:name(), 5000)
+                end, 0.2)
+
+            elseif cm:get_faction(faction):at_war_with(owner) then
+                if not cm:get_faction(eom:empire()):at_war_with(owner) then
+                    eom:log("the elector is at war with the dwarfs, but the Empire is not. This elector will capitulate!")
+                    cm:force_make_peace(owner:name(), faction)
+                    cm:transfer_region_to_faction(region, faction)
+                    cm:treasury_mod(owner:name(), 4000)
+                end
+
+            else
+                eom:log("These factions are at peace, giving the region back to its elector")
+                cm:transfer_region_to_faction(region, faction)
+                cm:treasury_mod(owner:name(), 4000)
+            end
+        end
+    end
+end
+
 
 
 
@@ -141,6 +218,7 @@ local function eom_add_revive_listener()
             if cm:get_faction(eom:empire()):is_human() then
                 eom_coup_detat_check(false)
                 eom_expedition_check(false)
+                dwarf_province_refund_check()
             else
                 eom_coup_detat_check(true)
                 eom_expedition_check(true)
