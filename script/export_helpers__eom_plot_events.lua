@@ -92,6 +92,14 @@ function marienburg_rebellion_add()
                     model:get_elector("wh_main_emp_marienburg"):set_loyalty(65)
                     model:get_elector("wh_main_emp_marienburg"):set_can_revive(true)
                     cm:apply_effect_bundle("eom_wh_main_emp_marienburg_taxation_3", eom:empire(), 0)
+                    cm:remove_effect_bundle_from_region("eom_marienburg_rebellion_1_region", "wh_main_the_wasteland_marienburg")
+                    eom:get_elector("wh_main_emp_marienburg"):respawn_at_capital()
+                    if cm:get_region("wh_main_the_wasteland_gorssel"):owning_faction():name() == eom:empire() then
+                        eom:log("Empire owns gorsel!")
+                        cm:callback(function() cm:transfer_region_to_faction("wh_main_the_wasteland_gorssel", "wh_main_emp_marienburg") end, 0.5)
+                    else
+                        eom:log("empire does not own gorsel!")
+                    end
                 else
                     cm:force_declare_war("wh_main_brt_bretonnia", "wh_main_emp_empire", false, false)
                     cm:treasury_mod("wh_main_brt_bretonnia", 5000)
@@ -101,6 +109,8 @@ function marienburg_rebellion_add()
                 end
             end,
             false)
+
+
         model:get_story_chain("marienburg_rebellion"):finish()
 
     end)
