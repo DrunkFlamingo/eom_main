@@ -68,7 +68,7 @@ local function eom_starting_settings()
 
         --set marienburg's status to seceded
         cm:force_change_cai_faction_personality("wh_main_emp_marienburg", "wh_main_emp_marienburg")
-
+        if cm:get_faction(eom:empire()):is_human() then
 
             local vlad_armies = cm:get_faction("wh_main_vmp_schwartzhafen"):character_list()
             for i = 0, vlad_armies:num_items() -1 do
@@ -114,7 +114,7 @@ local function eom_starting_settings()
             end, 5.0);
 
         --randomize which plot events happen when
-
+        end
 
         out("EOM STARTING CHANGES FINISHED")
     end
