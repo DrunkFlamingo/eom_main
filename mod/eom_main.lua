@@ -2,24 +2,6 @@ EOM_SHOULD_LOG = true --:boolean
 EOM_LAST_CONTEXT = "no context set" --:string
 EOM_LOG_TURN = "Preload" --:string
 
---v function(text: string)
-function EOM_ERRORS(text)
-    ftext = "debugger"
-    --sometimes I use ftext as an arg of this function, but for simple mods like this one I don't need it.
-
-    if not __write_output_to_logfile then
-        return; --if our bool isn't set true, we don't want to spam the end user with logs. 
-    end
-
-    local logText = tostring(text)
-    local logContext = tostring(ftext)
-    local logTimeStamp = os.date("%d, %m %Y %X")
-    local popLog = io.open("EOM_DEBUGG.txt","a")
-    --# assume logTimeStamp: string
-    popLog :write("WEC:  "..logText .. "    : [" .. logContext .. "] : [".. logTimeStamp .. "]\n")
-    popLog :flush()
-    popLog :close()
-end
 --v [NO_CHECK] function()
 local function error_checker()
     --v [NO_CHECK] function(func: function) --> any
@@ -27,8 +9,8 @@ local function error_checker()
     --RCDEBUG("safeCall start");
     local status, result = pcall(func)
     if not status then
-        EOM_ERRORS(tostring(result))
-        EOM_ERRORS(debug.traceback());
+        EOMLOG(tostring(result))
+        EOMLOG(debug.traceback());
     end
     --RCDEBUG("safeCall end");
     return result;
@@ -67,14 +49,14 @@ local function error_checker()
     function tryRequire(fileName)
     local loaded_file = loadfile(fileName);
     if not loaded_file then
-        EOM_ERRORS("Failed to find mod file with name " .. fileName)
+        EOMLOG("Failed to find mod file with name " .. fileName)
     else
-        EOM_ERRORS("Found mod file with name " .. fileName)
-        EOM_ERRORS("Load start")
+        EOMLOG("Found mod file with name " .. fileName)
+        EOMLOG("Load start")
         local local_env = getfenv(1);
         setfenv(loaded_file, local_env);
         loaded_file();
-        EOM_ERRORS("Load end")
+        EOMLOG("Load end")
     end
     end
 
@@ -91,7 +73,7 @@ local function error_checker()
     --v [NO_CHECK] function(f: function(), name: string)
     function logFunctionCall(f, name)
     return function(...)
-        EOM_ERRORS("function called: " .. name);
+        EOMLOG("function called: " .. name);
         return f(...);
     end
     end
@@ -101,7 +83,7 @@ local function error_checker()
     local metatable = getmetatable(object);
     for name,f in pairs(getmetatable(object)) do
         if is_function(f) then
-            EOM_ERRORS("Found " .. name);
+            EOMLOG("Found " .. name);
             if name == "Id" or name == "Parent" or name == "Find" or name == "Position" or name == "CurrentState"  or name == "Visible"  or name == "Priority" or "Bounds" then
                 --Skip
             else
@@ -110,12 +92,12 @@ local function error_checker()
         end
         if name == "__index" and not is_function(f) then
             for indexname,indexf in pairs(f) do
-                EOM_ERRORS("Found in index " .. indexname);
+                EOMLOG("Found in index " .. indexname);
                 if is_function(indexf) then
                     f[indexname] = logFunctionCall(indexf, indexname);
                 end
             end
-            EOM_ERRORS("Index end");
+            EOMLOG("Index end");
         end
     end
     end
@@ -165,25 +147,20 @@ end
 error_checker()
 
 
---v function(text: string, ftext: string?)
-function EOMLOG(text, ftext)
+--v function(text: any)
+function EOMLOG(text)
     
 
     if not __write_output_to_logfile then
         return; --if our bool isn't set true, we don't want to spam the end user with logs. 
     end
-    if not ftext then
-        ftext = EOM_LAST_CONTEXT
-    else
-        EOM_LAST_CONTEXT = ftext
-    end
+
 
     local logText = tostring(text)
-    local logContext = tostring(ftext)
     local logTimeStamp = os.date("%d, %m %Y %X")
     local popLog = io.open("EOMLOG.txt","a")
     --# assume logTimeStamp: string
-    popLog :write("WEC:  "..logText .. "    : CONTEXT: [" .. logContext .. "] TIMESTAMP : [".. logTimeStamp .. "] TURN : ["..EOM_LOG_TURN.."] \n")
+    popLog :write("GOC:  [".. logTimeStamp .. "]:  "..logText .. "  \n")
     popLog :flush()
     popLog :close()
 end
@@ -192,11 +169,6 @@ function EOMNEWLOG()
     if __write_output_to_logfile == false then
         return;
     end
-    if cm:get_saved_value("EOMLOG") == true then
-        return;
-    end
-    cm:set_saved_value("EOMLOG", true)
-
     local logTimeStamp = os.date("%d, %m %Y %X")
     --# assume logTimeStamp: string
 
@@ -206,54 +178,8 @@ function EOMNEWLOG()
     popLog :close()
     cm:set_saved_value("eom_new_log", true)
 end
---EOMNEWLOG()
+EOMNEWLOG()
 
---v function(msg: string)
-function EOM_ERROR(msg)
-	local ast_line = "********************";
-	
-	-- do output
-	print(ast_line);
-	print("SCRIPT ERROR, timestamp " .. get_timestamp());
-	print(msg);
-	print("");
-	print(debug.traceback("", 2));
-	print(ast_line);
-	-- assert(false, msg .. "\n" .. debug.traceback());
-	
-	-- logfile output
-		local file = io.open("RCLOG.txt", "a");
-		
-		if file then
-			file:write(ast_line .. "\n");
-			file:write("SCRIPT ERROR, timestamp " .. get_timestamp() .. "\n");
-			file:write(msg .. "\n");
-			file:write("\n");
-			file:write(debug.traceback("", 2) .. "\n");
-			file:write(ast_line .. "\n");
-			file:close();
-		end;
-end;
-
-
---v function(text: string)
-function EOM_DEBUG(text)
-    ftext = "debugger"
-    --sometimes I use ftext as an arg of this function, but for simple mods like this one I don't need it.
-
-    if not EOM_SHOULD_LOG then
-        return; --if our bool isn't set true, we don't want to spam the end user with logs. 
-    end
-
-    local logText = tostring(text)
-    local logContext = tostring(ftext)
-    local logTimeStamp = os.date("%d, %m %Y %X")
-    local popLog = io.open("RCLOG.txt","a")
-    --# assume logTimeStamp: string
-    popLog :write("WEC:  "..logText .. "    : [" .. logContext .. "] : [".. logTimeStamp .. "]\n")
-    popLog :flush()
-    popLog :close()
-end
 
 
 
@@ -881,7 +807,7 @@ function eom_plot.stage_callback(self, stage)
     local stage_callback = self._callbacks[stage]
     local result, err = pcall(stage_callback, self:model())
     --# assume err: string
-    if not result then EOM_ERROR(err) end
+    if not result then EOMLOG(err) end
 end
 
 
@@ -1017,7 +943,7 @@ function eom_action.act(self)
         self:key(),
         "DilemmaChoiceMadeEvent",
         function(context)
-            return context:faction():name() == EOM_GLOBAL_EMPIRE_FACTION
+            return context:dilemma() == self:key()
         end,
         function(context)
             self:do_choice((context:choice()+1))
@@ -1150,7 +1076,6 @@ end
 
 --v function(self: EOM_ELECTOR, status: ELECTOR_STATUS)
 function eom_elector.set_status(self, status)
-    EOMLOG("entered for ["..self:name().."] ", "eom_elector.set_status(self)")
     if self:is_loyal() and status ~= "loyal" then
         EOMLOG("this elector is fully loyal, aborting")
         return
@@ -1351,7 +1276,6 @@ end
 
 --v function(self: EOM_ELECTOR) 
 function eom_elector.dead_for_turn(self)
-    EOMLOG("entered", "eom_elector.dead_for_turn(self)")
     self._turnsDead = self._turnsDead + 1;
     EOMLOG(" ["..self:name().."] is dead this turn, incrementing their dead counter to ["..tostring(self:turns_dead()).."] ")
 end
@@ -1465,9 +1389,9 @@ function eom_model.empire(self)
     return "wh_main_emp_empire"
 end
 
---v function(self: EOM_MODEL, text: string, ftext: string?)
-function eom_model.log(self, text, ftext)
-    EOMLOG(text, ftext)
+--v function(self: EOM_MODEL, text: any)
+function eom_model.log(self, text)
+    EOMLOG(text)
 end
 
 --v function(self: EOM_MODEL, turn: number)
@@ -1617,7 +1541,6 @@ end
 
 --v function(self: EOM_MODEL, info: ELECTOR_INFO)
 function eom_model.add_elector(self, info)
-    EOMLOG("entered", "eom_model.add_elector(self, info)")
     local elector = eom_elector.new(info)
     self._electors[elector:name()] = elector
     EOMLOG("Added elector ["..elector:name().."] to the model!")
@@ -1762,11 +1685,10 @@ end
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.check_unjust_war(self, name)
-    EOMLOG("Entered", "eom_model.check_unjust_war(self, name)")
     if self:has_casus_belli_against(name) then
         EOMLOG("Casus Belli possessed, doing nothing!")
     else
-        EOMLOG("Checking unjust war!")
+        EOMLOG("Checking unjust war for ["..name.."]!")
         local last_unjust = self:get_core_data_with_key("last_unjust_war") --# assume last_unjust:number
         if last_unjust == nil then self:set_core_data("last_unjust_war", cm:model():turn_number()) end
         if last_unjust ~= cm:model():turn_number() then
@@ -1871,7 +1793,7 @@ end
 --saving
 --v function(self: EOM_MODEL) --> EOM_MODEL_SAVETABLE
 function eom_model.save(self)
-    EOMLOG("entered", "eom_model.save(self)")
+    EOMLOG("Saving the game!")
     local savetable = {} 
     --electors
     savetable._electors = {}--:map<ELECTOR_NAME, ELECTOR_INFO>
@@ -1894,7 +1816,7 @@ end
 --loading
 --v function(self: EOM_MODEL, savetable: EOM_MODEL_SAVETABLE)
 function eom_model.load(self, savetable)
-    EOMLOG("entered", "eom_model.load(self, savetable)")
+    EOMLOG("Loading the game!")
 
     --electors
     for k, v in pairs(savetable._electors) do
@@ -1909,7 +1831,7 @@ end
 --ui
 --v function(self: EOM_MODEL, view: EOM_VIEW)
 function eom_model.add_view(self, view)
-    EOMLOG("initializing the view", "eom_model.add_view(self, view)")
+    EOMLOG("Initializing the View!")
     self._view = view
 end
 
@@ -1962,10 +1884,10 @@ end
 function eom_view.set_button_parent(self)
     local component = find_uicomponent(core:get_ui_root(), "button_group_management")
     if not not component then
-        EOMLOG("Set the button parent", "eom_view.set_button_parent(self)")
+        EOMLOG("UI: Set the button parent")
         self.button_parent = component
     else
-        EOMLOG("ERROR?: Failed to set the button component!", "eom_view.set_button_parent(self)")
+        EOMLOG("ERROR?: Failed to set the button component!")
     end
 end
 
@@ -1974,7 +1896,7 @@ end
 function eom_view.get_button(self)
 
     if self.button_parent == nil then
-        EOMLOG("ERROR: get button called but the button parent is not set!", "eom_view.get_button(self)")
+        EOMLOG("ERROR: get button called but the button parent is not set!")
         return nil
     end
 
@@ -2007,7 +1929,7 @@ end
 --v function(self: EOM_VIEW) --> FRAME
 function eom_view.get_frame(self)
 
-    EOMLOG("Getting the politics frame!", "eom_view.get_frame(self)")
+    EOMLOG("Getting the politics frame!")
     local existingFrame = Util.getComponentWithName(self.frame_name)
     if not not existingFrame then
         --# assume existingFrame: FRAME
@@ -2037,7 +1959,7 @@ end
 --v function(self: EOM_VIEW)
 function eom_view.frame_buttons(self)
     if self.frame == nil then
-        EOMLOG("ERROR: frame buttons called but the button parent is not set!", "eom_view.frame_buttons(self)")
+        EOMLOG("ERROR: frame buttons called but the button parent is not set!")
         return
     end
     local existingCloseButton = Util.getComponentWithName(self.frame_name.."close")
@@ -2146,9 +2068,9 @@ function eom_view.populate_frame(self)
                 end
             end
         end
-        EOMLOG("Updated Loyalties", "UI")
+        EOMLOG("UI: Updated Loyalties")
     end
-    EOMLOG("Populate frame completed with no errors")
+    EOMLOG("UI: Populate frame completed with no errors")
 end
     
 
@@ -2157,7 +2079,7 @@ end
 
 --v function(self: EOM_VIEW)
 function eom_view.close_politics(self)
-    EOMLOG("Close button pressed on politics panel", "eom_controller.close_politics(self)")
+    EOMLOG("UI: Close button pressed on politics panel")
     self:hide_frame()
     local layout = find_uicomponent(core:get_ui_root(), "layout")
     if not not layout then
@@ -2179,13 +2101,13 @@ end
 
 --v function(self: EOM_VIEW)
 function eom_view.docker_button_pressed(self)
-    EOMLOG("Docker Button Pressed", "eom_controller.docker_button_pressed(self)")
+    EOMLOG("Docker Button Pressed")
     self:get_frame()
     self:frame_buttons()
     local ok, err = pcall( function() self:populate_frame() end)
     if not ok then
         --# assume err: string
-        EOM_ERROR(err)
+        EOMLOG(err)
     end
     local layout = find_uicomponent(core:get_ui_root(), "layout")
     if not not layout then

@@ -52,7 +52,7 @@ end
     
 
 local function empire_plot_and_events_check_human()
-    eom:log("Entered", "eom_model.event_and_plot_check(self)")
+    eom:log("CORE: Checking Plot and Events!")
 
     if cm:get_saved_value("ci_trigger_mid_game_event_on_turn_start") == true then
         eom:log("aborting for the chaos invasion")

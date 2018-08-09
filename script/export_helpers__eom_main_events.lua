@@ -1102,7 +1102,7 @@ local eom_main_events_table = {
         }
     }, 
 }--:vector<EOM_EVENT>
-    eom:log("Adding Main Events", "export_helpers__eom_main_events")
+    eom:log("Adding main events!")
     for i = 1, #eom_main_events_table do 
         local current_event = eom_main_events_table[i];
         eom:add_event(current_event)

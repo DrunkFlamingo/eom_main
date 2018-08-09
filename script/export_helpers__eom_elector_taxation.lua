@@ -50,7 +50,7 @@ core:add_listener(
         cm:remove_effect_bundle(last_total_bundle, eom:empire())
     end
     local total_value = 0 --:number
-    eom:log("Entered", "eom_model.elector_taxation(self)")
+    eom:log("Checking Elector Taxation")
     local empire = cm:get_faction(eom:empire())
         for name, elector in pairs(eom:electors()) do
             if (not elector:is_cult()) and eom:is_elector_valid_for_taxes(name) then

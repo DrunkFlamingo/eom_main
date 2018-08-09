@@ -6,7 +6,7 @@ if not eom then
 end
 local function eom_elector_diplomacy()
     local suffix_list = {"_critical", "_good", "_indifferent", "_low", "_loyal", "_very_good", "_very_low"} --:vector<string>
-    eom:log("entered", "function eom_model.elector_diplomacy(self)");
+    eom:log("Checking elector AI profiles!");
     local loyalty_level = "_loyal"
     for key, current_elector in pairs(eom:electors()) do
         local current_loyalty = current_elector:loyalty()
@@ -41,7 +41,7 @@ local function eom_elector_diplomacy()
 end
 
 local function eom_elector_personalities()
-    eom:log("Entered", "eom_model.elector_personalities(self)")
+    eom:log("Checking AI personalities")
     for name, elector in pairs(eom:electors()) do
         if elector:status() == "normal" then
             cm:force_change_cai_faction_personality(name, "eom_normal_elector")

@@ -560,7 +560,7 @@ end
 
 function eom_plot_events()
     if cm:get_faction(eom:empire()):is_human() then
-        eom:log("Started", "export_helpers__plot_events")
+        eom:log("Adding plot events!")
         reikland_rebellion_add()
         marienburg_rebellion_add()
         marienburg_invasion_add()

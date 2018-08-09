@@ -19,11 +19,11 @@ core:add_listener(
             local enemy = enemies[i]
             local enemy_sub = enemy:faction():subculture()
             if character:won_battle() then 
-                eom:log("Triggering event VictoryAgainstSubcultureKey_"..enemy_sub, "EOMBattlesCompleted")
+                eom:log("Triggering event VictoryAgainstSubcultureKey_"..enemy_sub)
                 core:trigger_event("VictoryAgainstSubcultureKey_"..enemy_sub)
             else
                 core:trigger_event("DefeatAgainstSubcultureKey_"..enemy_sub)
-                eom:log("Triggering event DeafeatAgainstSubcultureKey_"..enemy_sub, "EOMBattlesCompleted")
+                eom:log("Triggering event DeafeatAgainstSubcultureKey_"..enemy_sub)
             end
         end
     end, 

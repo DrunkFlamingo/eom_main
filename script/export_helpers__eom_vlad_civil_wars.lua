@@ -115,7 +115,7 @@ end
 
 
 local function eom_empire_add_civil_wars()
-    eom:log("Starting", "export_helpers__eom_civil_wars")
+    eom:log("Adding vlads civil war!")
     eom_vlad_civil_war()
 end
 
