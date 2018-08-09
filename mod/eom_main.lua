@@ -1743,54 +1743,12 @@ function eom_model.elector_fallen(self, name, show_message_event)
     end
 end
 
-    
---v function (self: EOM_MODEL, name: ELECTOR_NAME)
-function eom_model.trigger_restoration_dilemma(self, name)
-    local elector = self:get_elector(name)
-    cm:trigger_dilemma(EOM_GLOBAL_EMPIRE_FACTION, "eom_"..name.."_restoration", true)
-    core:add_listener(
-        "restoration_"..name,
-        "DilemmaChoiceMadeEvent",
-        true,
-        function(context)
-            if context:choice() == 1 then
-                self:elector_fallen(name)
-            elseif context:choice() == 0 then
-                if self:get_elector(name):status() == "open_rebellion" then
-                    self:elector_rebellion_end(name)
-                    self:get_elector(name):respawn_at_capital()
-                    local home_regions = self:get_elector(name):home_regions()
-                    for i = 1, #home_regions do
-                        local current_region = home_regions[i]
-                        if cm:get_region(current_region):owning_faction():subculture() == "wh_main_emp_sc_empire" then
-                            cm:callback(function()
-                                cm:transfer_region_to_faction(current_region, name)
-                            end, i/10)
-                        end
-                    end
-                else
-                    self:get_elector(name):respawn_at_capital()
-                    self:get_elector(name):change_loyalty(20)
-                    local home_regions = self:get_elector(name):home_regions()
-                    for i = 1, #home_regions do
-                        local current_region = home_regions[i]
-                        if cm:get_region(current_region):owning_faction():subculture() == "wh_main_emp_sc_empire" then
-                            cm:callback(function()
-                                cm:transfer_region_to_faction(current_region, name)
-                            end, i/10)
-                        end
-                    end
-                end
-            end
-        end,
-        false)
-end
+   
 
 --war systems
 
 --v function(self: EOM_MODEL, name: ELECTOR_NAME)
 function eom_model.grant_casus_belli(self, name)
-    
     self:log("granting casus belli against ["..name.."] ")
     cm:apply_effect_bundle("eom_"..name.."_casus_belli", EOM_GLOBAL_EMPIRE_FACTION, 8)
 end
@@ -1840,7 +1798,9 @@ function eom_model.offer_capitulation(self, name)
     core:add_listener(
         "capitulation_"..name,
         "DilemmaChoiceMadeEvent",
-        true,
+        function(context)
+           return context:dilemma() == "eom_"..name.."_capitulation"
+        end,
         function(context)
             if context:choice() == 0 then
                 cm:force_make_peace(name, EOM_GLOBAL_EMPIRE_FACTION)

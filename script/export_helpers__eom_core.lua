@@ -8,6 +8,49 @@ if not cm:get_saved_value("eom_bug_fix_1") then
 end
 
 
+--v function (name: ELECTOR_NAME)
+local function trigger_elector_restoration_dilemma(name)
+    local elector = eom:get_elector(name)
+    cm:trigger_dilemma(EOM_GLOBAL_EMPIRE_FACTION, "eom_"..name.."_restoration", true)
+    core:add_listener(
+    "restoration_"..name,
+    "DilemmaChoiceMadeEvent",
+    true,
+    function(context)
+        if context:choice() == 1 then
+            eom:elector_fallen(name)
+        elseif context:choice() == 0 then
+            if eom:get_elector(name):status() == "open_rebellion" then
+                eom:elector_rebellion_end(name)
+                eom:get_elector(name):respawn_at_capital()
+                local home_regions = eom:get_elector(name):home_regions()
+                for i = 1, #home_regions do
+                    local current_region = home_regions[i]
+                    if cm:get_region(current_region):owning_faction():subculture() == "wh_main_emp_sc_empire" then
+                        cm:callback(function()
+                            cm:transfer_region_to_faction(current_region, name)
+                        end, i/10)
+                    end
+                end
+            else
+                eom:get_elector(name):respawn_at_capital()
+                eom:get_elector(name):change_loyalty(20)
+                local home_regions = eom:get_elector(name):home_regions()
+                for i = 1, #home_regions do
+                    local current_region = home_regions[i]
+                    if cm:get_region(current_region):owning_faction():subculture() == "wh_main_emp_sc_empire" then
+                        cm:callback(function()
+                            cm:transfer_region_to_faction(current_region, name)
+                        end, i/10)
+                    end
+                end
+            end
+        end
+    end,
+    false)
+end
+    
+
 local function empire_plot_and_events_check_human()
     eom:log("Entered", "eom_model.event_and_plot_check(self)")
 
@@ -67,7 +110,7 @@ local function empire_plot_and_events_check_human()
         if not elector:is_cult() then
             if cm:get_region(elector:capital()):owning_faction():name() == EOM_GLOBAL_EMPIRE_FACTION and cm:get_faction(name):is_dead() then
                 if elector:status() == "normal" or elector:status() == "open_rebellion" then
-                    eom:trigger_restoration_dilemma(name)
+                    trigger_elector_restoration_dilemma(name)
                 end
             end
         end
