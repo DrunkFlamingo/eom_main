@@ -219,6 +219,7 @@ function marienburg_invasion_add()
         end,
         false)
     cm:force_make_peace("wh_main_emp_empire", "wh_main_brt_bretonnia")
+    cm:force_make_peace("wh_main_emp_marienburg", "wh_main_brt_bretonnia")
     end)
 
 end
