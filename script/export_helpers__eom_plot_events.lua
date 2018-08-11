@@ -259,7 +259,7 @@ vampire_wars:add_stage_callback(1, function(model --:EOM_MODEL
         cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_cult_of_sigmar", false, false)
     end, 0.5)
     cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_waldenhof", 687, 460, true, true)
-    cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_castle_drakenhof", cm:get_region("wh_main_eastern_sylvania_castle_drakenhof"):settlement():logical_position_x(), cm:get_region("wh_main_eastern_sylvania_castle_drakenhof"):settlement():logical_position_y(), true, true)
+    cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_castle_drakenhof", cm:get_region("wh_main_eastern_sylvania_castle_drakenhof"):settlement():logical_position_x() + 4, cm:get_region("wh_main_eastern_sylvania_castle_drakenhof"):settlement():logical_position_y() + 1, true, true)
 
 end)
 vampire_wars:add_stage_trigger(2, function(model --:EOM_MODEL
