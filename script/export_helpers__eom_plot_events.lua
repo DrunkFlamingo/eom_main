@@ -344,7 +344,7 @@ vampire_wars:add_stage_callback(3, function(model
                 cm:force_alliance("wh_main_emp_empire", "wh_main_vmp_schwartzhafen", true)
                 model:set_core_data("allied_vlad", true)
                 model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(-10)
-            else
+            elseif context:choice() == 1 then
                 model:get_elector("wh_main_emp_cult_of_sigmar"):change_loyalty(10)
                 model:set_core_data("allied_vlad", false)
                 cm:force_diplomacy("faction:wh_main_vmp_schwartzhafen", "subculture:wh_main_sc_emp_empire", "war", true, true, true);
