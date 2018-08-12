@@ -460,8 +460,8 @@ function ostland_start_pos()
     sp._leaderForename = "names_name_2147344026"
     sp._leaderSurname = "names_name_2147344030"
     sp._capital =  "wh_main_ostland_wolfenburg"
-    sp._capitalSpawnX = 595 --:number
-    sp._capitalSpawnY = 533 --:number
+    sp._capitalSpawnX = 605 --:number
+    sp._capitalSpawnY = 540 --:number
     sp._expeditionX = 586--:number
     sp._expeditionY = 522--:number
     sp._knights = false;
@@ -492,7 +492,7 @@ function wissenland_start_pos()
     sp._leaderSurname = "names_name_2147344064"
     sp._capital =  "wh_main_wissenland_nuln"
     sp._capitalSpawnX = 520 --:number
-    sp._capitalSpawnY = 505 --:number
+    sp._capitalSpawnY = 405 --:number
     sp._expeditionX = 522--:number
     sp._expeditionY = 504--:number
     sp._knights = false;
@@ -660,8 +660,8 @@ function sigmar_start_pos()
     sp._leaderForename = "names_name_2147358013"
     sp._leaderSurname = "names_name_2147358014"
     sp._capital =  "wh_main_wissenland_nuln"
-    sp._capitalSpawnX = 521 --:number
-    sp._capitalSpawnY = 506 --:number
+    sp._capitalSpawnX = 520 --:number
+    sp._capitalSpawnY = 406 --:number
     sp._expeditionX = 581--:number
     sp._expeditionY = 443--:number
     sp._knights = false;
