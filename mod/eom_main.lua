@@ -273,6 +273,8 @@ function averland_start_pos()
     sp._leaderForename = "names_name_2147343941"
     sp._leaderSurname = "names_name_2147343947"
     sp._capital =  "wh_main_averland_averheim"
+    sp._capitalSpawnX = 570 --:number
+    sp._capitalSpawnY = 400 --:number
     sp._expeditionX = 573 --:number
     sp._expeditionY = 386 --:number
     sp._expeditionRegion = "wh_main_wissenland_pfeildorf"
@@ -302,6 +304,8 @@ function hochland_start_pos()
     sp._leaderForename = "names_name_2147344017"
     sp._leaderSurname = "names_name_2147344019"
     sp._capital =  "wh_main_hochland_hergig"
+    sp._capitalSpawnX = 575 --:number
+    sp._capitalSpawnY = 520 --:number
     sp._expeditionX = 540 --:number 
     sp._expeditionY = 503 --:number
     sp._homeRegions = {"wh_main_hochland_brass_keep"} --:vector<string>
@@ -331,6 +335,8 @@ function ostermark_start_pos()
     sp._leaderForename = "names_name_2147344036"
     sp._leaderSurname = "names_name_2147344037"
     sp._capital =  "wh_main_ostermark_bechafen"
+    sp._capitalSpawnX = 660 --:number
+    sp._capitalSpawnY = 520 --:number
     sp._expeditionX = 577 --:number
     sp._expeditionY = 497 --:number
     sp._isCult = false;
@@ -360,6 +366,8 @@ function stirland_start_pos()
     sp._leaderForename = "names_name_2147344039"
     sp._leaderSurname = "names_name_2147344048"
     sp._capital =  "wh_main_stirland_wurtbad"
+    sp._capitalSpawnX = 585 --:number
+    sp._capitalSpawnY = 435 --:number
     sp._expeditionX = 515--:number
     sp._expeditionY = 434--:number
     sp._knights = false;
@@ -390,6 +398,8 @@ function middenland_start_pos()
     sp._leaderForename = "names_name_2147343937"
     sp._leaderSurname = "names_name_2147343940"
     sp._capital =  "wh_main_middenland_middenheim"
+    sp._capitalSpawnX = 520 --:number
+    sp._capitalSpawnY = 505 --:number
     sp._expeditionX = 489--:number
     sp._expeditionY = 469--:number
     sp._knights = false;
@@ -419,6 +429,8 @@ function nordland_start_pos()
     sp._leaderForename = "names_name_2147344022"
     sp._leaderSurname = "names_name_2147344023"
     sp._capital =  "wh_main_nordland_dietershafen"
+    sp._capitalSpawnX = 525 --:number
+    sp._capitalSpawnY = 555 --:number
     sp._expeditionX = 528--:number
     sp._expeditionY = 532--:number
     sp._knights = false;
@@ -448,6 +460,8 @@ function ostland_start_pos()
     sp._leaderForename = "names_name_2147344026"
     sp._leaderSurname = "names_name_2147344030"
     sp._capital =  "wh_main_ostland_wolfenburg"
+    sp._capitalSpawnX = 595 --:number
+    sp._capitalSpawnY = 533 --:number
     sp._expeditionX = 586--:number
     sp._expeditionY = 522--:number
     sp._knights = false;
@@ -477,8 +491,10 @@ function wissenland_start_pos()
     sp._leaderForename = "names_name_2147344005"
     sp._leaderSurname = "names_name_2147344064"
     sp._capital =  "wh_main_wissenland_nuln"
-    sp._expeditionX =515--:number
-    sp._expeditionY = 434--:number
+    sp._capitalSpawnX = 520 --:number
+    sp._capitalSpawnY = 505 --:number
+    sp._expeditionX = 522--:number
+    sp._expeditionY = 504--:number
     sp._knights = false;
     sp._canRevive = true;
     sp._unitList = get_default_start_army()
@@ -506,6 +522,8 @@ function talabecland_start_pos()
     sp._leaderForename = "names_name_2147344050"
     sp._leaderSurname = "names_name_2147344053"
     sp._capital =  "wh_main_talabecland_talabheim"
+    sp._capitalSpawnX = 580 --:number
+    sp._capitalSpawnY = 490 --:number
     sp._expeditionX = 515--:number
     sp._expeditionY = 434--:number
     sp._knights = false;
@@ -535,6 +553,8 @@ function marienburg_start_pos()
     sp._leaderForename = "names_name_2147355056"
     sp._leaderSurname = "names_name_2147352481" --change these
     sp._capital =  "wh_main_the_wasteland_marienburg"
+    sp._capitalSpawnX = 430 --:number
+    sp._capitalSpawnY = 460 --:number
     sp._expeditionX = 440--:number
     sp._expeditionY = 553--:number
     sp._knights = false;
@@ -564,6 +584,8 @@ function sylvania_start_pos()
     sp._leaderForename = "names_name_2147355363"
     sp._leaderSurname = "names_name_2147354856"
     sp._capital =  "wh_main_western_sylvania_castle_templehof"
+    sp._capitalSpawnX = 680 --:number
+    sp._capitalSpawnY = 425 --:number
     sp._expeditionX = 687--:number
     sp._expeditionY = 460--:number
     sp._knights = false;
@@ -600,6 +622,8 @@ function vampire_start_pos()
     sp._leaderForename = "names_name_2147345130"
     sp._leaderSurname = "names_name_2147343895"
     sp._capital =  "wh_main_eastern_sylvania_castle_drakenhof"
+    sp._capitalSpawnX = 680 --:number
+    sp._capitalSpawnY = 425 --:number
     sp._expeditionX = 677--:number
     sp._expeditionY = 460--:number
     sp._knights = false;
@@ -636,6 +660,8 @@ function sigmar_start_pos()
     sp._leaderForename = "names_name_2147358013"
     sp._leaderSurname = "names_name_2147358014"
     sp._capital =  "wh_main_wissenland_nuln"
+    sp._capitalSpawnX = 521 --:number
+    sp._capitalSpawnY = 506 --:number
     sp._expeditionX = 581--:number
     sp._expeditionY = 443--:number
     sp._knights = false;
@@ -679,6 +705,8 @@ function ulric_start_pos()
     sp._leaderForename = "names_name_2147344088"
     sp._leaderSurname = "names_name_2147344098"
     sp._capital =  "wh_main_middenland_middenheim"
+    sp._capitalSpawnX = 521 --:number
+    sp._capitalSpawnY = 506 --:number
     sp._expeditionX = 497--:number
     sp._expeditionY = 494--:number
     sp._expeditionRegion = "wh_main_middenland_weismund"
@@ -975,6 +1003,8 @@ function eom_elector.new(info)
     --revival
     self._turnsDead = info._turnsDead
     self._capital = info._capital
+    self._capitalSpawnX = info._capitalSpawnX
+    self._capitalSpawnY = info._capitalSpawnY
     self._expeditionX = info._expeditionX
     self._expeditionY = info._expeditionY
     self._expeditionRegion = info._expeditionRegion
@@ -1012,6 +1042,8 @@ function eom_elector.save(self)
     --revival
     savetable._turnsDead = self._turnsDead
     savetable._capital = self._capital
+    savetable._capitalSpawnX = self._capitalSpawnX
+    savetable._capitalSpawnY = self._capitalSpawnY
     savetable._expeditionX = self._expeditionX
     savetable._expeditionY = self._expeditionY
     savetable._expeditionRegion = self._expeditionRegion

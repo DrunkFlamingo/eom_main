@@ -47,7 +47,7 @@
 
 --# type global ELECTOR_INFO = {_key: ELECTOR_NAME,
 --# _loyalty: number, _power: number, _state: ELECTOR_STATUS, _isCult: boolean,
---# _capital: string, _hideFromUi: boolean, _leaderSubtype: string,
+--# _capital: string, _hideFromUi: boolean, _leaderSubtype: string, _capitalSpawnX: number, _capitalSpawnY: number,
 --# _leaderForename: string, _leaderSurname: string, _expeditionX: number, _expeditionY: number, _expeditionRegion: string,
 --# _baseRegions: number, _turnsDead: number, _image: string, _fullyLoyal: boolean, _uiName: string, _uiTooltip: string,
 --# _knights: boolean, _unitList: string, _canRevive: boolean, _homeRegions:vector<string>, _willCapitulate: boolean?}
