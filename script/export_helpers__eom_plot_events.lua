@@ -234,6 +234,27 @@ local function vampires_contained()
     return false
 end
 
+--v function() --> boolean
+local function empire_controls_sylvania()
+    local sylvania = {
+            "wh_main_western_sylvania_fort_oberstyre",
+            "wh_main_eastern_sylvania_castle_drakenhof",
+            "wh_main_eastern_sylvania_eschen",
+            "wh_main_western_sylvania_schwartzhafen",
+            "wh_main_eastern_sylvania_waldenhof",
+            "wh_main_western_sylvania_castle_templehof"
+    } --:vector<string>
+    local emp_count = 0
+    for i = 1, #sylvania do
+        if not cm:get_region(sylvania[i]):owning_faction():subculture() == "wh_main_sc_vmp_vampire_counts" then
+            emp_count = emp_count + 1
+        end
+    end
+    if emp_count >= 3 then return true else return false end
+end
+
+
+
 
 function vampire_wars_add()
 
@@ -266,6 +287,11 @@ end)
 vampire_wars:add_stage_trigger(2, function(model --:EOM_MODEL
 )
     local plot_turn = model:get_core_data_with_key("vampire_war_turn") --# assume plot_turn: number
+    if empire_controls_sylvania() then
+        model:get_story_chain("vampire_wars"):finish()
+        return false
+    end
+
     return (cm:model():turn_number() >= plot_turn) and vampires_contained()
 end)
 

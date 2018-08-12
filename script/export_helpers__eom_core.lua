@@ -63,16 +63,6 @@ end
 local function empire_plot_and_events_check_human()
     eom:log("CORE: Checking Plot and Events!")
 
-    --test code
-    if cm:model():turn_number() == 1 then
-        for name, elector in pairs(eom:electors()) do
-            elector:respawn_at_capital(true)
-        end
-    end
-
-
-
-
 
     if cm:get_saved_value("ci_trigger_mid_game_event_on_turn_start") == true then
         eom:log("aborting for the chaos invasion")
