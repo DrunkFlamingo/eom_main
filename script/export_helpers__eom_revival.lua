@@ -85,15 +85,11 @@ local function trigger_expedition_for_elector(elector, show_no_event)
         true,
         function(cqi)
             if not show_no_event then
-                local dx = cm:get_character_by_cqi(cqi):display_position_x()
-                local dy = cm:get_character_by_cqi(cqi):display_position_y()
-                cm:show_message_event_located(
+                cm:show_message_event(
                     EOM_GLOBAL_EMPIRE_FACTION,
                     "event_feed_strings_text_expedition_title",
                     "event_feed_strings_text_expedition_"..elector:name().."_subtitle",
                     "event_feed_strings_text_expedition_"..elector:name().."_detail",
-                    dx,
-                    dy,
                     true,
                     591)
             end

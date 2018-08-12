@@ -1312,6 +1312,17 @@ function eom_elector.dead_for_turn(self)
     EOMLOG(" ["..self:name().."] is dead this turn, incrementing their dead counter to ["..tostring(self:turns_dead()).."] ")
 end
 
+--v function(self: EOM_ELECTOR) --> number
+function eom_elector.capital_spawn_x(self)
+    return self._capitalSpawnX
+end
+
+--v function(self: EOM_ELECTOR) --> number
+function eom_elector.capital_spawn_y(self)
+    return self._capitalSpawnY
+end
+
+
 --v function(self: EOM_ELECTOR) --> (number, number)
 function eom_elector.expedition_coordinates(self)
     return self._expeditionX, self._expeditionY
@@ -1346,8 +1357,8 @@ function eom_elector.respawn_at_capital(self, transfer_no_region)
         self:name(),
         self:get_army_list(),
         self:capital(),
-        cm:get_region(self:capital()):settlement():logical_position_x() + 4,
-        cm:get_region(self:capital()):settlement():logical_position_y() + 4,
+        self:capital_spawn_x(),
+        self:capital_spawn_y(),
         "general",
         self:leader_subtype(),
         self:leader_forename(),
