@@ -6,7 +6,16 @@ if not cm:get_saved_value("eom_bug_fix_1") then
     cm:set_saved_value("eom_bug_fix_1", true)
     eom:get_elector("wh_main_vmp_schwartzhafen"):set_army_list("wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_0,wh_main_vmp_inf_grave_guard_1,wh_main_vmp_inf_grave_guard_1,wh_main_vmp_cav_black_knights_3,wh_main_vmp_cav_black_knights_3,wh_main_vmp_mon_terrorgheist,wh_main_vmp_veh_black_coach,wh_main_vmp_mon_varghulf,wh_main_vmp_inf_skeleton_warriors_1,wh_main_vmp_inf_skeleton_warriors_1,wh_dlc04_vmp_veh_mortis_engine_0")
 end
-
+if not cm:get_saved_value("eom_bug_fix_2") then
+    cm:set_saved_value("eom_bug_fix_2", true)
+    local starts = return_elector_starts()
+    for i = 1, #starts do 
+        start = starts[i]()
+        local elector = eom:get_elector(start._key)
+        elector._capitalSpawnX = start._capitalSpawnX
+        elector._capitalSpawnY = start._capitalSpawnY
+    end
+end
 
 --v function (name: ELECTOR_NAME)
 local function trigger_elector_restoration_dilemma(name)
