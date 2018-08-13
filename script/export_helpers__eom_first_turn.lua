@@ -36,8 +36,6 @@ local function eom_starting_settings()
 
         for i = 1, #elector_diplo_list do
             for j = 1, #elector_diplo_list do
-                cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "defensive alliance", false, false, false);
-                cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "peace", true, true, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "war,join war", false, false, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "form confederation", false, false, false);
                 cm:force_diplomacy(elector_diplo_list[i], elector_diplo_list[j], "military alliance", false, false, false);
@@ -60,8 +58,6 @@ local function eom_starting_settings()
             ---now, allow the emperor to declare war on anyone.
         for i = 1, #elector_diplo_list do
             cm:force_diplomacy("faction:"..karl, elector_diplo_list[i], "war", true, true, false);
-            cm:force_diplomacy("faction:"..karl, elector_diplo_list[i], "military alliance", false, false, false);
-            cm:force_diplomacy("faction:"..karl, elector_diplo_list[i], "defensive alliance", false, false, false);
             cm:force_diplomacy("faction:"..karl, elector_diplo_list[i], "form confederation", false, false, false);
             cm:force_diplomacy("faction:"..karl, elector_diplo_list[i], "vassal", false, false, false);
         end;
