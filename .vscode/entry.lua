@@ -4,8 +4,7 @@ local production = true --:boolean
 require("mod/eom_main")
 --require("df_politics_main")
 
-
-
+require("script/export_helpers__eom_ui")
 require("script/export_helpers__eom_main_events")
 require("script/export_helpers__eom_battles")
 require("script/export_helpers__eom_core")
@@ -19,7 +18,7 @@ require("script/export_helpers__eom_capitulation")
 require("script/export_helpers__eom_casus_belli")
 require("script/export_helpers__eom_elector_taxation")
 require("script/export_helpers__eom_elector_diplomacy")
-require("script/export_helpers__eom_ui")
+
 require("script/export_helpers__eom_chaos_invasion")
 require("script/export_helpers__eom_revival")
 require("script/export_helpers__eom_volkmar_unlock")
