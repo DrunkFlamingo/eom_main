@@ -29,7 +29,7 @@ function eom_view.new()
     --# assume self: EOM_VIEW
     self.game_model = nil --:EOM_MODEL
     self.button = nil --:BUTTON
-    self.button_name = "PoliticsButton"
+    self.button_name = "WEC_CUSTOM_FEATURE"
     self.button_parent = nil --:CA_UIC
     self.frame = nil --:FRAME
     self.frame_name = "PoliticsFrame"
