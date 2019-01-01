@@ -134,6 +134,7 @@
 --callbacks
 --# assume CM.first_tick_callbacks: vector<(function(context: WHATEVER?))>
 --# assume CM.add_game_created_callback: method(callback: function)
+--# assume CM.add_pre_first_tick_callback: method(callback: function)
 --# assume CM.callback: method(
 --#     callback: function(),
 --#     delay: number?,

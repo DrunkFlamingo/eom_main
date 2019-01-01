@@ -1429,7 +1429,9 @@ function eom_elector.set_fully_loyal(self, model)
         cm:trigger_incident(EOM_GLOBAL_EMPIRE_FACTION, "eom_full_loyalty_"..self:name(), true)
     end
     if not cm:get_faction(self:name()):is_dead() then
-        cm:force_confederation(EOM_GLOBAL_EMPIRE_FACTION, self:name())
+        if not cm:get_saved_value("disable_confed_eom")  then
+            cm:force_confederation(EOM_GLOBAL_EMPIRE_FACTION, self:name())
+        end
     end
 end
     
@@ -1456,7 +1458,7 @@ function eom_model.init()
 
     self._coredata = {} --:map<string, EOM_CORE_DATA>
     self._view = nil --:EOM_VIEW
-
+    self._autoconfedTweaker = false
     self._log = EOMLOG
     return self
 end
@@ -2000,7 +2002,7 @@ end
 
 --v function(self: EOM_VIEW)
 function eom_view.set_button_parent(self)
-    local component = find_uicomponent(core:get_ui_root(), "button_group_management")
+    local component = core:get_ui_root()
     if not not component then
         EOMLOG("Set the button parent", "eom_view.set_button_parent(self)")
         self.button_parent = component
@@ -2027,6 +2029,7 @@ function eom_view.get_button(self)
         local PoliticsButton = Button.new(self.button_name, self.button_parent, "CIRCULAR", "ui/skins/default/icon_capture_point.png")
         PoliticsButton:RegisterForClick(function(context) self:docker_button_pressed() end);
         PoliticsButton:Resize(69, 69)
+        PoliticsButton:MoveTo(1785 + 70, 827)
         return PoliticsButton
     end  
 
@@ -2250,12 +2253,17 @@ end
 eom = eom_model.init()
 _G.eom = eom
 --link the model to the view and vice versa
-core:add_ui_created_callback(function()
+cm:add_pre_first_tick_callback(function()
+    local ok, err = pcall(function()
     eom:add_view(eom_view.new())
     eom:view():add_model(eom)
     eom:view():set_button_parent()
     local button = eom:view():get_button()
     button:SetVisible(true)
+    end)
+    if not ok then 
+        EOMLOG(tostring(err))
+    end
 end);
 
 

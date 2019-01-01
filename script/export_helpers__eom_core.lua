@@ -218,3 +218,14 @@ core:add_listener(
 
 
 cm.first_tick_callbacks[#cm.first_tick_callbacks+1] = function(context) eom:set_log_turn(cm:model():turn_number()) end;  
+
+
+if not not _G.mcm then
+    mcm = _G.mcm
+    local seom = mcm:register_mod("eom_main", "Empire of Man", "Settings for Drunk Flamingo's Empire of Man Overhaul")
+    local confed = seom:add_tweaker("eom_confed", "Automatic Confederation", "Automatically confederate a lord at 100 loyalty")
+    confed:add_option("enabled", "Enabled", "Confederate")
+    confed:add_option("disabled", "Disabled", "Do not confederate"):add_callback(function(context) 
+        cm:set_saved_value("disable_confed_eom", true)
+    end)
+end
