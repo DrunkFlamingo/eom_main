@@ -419,7 +419,7 @@ end
 
 
 
-events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function()
+cm.first_tick_callbacks[#cm.first_tick_callbacks+1] = function(context)
     if cm:get_faction(eom:empire()):is_human() then
         eom_civil_war()
     end 

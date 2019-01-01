@@ -1109,7 +1109,7 @@ local eom_main_events_table = {
     end
 end
 
-events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() eom_empire_main_events() end;
+cm.first_tick_callbacks[#cm.first_tick_callbacks+1] = function(context) eom_empire_main_events() end;
 
 --eom_dilemma_ostermark_3
 

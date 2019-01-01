@@ -121,4 +121,4 @@ end
 
 
 
-events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() eom_empire_add_civil_wars() end;
+cm.first_tick_callbacks[#cm.first_tick_callbacks+1] = function(context) eom_empire_add_civil_wars() end;

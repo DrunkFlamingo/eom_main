@@ -217,4 +217,4 @@ core:add_listener(
 
 
 
-events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() eom:set_log_turn(cm:model():turn_number()) end;  
+cm.first_tick_callbacks[#cm.first_tick_callbacks+1] = function(context) eom:set_log_turn(cm:model():turn_number()) end;  

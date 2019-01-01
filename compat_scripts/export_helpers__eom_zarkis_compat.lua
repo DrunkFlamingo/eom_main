@@ -89,7 +89,7 @@ local function zarkis_compat_setup()
 end
 
 
-events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() zarkis_compat_setup() end;
+cm.first_tick_callbacks[#cm.first_tick_callbacks+1] = function(context) zarkis_compat_setup() end;
 
 
 --[[

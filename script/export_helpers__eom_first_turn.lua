@@ -123,5 +123,5 @@ end
 
 
 
-events.FirstTickAfterWorldCreated[#events.FirstTickAfterWorldCreated+1] = function() eom_starting_settings() end;
+cm.first_tick_callbacks[#cm.first_tick_callbacks+1] = function(context) eom_starting_settings() end;
 
