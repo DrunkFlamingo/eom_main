@@ -711,7 +711,6 @@ local eom_main_events_table = {
             carroburg_region:settlement():logical_position_x() + 1,
             carroburg_region:settlement():logical_position_y() + 2,
             true,
-            true,
             function(cqi)
 
             end)
@@ -733,7 +732,6 @@ local eom_main_events_table = {
             "wh_main_middenland_carroburg",
             carroburg_region:settlement():logical_position_x() + 1,
             carroburg_region:settlement():logical_position_y() + 2,
-            true,
             true,
             function(cqi)
 
@@ -761,7 +759,6 @@ local eom_main_events_table = {
             "wh_main_middenland_carroburg",
             carroburg_region:settlement():logical_position_x() + 1,
             carroburg_region:settlement():logical_position_y() + 2,
-            true,
             true,
             function(cqi)
 

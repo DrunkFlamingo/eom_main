@@ -1358,6 +1358,7 @@ end
 
 --v function(self: EOM_ELECTOR) --> (number, number)
 function eom_elector.expedition_coordinates(self)
+    local x, y = cm:find_valid_spawn_location_for_character_from_position(self:name(), self._expeditionX, self._expeditionY, false)
     return self._expeditionX, self._expeditionY
 end
 
@@ -1386,12 +1387,13 @@ end
 --v function(self: EOM_ELECTOR, transfer_no_region: boolean?)
 function eom_elector.respawn_at_capital(self, transfer_no_region)
     EOMLOG("Respawning elector ["..self:name().."] at capital with transfer no region ["..tostring(transfer_no_region).."] ")
+    local x, y = cm:find_valid_spawn_location_for_character_from_settlement(self:name(), self:capital(), false, false)
     cm:create_force_with_general(
         self:name(),
         self:get_army_list(),
         self:capital(),
-        cm:get_region(self:capital()):settlement():logical_position_x() + 2,
-        cm:get_region(self:capital()):settlement():logical_position_y() - 1,
+        x,
+        y,
         "general",
         self:leader_subtype(),
         self:leader_forename(),
@@ -1700,7 +1702,7 @@ function eom_model.elector_rebellion_start(self, name)
     end
     if elector:is_cult() then
         local x, y = elector:expedition_coordinates()
-        cm:create_force(name, elector:get_army_list(), elector:expedition_region(), x, y, true, true)
+        cm:create_force(name, elector:get_army_list(), elector:expedition_region(), x, y, true)
         core:add_listener(
             "rebellion_ender"..name,
             "FactionTurnStart",
@@ -2028,8 +2030,11 @@ function eom_view.get_button(self)
     else
         local PoliticsButton = Button.new(self.button_name, self.button_parent, "CIRCULAR", "ui/skins/default/icon_capture_point.png")
         PoliticsButton:RegisterForClick(function(context) self:docker_button_pressed() end);
-        PoliticsButton:Resize(69, 69)
-        PoliticsButton:MoveTo(1785 + 70, 827)
+        PoliticsButton:Resize(63, 63)
+        PoliticsButton:SetVisible(true)
+        PoliticsButton.uic:PropagatePriority(2)
+        local positionParent = find_uicomponent(self.button_parent, "layout", "faction_buttons_docker", "button_group_management", "button_offices")
+        PoliticsButton:PositionRelativeTo(positionParent, positionParent:Width()*1.1, 0)
         return PoliticsButton
     end  
 
@@ -2217,6 +2222,7 @@ function eom_view.close_politics(self)
     if not not character then
         character:SetVisible(true)
     end
+    self:set_button_visible(true)
 end
 
 
@@ -2244,6 +2250,7 @@ function eom_view.docker_button_pressed(self)
         EOMLOG("Setting Character Panel Invisible")
         character:SetVisible(false)
     end
+    self:set_button_visible(false)
 end
 
 

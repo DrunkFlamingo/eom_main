@@ -108,9 +108,9 @@ local function eom_starting_settings()
         cm:callback( function() 
             earlyunitlist = "wh_main_emp_inf_greatswords,wh_main_emp_inf_greatswords,wh_main_emp_inf_halberdiers,wh_main_emp_inf_halberdiers,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_crossbowmen,wh_main_emp_inf_handgunners,wh_main_emp_inf_handgunners,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen,wh_main_emp_inf_swordsmen"
             --497, 494
-            cm:create_force("wh_main_emp_middenland", earlyunitlist, "wh_main_middenland_weismund", 497, 494, true, true);
+            cm:create_force("wh_main_emp_middenland", earlyunitlist, "wh_main_middenland_weismund", 497, 494, true);
             --484, 564
-            cm:create_force("wh_main_emp_nordland", earlyunitlist, "wh_main_nordland_salzenmund", 484, 564, true, true);
+            cm:create_force("wh_main_emp_nordland", earlyunitlist, "wh_main_nordland_salzenmund", 484, 564, true);
             end, 5.0);
 
         --randomize which plot events happen when

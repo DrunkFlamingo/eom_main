@@ -89,6 +89,7 @@
 --# assume BUTTON.RegisterForClick: method(callback: function(context: WHATEVER?))
 --# assume BUTTON.SetImage: method(path: string)
 --# assume BUTTON.SetDisabled: method(disabled: boolean)
+--# assume BUTTON.uic: CA_UIC
 
 --frame
 --# assume FRAME.MoveTo: method(xPos: number, yPos: number)

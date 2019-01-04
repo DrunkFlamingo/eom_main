@@ -61,8 +61,8 @@ function marienburg_rebellion_add()
     marienburg_rebellion:add_stage_callback(1, function(model--:EOM_MODEL
     )
         cm:trigger_incident(model:empire(), "eom_marienburg_rebellion_1", true)
-        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 358, 509, true, true, function(cqi) end)
-        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 440, 545, true, true, function(cqi) end)
+        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 358, 509, true,  function(cqi) end)
+        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 440, 545, true,  function(cqi) end)
         cm:apply_effect_bundle_to_region("eom_marienburg_rebellion_1_region", "wh_main_the_wasteland_marienburg", 8)
         
         cm:callback(function()
@@ -110,7 +110,7 @@ function marienburg_rebellion_add()
                     cm:force_declare_war("wh_main_brt_bretonnia", "wh_main_emp_empire", false, false)
                     cm:treasury_mod("wh_main_brt_bretonnia", 5000)
                     if cm:get_faction("wh_main_emp_marienburg"):is_dead() then
-                        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 405, 478, true, true, function(cqi) end)
+                        cm:create_force("wh_main_emp_marienburg", model:get_elector("wh_main_emp_marienburg"):get_army_list(), "wh_main_couronne_et_languille_couronne", 405, 478, true, function(cqi) end)
                     end
                 end
             end,
@@ -258,8 +258,16 @@ vampire_wars:add_stage_callback(1, function(model --:EOM_MODEL
         cm:treasury_mod("wh_main_emp_cult_of_sigmar", 5000)
         cm:force_declare_war("wh_main_vmp_vampire_counts", "wh_main_emp_cult_of_sigmar", false, false)
     end, 0.5)
-    cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_waldenhof", 687, 460, true, true)
-    cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_castle_drakenhof", cm:get_region("wh_main_eastern_sylvania_castle_drakenhof"):settlement():logical_position_x(), cm:get_region("wh_main_eastern_sylvania_castle_drakenhof"):settlement():logical_position_y(), true, true)
+    local xa, ya = cm:find_valid_spawn_location_for_character_from_position("wh_main_vmp_vampire_counts", 687, 460, false)
+
+
+    cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_waldenhof", xa, ya, true,
+    function(cqi)
+        local xb, yb = cm:find_valid_spawn_location_for_character_from_settlement("wh_main_vmp_vampire_counts","wh_main_eastern_sylvania_castle_drakenhof", false, false)
+        cm:create_force("wh_main_vmp_vampire_counts", model:get_elector("wh_main_vmp_schwartzhafen"):get_army_list(), "wh_main_eastern_sylvania_castle_drakenhof", xb, yb, true)
+    end
+)
+    
 
 end)
 vampire_wars:add_stage_trigger(2, function(model --:EOM_MODEL

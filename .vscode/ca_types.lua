@@ -206,7 +206,6 @@
 --#     xPos: number,
 --#     yPos: number,
 --#     un1: boolean,
---#     un2: boolean,
 --#     callback: (function(CA_CQI))?
 --# )
 --# assume CM.spawn_character_to_pool: method(
@@ -214,6 +213,8 @@
 --#    otherName: string, age: int, male: boolean, agentKey: string, agent_subtypeKey: string, 
 --#    isImmortal: boolean, artSetId: string
 --#)
+--# assume CM.find_valid_spawn_location_for_character_from_settlement: method(faction_key: string, region_key: string, rebels: boolean, on_sea: boolean, rebel_distance: number?)
+--# assume CM.find_valid_spawn_location_for_character_from_position: method(faction_key: string, x: number, y: number, on_sea: boolean)
 --saving and loading
 --# assume CM.add_saving_game_callback: method(function(context: WHATEVER))
 --# assume CM.add_loading_game_callback: method(function(context: WHATEVER))
